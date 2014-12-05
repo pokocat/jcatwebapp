@@ -22,10 +22,10 @@
    <!-- BEGIN SIDEBAR MENU -->	
 	<p class="menu-title">BROWSE <span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p>
     <ul>	
-      <li class="start" th:classappend="${page == 'home' ? 'active' : ''}"> <a href="index.html"> <i class="icon-custom-home"></i> <span class="title">Dashboard</span> <span class="selected"></span> <span class="badge badge-important pull-right">5</span></a> </li>
-	  <li class="" th:classappend="${page == 'instances' ? 'open active' : ''}" > <a href="javascript:;"> <i class="icon-custom-form"></i> <span class="title">Instances</span> <span class="arrow "></span></a>
+      <li class="start" th:classappend="${page == 'home' ? 'active' : ''}"> <a href="/" th:href="@{/}"> <i class="icon-custom-home"></i> <span class="title">Dashboard</span> <span class="selected"></span> <span class="badge badge-important pull-right">5</span></a> </li>
+	  <li class="" th:classappend="${page == 'instances' ? 'open active' : ''}" > <a href="javascript:;"> <i class="icon-custom-form"></i> <span class="title">Instances</span> <span class="arrow "  th:classappend="${page == 'instances' ? 'open ' : ''}"></span></a>
         <ul class="sub-menu">
-          <li th:classappend="${page == 'listInstances' ? 'active' : ''}" > <a href="form_elements.html">List Instances <span class="badge badge-info pull-right">8</span></a>  </li>
+          <li th:classappend="${page == 'instances' ? 'active' : ''}" > <a href="form_elements.html" th:href="@{/instance}">List Instances <span class="badge badge-info pull-right">8</span></a>  </li>
           <li th:classappend="${page == 'launchInstance' ? 'active' : ''}" > <a href="form_validations.html">Launch new instance</a> </li>
         </ul>
       </li>

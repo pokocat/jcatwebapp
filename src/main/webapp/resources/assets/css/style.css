@@ -1,4 +1,5 @@
 /* Font Import */
+@import url(http://fonts.useso.com/css?family=Open+Sans:400,300,600,700);
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
     color:#333843! important;
 }
@@ -202,10 +203,14 @@ Page sidebar
   border-top: 0px !important;
 }
 
-.page-sidebar > ul > li > ul.sub-menu > li.active > a, 
+
 .page-sidebar > ul > li > ul.sub-menu > li > a:hover {
   color: #fff !important;
   background: #4b4b4b !important;  
+}
+
+.page-sidebar > ul > li > ul.sub-menu > li.active > a {
+	color: #fff !important;
 }
 
 .page-sidebar > ul > li > ul.sub-menu > li > a:hover {
@@ -392,6 +397,9 @@ blockquote small{
 
 .center-text{
 	text-align:center !important;
+}
+.right-text{
+	text-align:right !important;
 }
 .muted {
 	color:#b6bfc5;
@@ -1961,7 +1969,7 @@ display:none;
   color: #888;
 }
 .page-title .actions{
-	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-family: Open Sans;
 }
 /* Breadcrumb */
 .page-content .breadcrumb {
@@ -2089,7 +2097,7 @@ input[type="url"],
 input[type="search"],
 input[type="tel"],
 input[type="color"] {
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-family: Open Sans;
   -webkit-appearance: none !important;   
 	color: #282323 
   outline: 0;
@@ -4230,7 +4238,7 @@ background-position: -95px -40px;
 	text-shadow: none;
 	box-shadow:none;	
     transition: all 0.12s linear 0s !important;
-	font: 14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;	
+	font: 14px/20px Open Sans;	
 }
 .btn:focus{
 	outline:none;

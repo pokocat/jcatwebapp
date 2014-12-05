@@ -1,4 +1,4 @@
-package com.ericsson.jcat.jcatwebapp.instances;
+package com.ericsson.jcat.jcatwebapp.testenv;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,24 +12,24 @@ import java.util.List;
 
 @Repository
 @Transactional(readOnly = true)
-public class InstancesRepository {
+public class TestEnvRepository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(InstancesRepository.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestEnvRepository.class);
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Transactional
-    public Instance save(Instance instance) {
+    public TestEnv save(TestEnv instance) {
         entityManager.persist(instance);
         return instance;
     }
 
-    public List<Instance> findAll() {
-        return entityManager.createQuery("SELECT i FROM Instance i", Instance.class).getResultList();
+    public List<TestEnv> findAll() {
+        return entityManager.createQuery("SELECT i FROM TestEnv i", TestEnv.class).getResultList();
     }
 
-    public Instance findById(Long id) {
-        return entityManager.find(Instance.class, id);
+    public TestEnv findById(Long id) {
+        return entityManager.find(TestEnv.class, id);
     }
 }
