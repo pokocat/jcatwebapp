@@ -413,6 +413,9 @@
 								</tr>
 							</thead>
 							<tbody>
+						        <tr th:if="${testEnvs.empty}">
+            						<td class="center-text" colspan="12">No Testing Environment exists currently</td>
+        						</tr>
 								<tr th:each="testEnvs : ${testEnvs}">
 									<td th:text="${testEnvs.name}">
 										INSTA-EXAMPLE

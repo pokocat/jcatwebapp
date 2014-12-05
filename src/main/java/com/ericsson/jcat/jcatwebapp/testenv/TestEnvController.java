@@ -2,6 +2,8 @@ package com.ericsson.jcat.jcatwebapp.testenv;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import com.ericsson.jcat.jcatwebapp.extension.AjaxUtils;
 @Secured("ROLE_USER")
 @RequestMapping("/testenv")
 class TestEnvController {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private TestEnvRepository testEnvRepository;
 
@@ -46,14 +49,15 @@ class TestEnvController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String processSubmit(@Valid @ModelAttribute CreateTestEnvForm createTestEnvform, BindingResult result,
 			RedirectAttributes redirectAttrs) {
+		logger.info("Comming POST {}", createTestEnvform.toString());
 		if (result.hasErrors()) {
 			return null;// TODO handle errors
 		}
 		testEnvRepository.save(createTestEnvform.createTestEnv());
-		return "redirect:/";
+		return "redirect:/testenv/";
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String listTestEnv(Model model) {
 		model.addAttribute("testEnvs", testEnvRepository.findAll());
 		return "testenv/list-testenv";
