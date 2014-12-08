@@ -10,14 +10,13 @@
 
 <link href="../../../resources/assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/bootstrap-select2/select2.css}"/>
 
-
 <link href="../../../resources/assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/pace/pace-theme-flash.css}"/>
 <link href="../../../resources/assets/plugins/jquery-slider/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/jquery-slider/css/jquery.sidr.light.css}"/>
 <!-- BEGIN CORE CSS FRAMEWORK -->
 <link href="../../../resources/assets/plugins/boostrapv3/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/plugins/boostrapv3/css/bootstrap.min.css}"/>
 <link href="../../../resources/assets/plugins/boostrapv3/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/plugins/boostrapv3/css/bootstrap-theme.min.css}"/>
 <link href="../../../resources/assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/plugins/font-awesome/css/font-awesome.css}"/>
-<link href="../../../resources/assets/css/animate.min.css" rel="stylesheet" type="text/css" th:href="@{/resources/css/animate.min.css}"/>
+<link href="../../../resources/assets/css/animate.min.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/css/animate.min.css}"/>
 <!-- END CORE CSS FRAMEWORK -->
 
 <!-- BEGIN CSS TEMPLATE -->
@@ -391,80 +390,133 @@
 						<h4>Instance Custom</h4>
 						
 					</div>
-					<div class="grid-body no-border"> <br />
-						<form class="form-no-horizontal-spacing" id="form-condensed" novalidate="novalidate" method="post" th:action="@{/testenv}" th:object="${createTestEnvForm}" th:fragment="createTestEnvForm">	
+					<fieldset>
+					<div class="grid-body no-border">
+						<form class="form-no-horizontal-spacing" id="form-condensed" novalidate="novalidate" method="post" th:action="@{/testenv/create}" th:object="${createTestEnvForm}" th:fragment="createTestEnvForm">	
+												<div class="grid-body no-border" th:if="${#fields.hasAnyErrors()}">
+						<div th:replace="fragments/alert :: alert2 (type='danger', message='Form contains errors. Please check again.')" class="alert alert-block alert-error fade in">
+							<button type="button" class="close" data-dismiss="alert"></button>
+							<h4 class="alert-heading"><i class="icon-warning-sign"></i> Error!</h4>
+							<p> Error-handling  </p>
+						</div>
+					</div>
 							<div class="row column-seperation">
 								<div class="col-md-8 col-sm-8 col-xs-8">
 									<div class="form-group">
 										<label class="form-label">Instance Name</label>
 										<span class="help">e.g. "Mona Lisa's Instance"</span>
-										<div class="controls">
-											<input type="text" class="form-control" />
+										<div class="controls" th:classappend="${#fields.hasErrors('name')}? 'error-control'">
+											<input type="text" class="form-control" id="name" th:field="*{name}"/>
+											<span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"><label for="form1CardHolderName" class="error">This field is required.</label></span>
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="form-label">Other Contents</label>
-										<span class="help">e.g. "Some other info here."</span>
-										<div class="controls">
-											<input type="text" placeholder="You can put anything here" class="form-control" />
+										<label class="form-label">Description</label>
+										<span class="help">e.g. "Instance for Project ABC RST", can be empty.</span>
+										<div class="controls" th:classappend="${#fields.hasErrors('description')}? 'error-control'">
+											<input type="text" id="description" placeholder="You can put anything here" class="form-control" th:field="*{description}"/>
 										</div>
 									</div>
+									<hr />
+									<div class="form-group ">
+										<label class="form-label">RemotePC config</label>
+										<span class="help">Need a remote-PC or not.</span>
+				                        <div class="radio radio-primary">
+					                          <input id="no-remotePC" type="radio" name="remotePC" value="no-remotePC" checked="checked">
+					                          <label for="no-remotePC">No remote PC</label>
+					                          <input id="has-remotePC" type="radio" name="remotePC" value="has-remotePC">
+					                          <label for="has-remotePC">Use remote PC</label>
+				                        </div>
+			                      	</div>
 									<div class="form-group">
-										<label class="form-label">Testing ENV Options</label>
+										<label class="form-label">Traffic Generator</label>
 										<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
 										<br />
-										<div class="col-md-4">
+										<div class="col-md-3">
 											<div class="checkbox check-primary">
 												<input id="checkbox1" type="checkbox" value="1" />
 												<label for="checkbox1">Tgen Traffic</label>
 											</div>
 										</div>
-										<div class="col-md-4">
+										<div class="col-md-3">
 											<div class="checkbox check-primary 	">
 												<input id="checkbox2" type="checkbox" value="1" checked="checked" />
-												<label for="checkbox2">DIVA</label>
+												<label for="checkbox2">MgwSim</label>
 											</div>
 										</div>
-										<div class="col-md-4">
+										<div class="col-md-3">
 											<div class="checkbox check-primary">
 												<input id="checkbox3" type="checkbox" value="1" />
-												<label for="checkbox3">YASTI</label>
+												<label for="checkbox3">Client4</label>
 											</div>
 										</div>
-										<div class="col-md-4">
+										<div class="col-md-3">
 											<div class="checkbox check-primary">
 												<input id="checkbox4" type="checkbox" value="1" />
-												<label for="checkbox4">AAA</label>
+												<label for="checkbox4">Peip</label>
 											</div>
 										</div>
-										<div class="col-md-4">
-											<div class="checkbox check-primary">
-												<input id="checkbox5" type="checkbox" value="1" checked="checked" />
-												<label for="checkbox5">BBB</label>
-											</div>
-										</div>
-										<div class="col-md-4">
-											<div class="checkbox check-primary">
-												<input id="checkbox6" type="checkbox" value="1" checked="checked" />
-												<label for="checkbox6">CCC</label>
-											</div>
-										</div>
-
 									</div>
 									<div class="form-group">
-										<label class="form-label">Configuration</label>
-										<span class="help">e.g. "Some other info here."</span>
-										
-										<div class="controls">
-										<div class="btn-group col-md-12 "> 
-											<a href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-demo-space btn-white  "> Default <span class="caret"></span> </a>
-											<ul class="dropdown-menu">
-												<li><a >Custom</a></li>
-											</ul>
+										<label class="form-label">Single process</label>
+										<span class="help">Single service process.</span>
+										<br />
+										<div class="col-md-3">
+											<div class="checkbox check-primary">
+												<input id="checkbox1" type="checkbox" value="1" />
+												<label for="checkbox1">FTP</label>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="checkbox check-primary 	">
+												<input id="checkbox2" type="checkbox" value="1" checked="checked" />
+												<label for="checkbox2">SFTP</label>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="checkbox check-primary">
+												<input id="checkbox3" type="checkbox" value="1" />
+												<label for="checkbox3">BGWrpc</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="form-label">Testing Tool</label>
+										<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
+										<br />
+										<div class="checkbox">
+										<div class="col-md-3">
+											<div class="checkbox check-primary">
+												<input id="tt-checkbox1" type="checkbox" value="1" />
+												<label for="tt-checkbox1">Winfiol</label>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="checkbox check-primary 	">
+												<input id="tt-checkbox2" type="checkbox" value="1" />
+												<label for="tt-checkbox2">MCST</label>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="checkbox check-primary">
+												<input id="tt-checkbox3" type="checkbox" value="1" />
+												<label for="tt-checkbox3">SEA</label>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="checkbox check-primary">
+												<input id="tt-checkbox4" type="checkbox" value="1" />
+												<label for="tt-checkbox4">JCAT</label>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="checkbox check-primary">
+												<input id="tt-checkbox5" type="checkbox" value="1" />
+												<label for="tt-checkbox5">PUTTY</label>
+											</div>
 										</div>
 										</div>
 									</div>
-										
 								</div>
 								<div class="col-md-4">
 
@@ -514,6 +566,7 @@
 							</div>
 						</form>
 					</div>
+					</fieldset>
 				</div>
 			</div>
 		</div>
@@ -527,18 +580,18 @@
 <!-- END CONTAINER -->
 
 <!-- BEGIN CORE JS FRAMEWORK--> 
-<script src="../../../resources/assets/plugins/jquery-1.8.3.min.js" type="text/javascript" th:src="@{/resources/}" ></script> 
-<script src="../../../resources/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript" th:src="@{/resources/}" ></script> 
-<script src="../../../resources/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript" th:src="@{/resources/}" ></script> 
-<script src="../../../resources/assets/plugins/breakpoints.js" type="text/javascript" th:src="@{/resources/}" ></script> 
-<script src="../../../resources/assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript" th:src="@{/resources/}" ></script> 
-<script src="../../../resources/assets/plugins/jquery-block-ui/jqueryblockui.js" type="text/javascript" th:src="@{/resources/}" ></script> 
+<script src="../../../resources/assets/plugins/jquery-1.8.3.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-1.8.3.min.js}"></script> 
+<script src="../../../resources/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js}"></script> 
+<script src="../../../resources/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootstrap/js/bootstrap.min.js}"></script> 
+<script src="../../../resources/assets/plugins/breakpoints.js" type="text/javascript" th:src="@{/resources/assets/plugins/breakpoints.js}"></script> 
+<script src="../../../resources/assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-unveil/jquery.unveil.min.js}"></script> 
+<script src="../../../resources/assets/plugins/jquery-block-ui/jqueryblockui.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-block-ui/jqueryblockui.js}"></script> 
 <!-- END CORE JS FRAMEWORK --> 
 <!-- BEGIN PAGE LEVEL JS --> 	
-<script src="../../../resources/assets/plugins/jquery-slider/jquery.sidr.min.js" type="text/javascript" th:src="@{/resources/}" ></script> 	
-<script src="../../../resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript" th:src="@{/resources/}" ></script> 
-<script src="../../../resources/assets/plugins/pace/pace.min.js" type="text/javascript" th:src="@{/resources/}" ></script>  
-<script src="../../../resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript" th:src="@{/resources/}" ></script> 
+<script src="../../../resources/assets/plugins/jquery-slider/jquery.sidr.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-slider/jquery.sidr.min.js}"></script> 	
+<script src="../../../resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js}"></script> 
+<script src="../../../resources/assets/plugins/pace/pace.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/pace/pace.min.js}"></script>  
+<script src="../../../resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js}"></script>
 <!-- END PAGE LEVEL PLUGINS --> 	
 
 <script src="../../../resources/assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootstrap-select2/select2.min.js}" ></script> 

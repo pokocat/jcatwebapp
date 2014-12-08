@@ -303,13 +303,13 @@ h4{
 	line-height:22px
 }
 h3 small, h4 small, h5 small {
-  font-family: 'Georgia';
+  font-family: 'Open Sans';
   font-weight: 300;	
   color: #444;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Georgia';
+  font-family: 'Open Sans';
   font-weight: 300;
   color:#505458
 }
@@ -3725,7 +3725,7 @@ div.DTTT_print_info p {
 }
 .tiles  .tiles-title{
 	font-size:10.5px;
-	font-family: 'Georgia';
+	font-family: 'Open Sans';
 	letter-spacing:0.5px;
 	font-weight:600;
 }

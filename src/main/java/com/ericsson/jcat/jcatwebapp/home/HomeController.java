@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class HomeController {
+	@ModelAttribute("page")
+	public String module() {
+		return "home";
+	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String index(Principal principal) {
-		return principal != null ? "home/homeSignedIn" : "home/index2";
+		return principal != null ? "home/homeSignedIn" : "home/homeNotSignedIn";
 	}
 }

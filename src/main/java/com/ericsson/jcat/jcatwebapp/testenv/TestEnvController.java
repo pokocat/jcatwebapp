@@ -46,12 +46,13 @@ class TestEnvController {
 		return "instances";
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value="/create", method = RequestMethod.POST)
 	public String processSubmit(@Valid @ModelAttribute CreateTestEnvForm createTestEnvform, BindingResult result,
 			RedirectAttributes redirectAttrs) {
 		logger.info("Comming POST {}", createTestEnvform.toString());
 		if (result.hasErrors()) {
-			return null;// TODO handle errors
+			logger.error("post data has error: {}", result.getAllErrors().toString());
+			return "testenv/create-testenv";
 		}
 		testEnvRepository.save(createTestEnvform.createTestEnv());
 		return "redirect:/testenv/";
@@ -64,7 +65,8 @@ class TestEnvController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public String createNewTestEnv() {
+	public String createNewTestEnv(Model model) {
+		model.addAttribute(new CreateTestEnvForm());
 		return "testenv/create-testenv";
 	}
 }

@@ -3,7 +3,9 @@ package com.ericsson.jcat.jcatwebapp.testenv;
 import org.hibernate.validator.constraints.NotBlank;
 
 public class CreateTestEnvForm {
-	@NotBlank
+	private static final String NOT_BLANK_MESSAGE = "{notBlank.message}";
+	
+	@NotBlank(message = CreateTestEnvForm.NOT_BLANK_MESSAGE)
 	private String name;
 
 	private String description;
