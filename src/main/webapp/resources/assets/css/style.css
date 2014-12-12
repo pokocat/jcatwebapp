@@ -19,6 +19,18 @@ body {
   background-color:#1B1E24 ;
 }
 
+/****************
+Body bg
+****************/
+.bgImageContainer{
+    background-image:url('http://www.whitegadget.com/attachments/pc-wallpapers/16950d1224057972-landscape-wallpaper-blue-river-scenery-wallpapers.jpg'); 
+    width:500px;
+    height:400px;
+    -webkit-filter: blur(5px);
+    z-index:-1;
+    position:absolute;
+}
+
 
 /***
 Page header
@@ -277,7 +289,7 @@ Page sidebar
 
 body { 
   color: #6f7b8a; 
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: Open Sans;
   font-size:13px;
   padding: 0px !important;
   margin: 0px !important;
@@ -1244,6 +1256,7 @@ span.iconset{
   margin: 0px 0px 0px 0px;
   padding: 5px 0px;
   padding-left: 53px !important;
+  padding-right: 31px !important;
   color: #e1eaf1;
   text-decoration: none;
   text-shadow: 0 1px 1px #000;
@@ -2070,7 +2083,7 @@ input,
 button,
 select,
 textarea {
-  font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Segoe UI", Open Sans;
 }
 
 label {
@@ -2533,7 +2546,8 @@ table th .checkbox label {
     border-radius: 99px;
 }
 
-.checkbox input[type=checkbox]:checked + label::after  {
+
+.checkbox input[type=checkbox]:checked ~ label::after  {
 	font-family: 'FontAwesome';
 	content: "\F00C";
 }
@@ -2556,11 +2570,11 @@ table th .checkbox label {
 	color:#fff;
 }
 
-.checkbox.check-primary input[type=checkbox]:checked + label:before {
+.checkbox.check-primary input[type=checkbox]:checked ~ label:before {
 		background-color:#0AA699;
 	border:1px solid #0AA699;
 }
-.checkbox.check-primary input[type=checkbox]:checked + label::after {
+.checkbox.check-primary input[type=checkbox]:checked ~ label::after {
 	color:#fff;
 }
 
@@ -5493,7 +5507,12 @@ ul.progress-list li  .progress{
 
 /*** Table Styles **/
 .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
-	padding:12px
+	padding:12px;
+	
+}
+
+.table>tbody>tr>td {
+	line-height: 27px; 
 }
 
 .table tr.row_selected td{

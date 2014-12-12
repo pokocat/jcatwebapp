@@ -20,16 +20,22 @@ public class TestEnvRepository {
     private EntityManager entityManager;
 
     @Transactional
-    public TestEnv save(TestEnv instance) {
-        entityManager.persist(instance);
-        return instance;
+    public TestEnv save(TestEnv testEnv) {
+        entityManager.persist(testEnv);
+        return testEnv;
+    }
+    
+    @Transactional
+    public TestEnv update(TestEnv testEnv) {
+        entityManager.refresh(testEnv);
+        return testEnv;
     }
 
     public List<TestEnv> findAll() {
         return entityManager.createQuery("SELECT i FROM TestEnv i", TestEnv.class).getResultList();
     }
 
-    public TestEnv findById(Long id) {
+    public TestEnv findById(int id) {
         return entityManager.find(TestEnv.class, id);
     }
 }

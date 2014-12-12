@@ -1,67 +1,94 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Insert title here</title>
+    <title>Insert title here</title>
 </head>
+
 <body>
-  <!-- BEGIN SIDEBAR -->
-  <div class="page-sidebar" id="main-menu" th:fragment="sidebar"> 
-  <!-- BEGIN MINI-PROFILE -->
-   <div class="user-info-wrapper">	
-	<div class="profile-wrapper">
-		<img src="../../../resources/assets/img/profiles/avatar.jpg"  alt="" width="69" height="69" />
-	</div>
-    <div class="user-info">
-      <div class="greeting">Welcome</div>
-      <div class="username">John <span class="semi-bold">Smith</span></div>
-      <!-- <div class="status">Status<a href="#"><div class="status-icon green"></div>Online</a></div> -->
-    </div>
-   </div>
-  <!-- END MINI-PROFILE -->
-   
-   <!-- BEGIN SIDEBAR MENU -->	
-	<p class="menu-title">BROWSE <span class="pull-right"><a href="javascript:;"><i class="fa fa-refresh"></i></a></span></p>
-    <ul>	
-      <li class="start" th:classappend="${page == 'home' ? 'active' : ''}"> <a href="/" th:href="@{/}"> <i class="icon-custom-home"></i> <span class="title">Dashboard</span> <span class="selected"></span> <span class="badge badge-important pull-right">5</span></a> </li>
-	  <li class="" th:classappend="${page == 'instances' ? 'open active' : ''}" > <a href="javascript:;"> <i class="icon-custom-form"></i> <span class="title">Instances</span> <span class="arrow "  th:classappend="${page == 'instances' ? 'open ' : ''}"></span></a>
-        <ul class="sub-menu">
-          <li th:classappend="${page == 'instances' ? 'active' : ''}" > <a href="form_elements.html" th:href="@{/instance}">List Instances <span class="badge badge-info pull-right">8</span></a>  </li>
-          <li th:classappend="${page == 'launchInstance' ? 'active' : ''}" > <a href="form_validations.html">Launch new instance</a> </li>
+    <!-- BEGIN SIDEBAR -->
+    <div class="page-sidebar" id="main-menu" th:fragment="sidebar">
+        <!-- BEGIN MINI-PROFILE -->
+        <div class="user-info-wrapper">
+            <div class="profile-wrapper">
+                <img src="../../../resources/assets/img/profiles/avatar.jpg" alt="" width="69" height="69" />
+            </div>
+            <div class="user-info">
+                <div class="greeting">Welcome</div>
+                <div class="username">
+                    John <span class="semi-bold">Smith</span>
+                </div>
+                <!-- <div class="status">Status<a href="#"><div class="status-icon green"></div>Online</a></div> -->
+            </div>
+        </div>
+        <!-- END MINI-PROFILE -->
+
+        <!-- BEGIN SIDEBAR MENU -->
+        <p class="menu-title">
+            BROWSE <span class="pull-right"><a href="javascript:;"><i
+					class="fa fa-refresh"></i></a></span>
+        </p>
+        <ul>
+            <li class="start" th:classappend="${page == 'home' ? 'active' : ''}">
+                <a href="/" th:href="@{/}"> <i class="icon-custom-home"></i> 
+                <span class="title">Dashboard</span> <span class="selected"></span> <span class="badge badge-important pull-right">5</span>
+                </a>
+            </li>
+            <li class="" th:classappend="${page == 'instances' ? 'open active' : ''}">
+                <a href="javascript:;"> <i class="icon-custom-form"></i> 
+                <span class="title">Testing ENV</span> <span class="arrow " th:classappend="${page == 'instances' ? 'open ' : ''}"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li th:classappend="${page == 'instances' ? 'active' : ''}">
+                        <a th:href="@{/testenv}">List Testing ENV <span class="badge badge-info pull-right" th:text="${testingEnvAmount}">8</span>
+					</a>
+                    </li>
+                    <li th:classappend="${page == 'launchInstance' ? 'active' : ''}">
+                        <a href="/" th:href="@{/testenv/create}">Launch new Testing ENV</a>
+                    </li>
+                </ul>
+            </li>
+
+
         </ul>
-      </li>
-   
-	   
-    </ul>
-	<div class="side-bar-widgets">
-	
-	<p class="menu-title">PROJECTS </p>
-		<div class="status-widget">
-			<div class="status-widget-wrapper">
-				<div class="title">RST<a href="#" class="remove-widget"><i class="icon-custom-cross"></i></a></div>
-				<p>Project RST</p>
-			</div>
-		</div>
-		<div class="status-widget">
-			<div class="status-widget-wrapper">
-				<div class="title">Characteristic<a href="#" class="remove-widget"><i class="icon-custom-cross"></i></a></div>
-				<p>Project Characteristic</p>
-			</div>
-		</div>
-	</div>
-	<a href="#" class="scrollup">Scroll</a>
-	<div class="clearfix"></div>
-    <!-- END SIDEBAR MENU --> 
-  </div>
-   <div class="footer-widget">		
-	<div class="progress transparent progress-small no-radius no-margin">
-		<div class="progress-bar progress-bar-success animate-progress-bar" data-percentage="79%" style="width: 79%;"></div>		
-	</div>
-	<div class="pull-right">
-		<div class="details-status">
-		<span class="animate-number" data-value="86" data-animation-duration="560">86</span>%
-	</div>	
-	<a href="lockscreen.html"><i class="fa fa-power-off"></i></a></div>
-  </div>
-  <!-- END SIDEBAR --> 
+        <div class="side-bar-widgets">
+
+            <p class="menu-title">PROJECTS</p>
+            <div class="status-widget">
+                <div class="status-widget-wrapper">
+                    <div class="title">
+                        RST<a href="#" class="remove-widget"><i
+							class="icon-custom-cross"></i></a>
+                    </div>
+                    <p>Project RST</p>
+                </div>
+            </div>
+            <div class="status-widget">
+                <div class="status-widget-wrapper">
+                    <div class="title">
+                        Characteristic<a href="#" class="remove-widget"><i
+							class="icon-custom-cross"></i></a>
+                    </div>
+                    <p>Project Characteristic</p>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="scrollup">Scroll</a>
+        <div class="clearfix"></div>
+        <!-- END SIDEBAR MENU -->
+    </div>
+    <div class="footer-widget">
+        <div class="progress transparent progress-small no-radius no-margin">
+            <div class="progress-bar progress-bar-success animate-progress-bar" data-percentage="79%" style="width: 79%;"></div>
+        </div>
+        <div class="pull-right">
+            <div class="details-status">
+                <span class="animate-number" data-value="86" data-animation-duration="560">86</span>%
+            </div>
+            <a href="lockscreen.html"><i class="fa fa-power-off"></i></a>
+        </div>
+    </div>
+    <!-- END SIDEBAR -->
 </body>
+
 </html>

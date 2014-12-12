@@ -24,10 +24,10 @@ public class AccountRepository {
 		return account;
 	}
 	
-	public Account findByEmail(String email) {
+	public Account findByUserName(String userName) {
 		try {
-			return entityManager.createNamedQuery(Account.FIND_BY_EMAIL, Account.class)
-					.setParameter("email", email)
+			return entityManager.createNamedQuery(Account.FIND_BY_NAME, Account.class)
+					.setParameter("userName", userName)
 					.getSingleResult();
 		} catch (PersistenceException e) {
 			return null;

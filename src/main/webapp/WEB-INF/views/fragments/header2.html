@@ -117,33 +117,16 @@
 				</div>       			
 			</div>
 		 <ul class="nav quick-section ">
-			<li class="quicklinks"> 
-				<a data-toggle="dropdown" class="dropdown-toggle  pull-right " href="#" id="user-options">						
-					<div class="iconset top-settings-dark "></div> 	
+			<li th:if="${#authorization.expression('!isAuthenticated()')}" class="quicklinks"> 
+				<a   class="  pull-right " href="/login" th:href="@{/login}" id="user-options">						
+					<div class="" style="width: 17px; height: 16px;" ><i style="font-size: 17px; color: black !important;" class="fa fa-sign-in"></i></div> 	
 				</a>
-				<ul class="dropdown-menu  pull-right" role="menu" aria-labelledby="user-options">
-                  <li><a href="user-profile.html"> My Account</a>
-                  </li>
-                  <li><a href="calender.html">My Calendar</a>
-                  </li>
-                  <li><a href="email.html"> My Inbox&nbsp;&nbsp;<span class="badge badge-important animated bounceIn">2</span></a>
-                  </li>
-                  <li class="divider"></li>                
-                  <li><a href="login.html"><i class="fa fa-power-off"></i>&nbsp;&nbsp;Log Out</a></li>
-               </ul>
-			</li> 
-			<li class="quicklinks"> <span class="h-seperate"></span></li> 
-			<li class="quicklinks"> 	
-			<a id="chat-menu-toggle" href="#sidr" class="chat-menu-toggle" ><div class="iconset top-chat-dark "><span class="badge badge-important hide" id="chat-message-count">1</span></div>
-			</a> 
-				<div class="simple-chat-popup chat-menu-toggle hide" >
-					<div class="simple-chat-popup-arrow"></div><div class="simple-chat-popup-inner">
-						 <div style="width:100px">
-						 <div class="semi-bold">David Nester</div>
-						 <div class="message">Hey you there </div>
-						</div>
-					</div>
-				</div>
+			</li>
+			<li th:if="${#authorization.expression('isAuthenticated()')}" class="quicklinks"> 
+				<a  class="pull-right " href="/logout" th:href="@{#}" onclick="$('#form').submit();" id="user-options">						
+					<div class="" style="width: 17px; height: 16px;" ><i style="font-size: 17px; color: black !important;" class="fa fa-sign-out"></i></div>
+					<form style="visibility: hidden" id="form" method="post" action="#" th:action="@{/logout}"></form> 	
+				</a>
 			</li> 
 		</ul>
       </div>

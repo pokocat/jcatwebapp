@@ -4,33 +4,38 @@ import javax.persistence.*;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
+
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "account")
-@NamedQuery(name = Account.FIND_BY_EMAIL, query = "select a from Account a where a.email = :email")
+@NamedQuery(name = Account.FIND_BY_NAME, query = "select a from Account a where a.userName = :userName")
 public class Account implements java.io.Serializable {
 
-	public static final String FIND_BY_EMAIL = "Account.findByEmail";
+	public static final String FIND_BY_NAME = "Account.findByName";
 
 	@Id
 	@GeneratedValue
 	private Long id;
 
 	@Column(unique = true)
-	private String email;
-	
+	private String userName;
+
 	@JsonIgnore
 	private String password;
 
+	private UserGroup userGroup;
+
 	private String role = "ROLE_USER";
 
-    protected Account() {
+	protected Account() {
 
 	}
-	
-	public Account(String email, String password, String role) {
-		this.email = email;
+
+	public Account(String userName, String password, UserGroup userGroup, String role) {
+		this.userName = userName;
 		this.password = password;
+		this.userGroup = userGroup;
 		this.role = role;
 	}
 
@@ -38,12 +43,12 @@ public class Account implements java.io.Serializable {
 		return id;
 	}
 
-    public String getEmail() {
-		return email;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getPassword() {
@@ -60,5 +65,13 @@ public class Account implements java.io.Serializable {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public UserGroup getUserGroup() {
+		return userGroup;
+	}
+
+	public void setUserGroup(UserGroup userGroup) {
+		this.userGroup = userGroup;
 	}
 }

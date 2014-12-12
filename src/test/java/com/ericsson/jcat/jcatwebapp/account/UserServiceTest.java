@@ -17,6 +17,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
+
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
 
@@ -43,7 +45,7 @@ public class UserServiceTest {
 		thrown.expect(UsernameNotFoundException.class);
 		thrown.expectMessage("user not found");
 
-		when(accountRepositoryMock.findByEmail("user@example.com")).thenReturn(null);
+		when(accountRepositoryMock.findByUserName("user@example.com")).thenReturn(null);
 		// act
 		userService.loadUserByUsername("user@example.com");
 	}
@@ -51,14 +53,14 @@ public class UserServiceTest {
 	@Test
 	public void shouldReturnUserDetails() {
 		// arrange
-		Account demoUser = new Account("user@example.com", "demo", "ROLE_USER");
-		when(accountRepositoryMock.findByEmail("user@example.com")).thenReturn(demoUser);
+		Account demoUser = new Account("user@example.com", "demo", UserGroup.CHS, "ROLE_USER");
+		when(accountRepositoryMock.findByUserName("user@example.com")).thenReturn(demoUser);
 
 		// act
 		UserDetails userDetails = userService.loadUserByUsername("user@example.com");
 
 		// assert
-		assertThat(demoUser.getEmail()).isEqualTo(userDetails.getUsername());
+		assertThat(demoUser.getUserName()).isEqualTo(userDetails.getUsername());
 		assertThat(demoUser.getPassword()).isEqualTo(userDetails.getPassword());
         assertThat(hasAuthority(userDetails, demoUser.getRole()));
 	}
