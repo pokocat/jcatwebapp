@@ -408,47 +408,65 @@
 											<label for="checkbox10"></label>
 										</div>
 									</th> -->
-									<th style="width:9%; white-space: nowrap;" class="v-align-middle">Testing ENV Name</th>
-									<th style="width:3%; white-space: nowrap;" class="v-align-middle">IP Address</th>
-									<th style="width:3%; white-space: nowrap;" class="v-align-middle">Use RPC</th>
-									<th style="width:16%; white-space: nowrap;" class="v-align-middle">ENV set</th>
+									<th style="width:9%; white-space: nowrap;" class="v-align-middle">ENV Set Name</th>
+									<!--<th style="width:3%; white-space: nowrap;" class="v-align-middle">IP Address</th>
+									<th style="width:3%; white-space: nowrap;" class="v-align-middle">PC Type</th>-->
+									<th style="width:20%; white-space: nowrap;" class="v-align-middle">Resources</th>
 									<th style="width:8%; white-space: nowrap;" class="v-align-middle">Status</th>
-									<th style="width:8%; white-space: nowrap;" class="v-align-middle">Up Time</th>
+									<th style="width:8%; white-space: nowrap;" class="v-align-middle">Time since created</th>
 									<th style="width:15%; white-space: nowrap;" class="v-align-middle">Actions</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr th:if="${testEnvs.empty}">
-									<td class="center-text" colspan="12">No Testing Environment exists currently</td>
+									<td class="center-text" colspan="12">No Test Environment exists currently</td>
 								</tr>
-								<tr th:each="testEnvs,iterStat : ${testEnvs}">
+								<tr th:each="testEnv,iterStat : ${testEnvs}">
 									<td>
-										<div class="env-name" data-toggle="tooltip" title="" data-placement="top" data-original-title="Hello there! Some description here." th:attr="data-original-title=${testEnvs.description}">
-										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)" th:text="${testEnvs.name}">INSTA-EXAMPLE</a>
+										<div class="env-name" data-toggle="tooltip" title="" data-placement="top" data-original-title="Hello there! Some description here." th:attr="data-original-title=${testEnv.description}">
+										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)" th:text="${testEnv.name}">INSTA-EXAMPLE</a>
 										</div>
 									</td>
-									<td  class="v-align-middle muted" th:text="10.10.10.10">10.170.110.1</td>
-									<td  class="v-align-middle"><span th:text="${testEnvs.useRPC}">yes</span>
-									</td>
+									<!--<td  class="v-align-middle muted" th:text="10.10.10.10">10.170.110.1</td>-->
+									<!--<td  class="v-align-middle"><span class="label" th:text="${testEnvs.imageSet}"><i class="fa fa-desktop" >&nbsp;</i>PURE_OS</span>
+									</td>-->
 									<td class="v-align-middle">
-									<span class="label" th:each="env : ${testEnvs.envTG}" th:text="${env}">TrafficGene</span>
-									<span class="label" th:each="env : ${testEnvs.envTT}" th:text="${env}">TestingTool</span>
-									<span class="label" th:each="env : ${testEnvs.envSP}" th:text="${env}">SingleProce</span>
+										<div class="env-name inline" data-toggle="tooltip" title="" data-placement="top" data-original-title="Hello there! Some description here." th:attr="data-original-title=${testEnv.description}">
+											<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)">
+												<span th:if="${testEnv.pcSet}" class="label label-inverse light normal-text" th:inline="text"><i class="fa fa-desktop" >&nbsp;</i>[[${testEnv.imageSet}]]</span>
+											</a>
+										</div>
+										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)">
+											<span class="label label-info light normal-text" th:each="env : ${testEnv.envTG}" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${env}]]</span>
+										</a>
+										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)">
+											<span class="label label-info light normal-text" th:each="env : ${testEnv.envTT}" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${env}]]</span>
+										</a>
+										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)">
+											<span class="label label-info light normal-text" th:each="env : ${testEnv.envSP}" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${env}]]</span>
+										</a>
 									</td>
 									<td class="v-align-middle">
 										<span class="label label-success" th:text="NORMAL">TERMINATED</span>
 									</td>
-									<td class="v-align-middle" th:text="'0 minutes'">0 minutes</td>
+									<td class="v-align-middle" th:text="${#dates.format(testEnv.created)}">0 minutes</td>
 									<td class="v-align-middle">
 										<div class="btn-group">
 											<button class="btn btn-white btn-small"> Create Snapshot</button>
 											<button class="btn btn-white dropdown-toggle btn-small" data-toggle="dropdown"> <span class="caret"></span> </button>
 											<ul class="dropdown-menu">
 												<li><a href="#">Create Snapshot</a></li>
-												<li><a href="#">Another Create Snapshot</a></li>
-												<li><a href="#">Something else here</a></li>
+												<li><a href="">Restore Snapshot</a></li>
 												<li class="divider"></li>
-												<li><a href="#">Separated link</a></li>
+												<li><a href="#">Start</a></li>
+												<li><a href="#">Stop</a></li>
+												<li class="divider"></li>
+												<li><a href="#">Suspend</a></li>
+												<li><a href="#">Restore</a></li>
+												<li class="divider"></li>
+												<li><a href="#">Destroy</a></li>
+												<li><a href="#">Reset</a></li>
+
 											</ul>
 										</div>
 									</td>

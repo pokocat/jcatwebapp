@@ -3,6 +3,7 @@ package com.ericsson.jcat.jcatwebapp.testenv;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.ericsson.jcat.jcatwebapp.cusom.OpenstackFlavor;
+import com.ericsson.jcat.jcatwebapp.cusom.OpenstackImage;
 import com.ericsson.jcat.jcatwebapp.cusom.SingleProcess;
 import com.ericsson.jcat.jcatwebapp.cusom.TestingTool;
 import com.ericsson.jcat.jcatwebapp.cusom.TrafficGenerator;
@@ -26,31 +27,51 @@ public class TestEnv {
 	private String description;
 
 	@Version
-	private Calendar created = Calendar.getInstance();
+	private long created = Calendar.getInstance().getTimeInMillis();
 
 	private UserGroup userGroup;
 
-	private boolean useRPC;
+	private boolean pcSet;
 
 	private OpenstackFlavor hwSet;
 
+	private OpenstackImage imageSet;
+
 	private ArrayList<TrafficGenerator> envTG;
+
 	private ArrayList<TestingTool> envTT;
+
 	private ArrayList<SingleProcess> envSP;
+
+	private String stpIp;
+
+	private String expertUser;
+
+	private String expertPass;
+
+	private String customerUser;
+
+	private String customerPass;
 
 	public TestEnv() {
 	}
 
-	public TestEnv(String title, String text, UserGroup userGroup, boolean useRPC, OpenstackFlavor hwSet,
-			ArrayList<TrafficGenerator> envTG, ArrayList<TestingTool> envTT, ArrayList<SingleProcess> envSP) {
+	public TestEnv(String title, String text, UserGroup userGroup, boolean pcSet, OpenstackFlavor hwSet,
+			OpenstackImage imageSet, ArrayList<TrafficGenerator> envTG, ArrayList<TestingTool> envTT, String stpIp,
+			String expertUser, String expertPass, String customerUser, String customerPass) {
 		this.name = title;
 		this.description = text;
 		this.setGroup(userGroup);
-		this.setUseRPC(useRPC);
+		this.setUseRPC(pcSet);
 		this.setHwSet(hwSet);
+		this.setImageSet(imageSet);
 		this.setEnvTG(envTG);
 		this.setEnvTT(envTT);
-		this.setEnvSP(envSP);
+		this.setStpIp(stpIp);
+		this.setExpertUser(expertUser);
+		this.setExpertPass(expertPass);
+		this.setCustomerUser(customerUser);
+		this.setCustomerPass(customerPass);
 	}
 
 	public int getId() {
@@ -61,11 +82,11 @@ public class TestEnv {
 		this.id = id;
 	}
 
-	public Calendar getCreated() {
+	public long getCreated() {
 		return created;
 	}
 
-	public void setCreated(Calendar created) {
+	public void setCreated(long created) {
 		this.created = created;
 	}
 
@@ -94,11 +115,11 @@ public class TestEnv {
 	}
 
 	public boolean getUseRPC() {
-		return useRPC;
+		return pcSet;
 	}
 
 	public void setUseRPC(boolean useRPC2) {
-		this.useRPC = useRPC2;
+		this.pcSet = useRPC2;
 	}
 
 	public OpenstackFlavor getHwSet() {
@@ -131,6 +152,70 @@ public class TestEnv {
 
 	public void setEnvSP(ArrayList<SingleProcess> envSP) {
 		this.envSP = envSP;
+	}
+
+	public UserGroup getUserGroup() {
+		return userGroup;
+	}
+
+	public void setUserGroup(UserGroup userGroup) {
+		this.userGroup = userGroup;
+	}
+
+	public boolean isPcSet() {
+		return pcSet;
+	}
+
+	public void setPcSet(boolean pcSet) {
+		this.pcSet = pcSet;
+	}
+
+	public OpenstackImage getImageSet() {
+		return imageSet;
+	}
+
+	public void setImageSet(OpenstackImage imageSet) {
+		this.imageSet = imageSet;
+	}
+
+	public String getStpIp() {
+		return stpIp;
+	}
+
+	public void setStpIp(String stpIp) {
+		this.stpIp = stpIp;
+	}
+
+	public String getExpertUser() {
+		return expertUser;
+	}
+
+	public void setExpertUser(String expertUser) {
+		this.expertUser = expertUser;
+	}
+
+	public String getExpertPass() {
+		return expertPass;
+	}
+
+	public void setExpertPass(String expertPass) {
+		this.expertPass = expertPass;
+	}
+
+	public String getCustomerUser() {
+		return customerUser;
+	}
+
+	public void setCustomerUser(String customerUser) {
+		this.customerUser = customerUser;
+	}
+
+	public String getCustomerPass() {
+		return customerPass;
+	}
+
+	public void setCustomerPass(String customerPass) {
+		this.customerPass = customerPass;
 	}
 
 }

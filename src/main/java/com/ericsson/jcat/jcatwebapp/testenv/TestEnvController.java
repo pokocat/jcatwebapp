@@ -13,18 +13,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ericsson.jcat.jcatwebapp.cusom.OpenstackImage;
 import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
 import com.ericsson.jcat.jcatwebapp.cusom.OpenstackFlavor;
 import com.ericsson.jcat.jcatwebapp.cusom.SingleProcess;
@@ -33,7 +36,7 @@ import com.ericsson.jcat.jcatwebapp.cusom.TrafficGenerator;
 import com.ericsson.jcat.jcatwebapp.extension.AjaxUtils;
 
 @Controller
-@Secured("ROLE_USER")
+// @Secured("ROLE_USER")
 @RequestMapping("/testenv")
 class TestEnvController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -48,14 +51,15 @@ class TestEnvController {
 
 	private void init() {
 		testEnvRepository.save(new TestEnv("ENV SET DEMO 1", "This is a demo env set", UserGroup.CHS, true,
-				OpenstackFlavor.MEDIUM, new ArrayList<TrafficGenerator>(Arrays.asList(TrafficGenerator.Client4,
-						TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(Arrays.asList(TestingTool.JCAT)),
-				new ArrayList<SingleProcess>(Arrays.asList(SingleProcess.BGWrpc))));
+				OpenstackFlavor.MEDIUM, OpenstackImage.CentOS, new ArrayList<TrafficGenerator>(Arrays.asList(
+						TrafficGenerator.Client4, TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(Arrays
+						.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
+				"customeruser", "customeruser"));
 		testEnvRepository.save(new TestEnv("ENV SET DEMO 2", "Isn't this demo fantacy? Created by me.", UserGroup.RST,
-				false, OpenstackFlavor.MEDIUM, new ArrayList<TrafficGenerator>(Arrays.asList(TrafficGenerator.Peip,
-						TrafficGenerator.Tgen)), new ArrayList<TestingTool>(Arrays.asList(TestingTool.MCST,
-						TestingTool.SEA)), new ArrayList<SingleProcess>(Arrays.asList(SingleProcess.FTP,
-						SingleProcess.SFTP))));
+				false, OpenstackFlavor.MEDIUM, OpenstackImage.Remote_PC_OS, new ArrayList<TrafficGenerator>(Arrays
+						.asList(TrafficGenerator.Client4, TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(Arrays
+						.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
+				"customeruser", "customeruser"));
 	}
 
 	@ModelAttribute
@@ -71,6 +75,11 @@ class TestEnvController {
 	@ModelAttribute("page")
 	public String module() {
 		return "instances";
+	}
+	
+	@ModelAttribute("allImages")
+	public List<OpenstackImage> populateImages() {
+		return Arrays.asList(OpenstackImage.values());
 	}
 
 	@ModelAttribute("allFlavors")
@@ -104,15 +113,16 @@ class TestEnvController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String processSubmit(@Valid @ModelAttribute CreateTestEnvForm createTestEnvform, BindingResult result,
-			RedirectAttributes redirectAttrs) {
+	@ResponseBody
+	public TestEnv createTestEnv(@ModelAttribute CreateTestEnvForm createTestEnvform) {
 		logger.info("Comming POST {}", createTestEnvform.toString());
-		if (result.hasErrors()) {
-			logger.error("post data has error: {}", result.getAllErrors().toString());
-			return "testenv/create-testenv";
-		}
-		testEnvRepository.save(createTestEnvform.createTestEnv());
-		return "redirect:/testenv/";
+		// if (result.hasErrors()) {
+		// logger.error("post data has error: {}",
+		// result.getAllErrors().toString());
+		// return "testenv/create-testenv";
+		// }
+		TestEnv te = testEnvRepository.save(createTestEnvform.createTestEnv());
+		return te;
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -120,10 +130,10 @@ class TestEnvController {
 		model.addAttribute("updateTestEnv", testEnvRepository.findById(id));
 		return "testenv/env-modal";
 	}
-	
-	@RequestMapping(value = "/update" ,produces = "application/json")
+
+	@RequestMapping(value = "/update", produces = "application/json")
 	public @ResponseBody BindingResult updateTestEnv(Model model, BindingResult result) {
-//		model.addAttribute("updateTestEnv", testEnvRepository.findById(id));
+		// model.addAttribute("updateTestEnv", testEnvRepository.findById(id));
 		return result;
 	}
 

@@ -7,6 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="" name="description" />
 <meta content="" name="author" />
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
 
 <link href="../../../resources/assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/bootstrap-select2/select2.css}"/>
 
@@ -38,7 +40,7 @@
 		 <li class="dropdown"> <a id="main-menu-toggle" href="#main-menu"  class="" > <div class="iconset top-menu-toggle-white"></div> </a> </li>		 
 		</ul>
       <!-- BEGIN LOGO -->	
-      <a href="index.html"><img src="../../../resources/assets/img/logo.png" class="logo" alt=""  data-src="../../../resources/assets/img/logo.png" data-src-retina="../../../resources/assets/img/logo2x.png" width="142" height="49"/></a>
+      <a href="index.html"><img src="../../../resources/assets/img/logo.png" class="logo" alt=""  th:src="@{/resources/assets/img/logo.png}" width="142" height="49"/></a>
       <!-- END LOGO --> 
       <ul class="nav pull-right notifcation-center">	
         <li class="dropdown" id="header_task_bar"> <a href="index.html" class="dropdown-toggle active" data-toggle=""> <div class="iconset top-home"></div> </a> </li>
@@ -388,197 +390,244 @@
 				<div class="grid simple">
 					<div class="grid-title no-border">
 						<h4>Instance Custom</h4>
-						
 					</div>
 					<fieldset>
-					<div class="grid-body no-border">
-						<form class="form-no-horizontal-spacing" id="form-condensed" novalidate="novalidate" method="post" th:action="@{/testenv/create}" th:object="${createTestEnvForm}" th:fragment="createTestEnvForm">	
-												<div class="grid-body no-border" th:if="${#fields.hasAnyErrors()}">
-						<div th:replace="fragments/alert :: alert2 (type='danger', message='Form contains errors. Please check again.')" class="alert alert-block alert-error fade in">
-							<button type="button" class="close" data-dismiss="alert"></button>
-							<h4 class="alert-heading"><i class="icon-warning-sign"></i> Error!</h4>
-							<p> Error-handling  </p>
-						</div>
-					</div>
-							<div class="row column-seperation">
-								<div class="col-md-8 col-sm-8 col-xs-8">
-									<div class="form-group">
-										<label class="form-label">Env-set Name</label>
-										<span class="help">e.g. "Mona Lisa's Instance"</span>
-										<div class="controls" th:classappend="${#fields.hasErrors('name')}? 'error-control'">
-											<input type="text" class="form-control" id="name" name="name" th:field="*{name}"/>
-											<span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"><label for="form1CardHolderName" class="error">This field is required.</label></span>
-										</div>
+						<div class="grid-body no-border">
+							<form class="form-no-horizontal-spacing" id="form-createTestEnv" novalidate="novalidate" method="post" th:action="@{/testenv/create}" th:object="${createTestEnvForm}" th:fragment="createTestEnvForm">	
+								<div class="grid-body no-border" th:if="${#fields.hasAnyErrors()}">
+									<div th:replace="fragments/alert :: alert2 (type='danger', message='Form contains errors. Please check again.')" class="alert alert-block alert-error fade in">
+										<button type="button" class="close" data-dismiss="alert"></button>
+										<h4 class="alert-heading"><i class="icon-warning-sign"></i> Error!</h4>
+										<p> Error-handling  </p>
 									</div>
-									<div class="form-group">
-										<label class="form-label">Description</label>
-										<span class="help">e.g. "Instance for Project ABC RST", can be empty.</span>
-										<div class="controls" th:classappend="${#fields.hasErrors('description')}? 'error-control'">
-											<input type="text" id="description" name="description" placeholder="You can put anything here" class="form-control" th:field="*{description}"/>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="form-label">Group</label>
-										<span class="help">ENV set belongs to one group.</span>
-										<div class="controls" th:classappend="${#fields.hasErrors('group')}? 'error-control'">
-											<select id="group" name="group" style="width: 100%;" th:field="*{group}">
-												<option value="RST">RST</option>
-												<option value="CHS">CHS</option>
-												<option value="RP">RP</option>
-												<option th:each="group : ${allGroups}" th:value="${group}" th:text="${group}"></option>
-											</select>
-										</div>
-									</div>
-									<hr />
-									<div class="row-fluid">
-										<div class="form-group ">
-											<label class="form-label">RemotePC config</label>
-											<span class="help">Need a remote-PC or not.</span>
-											<div class="form-row">
-											<div class="radio radio-primary" >
-												<input id="no-remotePC" type="radio" name="remotePC" th:field="*{remotePC}" value="false" checked="checked" />
-												<label for="no-remotePC">No remote PC</label>
-												<input id="has-remotePC" type="radio" name="remotePC" th:field="*{remotePC}" value="true" />
-												<label for="has-remotePC">Use remote PC</label>
+								</div>
+								<div class="row column-seperation">
+									<div class="col-md-8 col-sm-8 col-xs-8">
+										<div class="form-group">
+											<label class="form-label">Env-set Name</label>
+											<span class="help">e.g. "Mona Lisa's Instance"</span>
+											<div class="controls">
+												<input type="text" class="form-control" id="name" name="name" th:field="*{name}"/>
+												<span id="name-span" class="error" style="display: none;"><label for="name" class="error">This field is required.</label></span>
 											</div>
-											<div id="rpc-custom" class="">
-												<p>Custom Hardware settings:</p>
-												<select id="hw-set" style="width: 100%;" th:field="*{hwSet}">   
-													<option th:each="flavor : ${allFlavors}" th:value="${flavor}" th:text="${flavor}"></option>
-													<!-- <optgroup label="Default setting">
-														<option value="medium">Medium</option>
-													</optgroup>
-													<optgroup label="Custom setting">
-														<option value="mini">Mini</option>
-														<option value="large">Large</option>
-														<option value="xlarge">X-Large</option>
-													</optgroup> -->
+										</div>
+										<div class="form-group">
+											<label class="form-label">Description</label>
+											<span class="help">e.g. "Instance for Project ABC RST", can be empty.</span>
+											<div class="controls" th:classappend="${#fields.hasErrors('description')}? 'error-control'">
+												<input type="text" id="description" name="description" placeholder="You can put anything here" class="form-control" th:field="*{description}"/>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="form-label">Group</label>
+											<span class="help">ENV set belongs to one group.</span>
+											<div class="controls" th:classappend="${#fields.hasErrors('group')}? 'error-control'">
+												<select id="group" name="group" style="width: 100%;" th:field="*{group}">
+													<option value="RST">RST</option>
+													<option value="CHS">CHS</option>
+													<option value="RP">RP</option>
+													<option th:each="group : ${allGroups}" th:value="${group}" th:text="${group}"></option>
 												</select>
 											</div>
-											</div>
 										</div>
-									</div>
-									<div class="clearfix"></div>
-									<div class="form-group">
-										<label class="form-label">Traffic Generator</label>
-										<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
-										<br />
-										<div class="col-md-3">
-											<div class="checkbox check-primary">
-												<input id="tg-checkbox1" type="checkbox" name="tg-checkbox"  value="Tgen-Traffic" />
-												<label for="tg-checkbox1">Tgen Traffic</label>
+										<hr />
+										<div class="form-group ">
+											<label class="form-label">PC config</label>
+											<span class="help">Order a PC with OS or not.</span>
+
+											<div class="radio radio-primary" >
+												<input id="no-PC" type="radio" name="pcSet" th:field="*{pcSet}" value="false" checked="checked" />
+												<label for="no-PC">No PC</label>
+												<input id="has-PC" type="radio" name="pcSet" th:field="*{pcSet}" value="true" />
+												<label for="has-PC">Use PC</label>
 											</div>
-										</div>
-										<div class="col-md-3" th:each="trafficGenerator : ${allTrafficGenerators}">
-											<div class="checkbox check-primary">
-												<input type="checkbox" th:field="*{envTrafficGenerator}" th:value="${trafficGenerator}"/>
-												<label th:for="${#ids.prev('envTrafficGenerator')}" th:text="${trafficGenerator}">Traffic Gen</label>
-											</div>
-										</div>
-									</div>
-									<div class="clearfix"></div>
-									<div class="form-group">
-										<label class="form-label">Testing Tool</label>
-										<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
-										<br />
-										<div class="checkbox">
-											<div class="col-md-3" th:each="testingTool : ${allTestingTools}">
-												<div class="checkbox check-primary" >
-													<input type="checkbox" th:field="*{envTestingTool}" th:value="${testingTool}" />
-													<label th:for="${#ids.prev('envTestingTool')}" th:text="${testingTool}">Winfiol</label>
+											<div id="pc-custom" style="display: none;">
+												<div class="col-md-6">
+													<p>Custom Image settings:</p>
+													<select id="image-set" style="width: 100%;" th:field="*{imageSet}">   
+														<option th:each="image : ${allImages}" th:value="${image}" th:text="${image}">Image</option>
+													</select>
+												</div>
+												<div class="col-md-6">
+													<p>Custom Hardware settings:</p>
+													<select id="hw-set" style="width: 100%;" th:field="*{hwSet}">   
+														<option th:each="flavor : ${allFlavors}" th:value="${flavor}" th:text="${flavor}">Hardware settings</option>
+													</select>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div class="clearfix"></div>
-									<div class="form-group">
-										<label class="form-label">Single process</label>
-										<span class="help">Single service process.</span>
-										<br />
-										<div class="col-md-3" th:each="singleProcess : ${allSingleProcesses}">
-											<div class="checkbox check-primary">
-												<input  type="checkbox" th:field="*{envSingleProcess}" th:value="${singleProcess}"/>
-												<label  th:for="${#ids.prev('envSingleProcess')}" th:text="${singleProcess}">FTP</label>
+										<div class="clearfix"></div>
+										<div class="clearfix"></div>
+										<div class="form-group">
+											<label class="form-label">Traffic Generator</label>
+											<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
+											<br />
+											<div class="col-md-3">
+												<div class="checkbox check-primary">
+													<input id="tg-checkbox1" type="checkbox" name="tg-checkbox"  value="Tgen-Traffic" />
+													<label for="tg-checkbox1">Tgen Traffic</label>
+												</div>
+											</div>
+											<div class="col-md-3" th:each="trafficGenerator : ${allTrafficGenerators}">
+												<div class="checkbox check-primary">
+													<input type="checkbox" th:field="*{envTrafficGenerator}" th:value="${trafficGenerator}"/>
+													<label th:for="${#ids.prev('envTrafficGenerator')}" th:text="${trafficGenerator}">Traffic Gen</label>
+												</div>
+											</div>
+										</div>
+										<div class="clearfix"></div>
+										<div class="form-group">
+											<label class="form-label">Testing Tool</label>
+											<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
+											<br />
+											<div class="checkbox">
+												<div class="col-md-3" th:each="testingTool : ${allTestingTools}">
+													<div class="checkbox check-primary" >
+														<input type="checkbox" th:field="*{envTestingTool}" th:value="${testingTool}" />
+														<label th:for="${#ids.prev('envTestingTool')}" th:text="${testingTool}">Winfiol</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--<div class="clearfix"></div>
+										<div class="form-group">
+											<label class="form-label">Single process</label>
+											<span class="help">Single service process.</span>
+											<br />
+											<div class="col-md-3" th:each="singleProcess : ${allSingleProcesses}">
+												<div class="checkbox check-primary">
+													<input  type="checkbox" th:field="*{envSingleProcess}" th:value="${singleProcess}"/>
+													<label  th:for="${#ids.prev('envSingleProcess')}" th:text="${singleProcess}">FTP</label>
+												</div>
+											</div>
+										</div>-->
+										<div class="clearfix"></div>
+										<div class="form-group">
+											<label class="form-label">STP info</label>
+											<span class="help">Information about target STP.</span>
+											<br />
+											<div class="controls col-md-6">
+												<input type="text" class="form-control" id="stpIp" placeholder="STP IP address" th:field="*{stpIp}"/>
+												<span id="stp-span" class="error" style="display: none;">
+													<label for="name" class="error">This field is required.</label>
+												</span>
+											</div>
+											<div class="controls col-md-3">
+												<input type="text" class="form-control" id="expertUser" name="expertUser" placeholder="ExpertUser" th:field="*{expertUser}"/>
+												<span id="stp-span" class="error" style="display: none;">
+													<label for="name" class="error">This field is required.</label>
+												</span>
+											</div>
+											<div class="controls col-md-3">
+												<input type="text" class="form-control" id="expertPass" name="expertPass" placeholder="ExpertPass" th:field="*{expertPass}"/>
+												<span id="stp-span" class="error" style="display: none;">
+													<label for="name" class="error">This field is required.</label>
+												</span>
+											</div>
+											<div class="checkbox">
+												<div class="controls col-md-6">
+													<div class="checkbox check-primary" >
+														<input type="checkbox" id="customerUserSetting" name="customerUserSetting" />
+														<label for="customerUserSetting">Use Expert user as Customer user.</label>
+													</div>
+												</div>
+											</div>
+											<div class="controls col-md-3">
+												<input type="text" class="form-control" id="customerUser" name="customerUser" placeholder="CustomerUser" th:field="*{customerUser}"/>
+												<span id="stp-span" class="error" style="display: none;">
+													<label for="name" class="error">This field is required.</label>
+												</span>
+											</div>
+											<div class="controls col-md-3">
+												<input type="text" class="form-control" id="customerPass" name="customerPass" placeholder="CustomerPass" th:field="*{customerPass}"/>
+												<span id="stp-span" class="error" style="display: none;">
+													<label for="name" class="error">This field is required.</label>
+												</span>
 											</div>
 										</div>
 									</div>
-								</div>
-								<div class="col-md-4">
+									<!-- Break for column -->
+									<!-- Break for column -->
+									<!-- Break for column -->
+									<!-- Break for column -->
+									<!-- Break for column -->
+									<!-- Break for column -->
 
-									<h4>Environment Information</h4>
-									<p>Specify the details for launching an instance.The chart below shows the resources used by this project in relation to the project's quotas.</p>
-									<table class="table table-hover no-more-tables table-bordered">
-										<thead>
-											<tr>
-												<th class="col-md-4">Name</th>
-												<th class="col-md-8">Detail</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>Name</td>
-												<td id="env-name"></td>
-											</tr>
-											<tr>
-												<td>Description</td>
-												<td id="env-description"></td>
-											</tr>
-											<tr>
-												<td>Group</td>
-												<td id="env-group"></td>
-											</tr>
-											<tr>
-												<td>Use RPC</td>
-												<td id="env-rpc"></td>
-											</tr>
-											<tr class="env-hw">
-												<td>VCPUs</td>
-												<td>2</td>
-											</tr>
-											<tr class="env-hw">
-												<td>RAM</td>
-												<td>1G</td>
-											</tr>
-											<tr class="env-hw">
-												<td>Total Disk</td>
-												<td colspan="2">1 GB</td>
-											</tr>
-											<tr>
-												<td>Traffic Generator</td>
-												<td id="env-tg"></td>
-											</tr>
-											<tr>
-												<td>Testing Tool</td>
-												<td id="env-tt"></td>
-											</tr>
-											<tr>
-												<td>Single Process</td>
-												<td id="env-sp"></td>
-											</tr>
-										</tbody>
-									</table>
-									<div class="row small-text">
-										<p class="col-md-12">
-											NOTE - Facts to be considered, Simply remove or edit this as for what you desire. Disabled font Color and size
-										</p>
-									</div>
+									<div class="col-md-4">
+										<h4>Environment Information</h4>
+										<p>Specify the details for launching an instance.The chart below shows the resources used by this project in relation to the project's quotas.</p>
+										<table class="table table-hover no-more-tables table-bordered">
+											<thead>
+												<tr>
+													<th class="col-md-4">Name</th>
+													<th class="col-md-8">Detail</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Name</td>
+													<td id="env-name"></td>
+												</tr>
+												<tr>
+													<td>Description</td>
+													<td id="env-description"></td>
+												</tr>
+												<tr>
+													<td>Group</td>
+													<td id="env-group"></td>
+												</tr>
+												<tr>
+													<td>Use RPC</td>
+													<td id="env-rpc"></td>
+												</tr>
+												<tr class="env-hw">
+													<td>VCPUs</td>
+													<td>2</td>
+												</tr>
+												<tr class="env-hw">
+													<td>RAM</td>
+													<td>1G</td>
+												</tr>
+												<tr class="env-hw">
+													<td>Total Disk</td>
+													<td colspan="2">1 GB</td>
+												</tr>
+												<tr>
+													<td>Traffic Generator</td>
+													<td id="env-tg"></td>
+												</tr>
+												<tr>
+													<td>Testing Tool</td>
+													<td id="env-tt"></td>
+												</tr>
+												<tr>
+													<td>Single Process</td>
+													<td id="env-sp"></td>
+												</tr>
+											</tbody>
+										</table>
+										<div class="row small-text">
+											<p class="col-md-12">
+												NOTE - Facts to be considered, Simply remove or edit this as for what you desire. Disabled font Color and size
+											</p>
+										</div>
 
-								</div>
-							</div>
-							<div class="form-actions ">
-								<div class="pull-left">
-									<div class="checkbox checkbox check-success 	">
-										<input type="checkbox" value="1" id="chkTerms" />
-										<label for="chkTerms">I Here by agree on the Term and condition. </label>
 									</div>
 								</div>
-								<div class="pull-right">
-									<button class="btn btn-danger btn-cons" type="submit"><i class="icon-ok"></i> Save</button>
-									<button class="btn btn-white btn-cons" type="button">Cancel</button>
+								<div class="form-actions ">
+									<div class="pull-left">
+										<div class="checkbox checkbox check-success 	">
+											<input type="checkbox" value="1" id="chkTerms" />
+											<label for="chkTerms">I Here by agree on the Term and condition. </label>
+										</div>
+									</div>
+									<div class="pull-right">
+										<button id="submit-env" class="btn btn-danger btn-cons" type="submit"><i class="icon-ok"></i> Save</button>
+										<button class="btn btn-white btn-cons" type="button">Cancel</button>
+									</div>
 								</div>
-							</div>
-						</form>
-					</div>
+							</form>
+						</div>
 					</fieldset>
 				</div>
 			</div>

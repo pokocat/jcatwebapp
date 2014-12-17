@@ -8,6 +8,7 @@ import junit.framework.Test;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.ericsson.jcat.jcatwebapp.cusom.OpenstackFlavor;
+import com.ericsson.jcat.jcatwebapp.cusom.OpenstackImage;
 import com.ericsson.jcat.jcatwebapp.cusom.SingleProcess;
 import com.ericsson.jcat.jcatwebapp.cusom.TestingTool;
 import com.ericsson.jcat.jcatwebapp.cusom.TrafficGenerator;
@@ -23,15 +24,27 @@ public class CreateTestEnvForm {
 
 	private UserGroup group;
 
-	private boolean remotePC;
+	private boolean pcSet;
 
 	private OpenstackFlavor hwSet;
+
+	private OpenstackImage imageSet;
 
 	private ArrayList<TrafficGenerator> envTrafficGenerator;
 
 	private ArrayList<TestingTool> envTestingTool;
 
 	private ArrayList<SingleProcess> envSingleProcess;
+
+	private String stpIp;
+
+	private String expertUser;
+
+	private String expertPass;
+
+	private String customerUser;
+
+	private String customerPass;
 
 	public String getName() {
 		return name;
@@ -57,12 +70,12 @@ public class CreateTestEnvForm {
 		this.group = group;
 	}
 
-	public boolean getRemotePC() {
-		return remotePC;
+	public boolean getPcSet() {
+		return pcSet;
 	}
 
-	public void setRemotePC(Boolean remotePC) {
-		this.remotePC = remotePC;
+	public void setPcSet(Boolean pcSet) {
+		this.pcSet = pcSet;
 	}
 
 	public OpenstackFlavor getHwSet() {
@@ -97,11 +110,62 @@ public class CreateTestEnvForm {
 		this.envSingleProcess = envSingleProcess;
 	}
 
-	public TestEnv createTestEnv() {
-		return new TestEnv(this.getName(), this.getDescription(), this.getGroup(), this.getRemotePC(), this.getHwSet(),
-				this.getEnvTrafficGenerator(), this.getEnvTestingTool(), this.getEnvSingleProcess());
+	public OpenstackImage getImageSet() {
+		return imageSet;
 	}
 
+	public void setImageSet(OpenstackImage imageSet) {
+		this.imageSet = imageSet;
+	}
 
+	public String getStpIp() {
+		return stpIp;
+	}
+
+	public void setStpIp(String stpIp) {
+		this.stpIp = stpIp;
+	}
+
+	public String getExpertUser() {
+		return expertUser;
+	}
+
+	public void setExpertUser(String expertUser) {
+		this.expertUser = expertUser;
+	}
+
+	public String getExpertPass() {
+		return expertPass;
+	}
+
+	public void setExpertPass(String expertPass) {
+		this.expertPass = expertPass;
+	}
+
+	public String getCustomerUser() {
+		return customerUser;
+	}
+
+	public void setCustomerUser(String customerUser) {
+		this.customerUser = customerUser;
+	}
+
+	public String getCustomerPass() {
+		return customerPass;
+	}
+
+	public void setCustomerPass(String customerPass) {
+		this.customerPass = customerPass;
+	}
+
+	public void setPcSet(boolean pcSet) {
+		this.pcSet = pcSet;
+	}
+
+	public TestEnv createTestEnv() {
+		return new TestEnv(this.getName(), this.getDescription(), this.getGroup(), this.getPcSet(), this.getHwSet(),
+				this.getImageSet(), this.getEnvTrafficGenerator(), this.getEnvTestingTool(), this.getStpIp(),
+				this.getExpertUser(), this.getExpertPass(), this.getCustomerUser(), this.getCustomerPass());
+	}
 
 }

@@ -40,15 +40,15 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "signup", method = RequestMethod.POST)
-	public String signup(@Valid @ModelAttribute SignupForm signupForm, Errors errors, RedirectAttributes ra) {
-		if (errors.hasErrors()) {
+	public Account signup(@Valid @ModelAttribute SignupForm signupForm, Errors errors, RedirectAttributes ra) {
+		/*if (errors.hasErrors()) {
 			logger.error(errors.toString());
-			return USERSERVICE_VIEW_NAME;
-		}
+			return account;
+		}*/
 		Account account = accountRepository.save(signupForm.createAccount());
 		userService.signin(account);
 		MessageHelper.addSuccessAttribute(ra, "signup.success");
-		return "redirect:/";
+		return account;
 	}
 
 	@RequestMapping(value = "login")
