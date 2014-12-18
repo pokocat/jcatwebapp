@@ -1,11 +1,11 @@
 $(document).ready(function() {		
 	$('#login_toggle').click(function(){
-		$('#frm_login').show();
-		$('#frm_register').hide();
+		$('#frm_login').removeClass("hide");
+		$('#frm_register').addClass("hide");
 	})
 	$('#register_toggle').click(function(){
-		$('#frm_login').hide();
-		$('#frm_register').show();
+		$('#frm_login').addClass("hide");
+		$('#frm_register').removeClass("hide");
 	})
 	
 	$(".lazy").lazyload({

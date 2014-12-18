@@ -15,6 +15,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -50,16 +52,22 @@ class TestEnvController {
 	}
 
 	private void init() {
-		testEnvRepository.save(new TestEnv("ENV SET DEMO 1", "This is a demo env set", UserGroup.CHS, true,
-				OpenstackFlavor.MEDIUM, OpenstackImage.CentOS, new ArrayList<TrafficGenerator>(Arrays.asList(
-						TrafficGenerator.Client4, TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(Arrays
-						.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
+		testEnvRepository.save(new TestEnv("ENV SET DEMO 1", "This is a demo env set", "admin",
+				UserGroup.CHS, true, OpenstackFlavor.MEDIUM, OpenstackImage.CentOS, new ArrayList<TrafficGenerator>(
+						Arrays.asList(TrafficGenerator.Client4, TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(
+						Arrays.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
 				"customeruser", "customeruser"));
-		testEnvRepository.save(new TestEnv("ENV SET DEMO 2", "Isn't this demo fantacy? Created by me.", UserGroup.RST,
-				false, OpenstackFlavor.MEDIUM, OpenstackImage.Remote_PC_OS, new ArrayList<TrafficGenerator>(Arrays
-						.asList(TrafficGenerator.Client4, TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(Arrays
-						.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
-				"customeruser", "customeruser"));
+		testEnvRepository.save(new TestEnv("ENV SET DEMO 2", "Isn't this demo fantacy? Created by me.",
+				"admin", UserGroup.RST, false, OpenstackFlavor.MEDIUM, OpenstackImage.Remote_PC_OS,
+				new ArrayList<TrafficGenerator>(Arrays.asList(TrafficGenerator.Client4, TrafficGenerator.MgwSim)),
+				new ArrayList<TestingTool>(Arrays.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se",
+				"expertuser", "expertpass", "customeruser", "customeruser"));
+	}
+
+	public String getUserLoggedIn() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String name = auth.getName();
+		return name;
 	}
 
 	@ModelAttribute
@@ -76,7 +84,7 @@ class TestEnvController {
 	public String module() {
 		return "instances";
 	}
-	
+
 	@ModelAttribute("allImages")
 	public List<OpenstackImage> populateImages() {
 		return Arrays.asList(OpenstackImage.values());
@@ -112,17 +120,17 @@ class TestEnvController {
 		return testEnvRepository.findAll().size();
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public TestEnv createTestEnv(@ModelAttribute CreateTestEnvForm createTestEnvform) {
+	public TestEnv createTestEnv(@RequestBody CreateTestEnvForm createTestEnvform) {
 		logger.info("Comming POST {}", createTestEnvform.toString());
 		// if (result.hasErrors()) {
 		// logger.error("post data has error: {}",
 		// result.getAllErrors().toString());
 		// return "testenv/create-testenv";
 		// }
-		TestEnv te = testEnvRepository.save(createTestEnvform.createTestEnv());
-		return te;
+//		TestEnv te = testEnvRepository.save(createTestEnvform.createTestEnv());
+		return new TestEnv();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

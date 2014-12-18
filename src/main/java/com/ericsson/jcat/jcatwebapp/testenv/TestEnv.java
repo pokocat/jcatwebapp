@@ -28,6 +28,8 @@ public class TestEnv {
 
 	@Version
 	private long created = Calendar.getInstance().getTimeInMillis();
+	
+	private String owner;
 
 	private UserGroup userGroup;
 
@@ -56,11 +58,12 @@ public class TestEnv {
 	public TestEnv() {
 	}
 
-	public TestEnv(String title, String text, UserGroup userGroup, boolean pcSet, OpenstackFlavor hwSet,
+	public TestEnv(String title, String text,String owner, UserGroup userGroup, boolean pcSet, OpenstackFlavor hwSet,
 			OpenstackImage imageSet, ArrayList<TrafficGenerator> envTG, ArrayList<TestingTool> envTT, String stpIp,
 			String expertUser, String expertPass, String customerUser, String customerPass) {
 		this.name = title;
 		this.description = text;
+		this.setOwner(owner);
 		this.setGroup(userGroup);
 		this.setUseRPC(pcSet);
 		this.setHwSet(hwSet);
@@ -216,6 +219,14 @@ public class TestEnv {
 
 	public void setCustomerPass(String customerPass) {
 		this.customerPass = customerPass;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 
 }

@@ -15,8 +15,8 @@
             </div>
             <div class="user-info">
                 <div class="greeting">Welcome</div>
-                <div class="username">
-                    John <span class="semi-bold">Smith</span>
+                <div class="username" th:inline="text">
+                    [[${#httpServletRequest.remoteUser}]]John <span class="semi-bold">Smith</span>
                 </div>
                 <!-- <div class="status">Status<a href="#"><div class="status-icon green"></div>Online</a></div> -->
             </div>

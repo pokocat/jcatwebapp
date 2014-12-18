@@ -21,6 +21,8 @@ public class CreateTestEnvForm {
 	private String name;
 
 	private String description;
+	
+	private String owner;
 
 	private UserGroup group;
 
@@ -162,10 +164,36 @@ public class CreateTestEnvForm {
 		this.pcSet = pcSet;
 	}
 
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
 	public TestEnv createTestEnv() {
-		return new TestEnv(this.getName(), this.getDescription(), this.getGroup(), this.getPcSet(), this.getHwSet(),
+		return new TestEnv(this.getName(), this.getDescription(), this.getOwner(), this.getGroup(), this.getPcSet(), this.getHwSet(),
 				this.getImageSet(), this.getEnvTrafficGenerator(), this.getEnvTestingTool(), this.getStpIp(),
 				this.getExpertUser(), this.getExpertPass(), this.getCustomerUser(), this.getCustomerPass());
 	}
 
+	@Override
+	public String toString() {
+		return "CreateTestEnvForm [" + (name != null ? "name=" + name + ", " : "")
+				+ (description != null ? "description=" + description + ", " : "")
+				+ (owner != null ? "owner=" + owner + ", " : "") + (group != null ? "group=" + group + ", " : "")
+				+ "pcSet=" + pcSet + ", " + (hwSet != null ? "hwSet=" + hwSet + ", " : "")
+				+ (imageSet != null ? "imageSet=" + imageSet + ", " : "")
+				+ (envTrafficGenerator != null ? "envTrafficGenerator=" + envTrafficGenerator + ", " : "")
+				+ (envTestingTool != null ? "envTestingTool=" + envTestingTool + ", " : "")
+				+ (envSingleProcess != null ? "envSingleProcess=" + envSingleProcess + ", " : "")
+				+ (stpIp != null ? "stpIp=" + stpIp + ", " : "")
+				+ (expertUser != null ? "expertUser=" + expertUser + ", " : "")
+				+ (expertPass != null ? "expertPass=" + expertPass + ", " : "")
+				+ (customerUser != null ? "customerUser=" + customerUser + ", " : "")
+				+ (customerPass != null ? "customerPass=" + customerPass : "") + "]";
+	}
+	
+	
 }

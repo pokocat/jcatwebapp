@@ -124,7 +124,7 @@ $(document).ready(function() {
         // var token = $("meta[name='_csrf']").attr("content");
         var token = $("input[name='_csrf']").attr("value");
   		
-        alert(token);
+        alert(JSON.stringify(json));
         $.ajax({
         		url: $(this).attr("action"),
         		type: 'post',
@@ -135,7 +135,7 @@ $(document).ready(function() {
         			xhr.setRequestHeader("X-CSRF-TOKEN", token);
         		},
         		complete: function (data) {
-        			alert(data);
+        			alert(JSON.stringify(data));
         		},
         		success: function (data) {
         			alert(JSON.stringify(data));
