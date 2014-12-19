@@ -394,8 +394,8 @@
 					<fieldset>
 						<div class="grid-body no-border">
 							<form class="form-no-horizontal-spacing" id="form-createTestEnv" novalidate="novalidate" method="post" th:action="@{/testenv/create}" th:object="${createTestEnvForm}" th:fragment="createTestEnvForm">	
-								<div class="grid-body no-border" th:if="${#fields.hasAnyErrors()}">
-									<div th:replace="fragments/alert :: alert2 (type='danger', message='Form contains errors. Please check again.')" class="alert alert-block alert-error fade in">
+								<div id="resultBox" class="grid-body no-border hide fade-in">
+									<div class="alert alert-block  fade-in">
 										<button type="button" class="close" data-dismiss="alert"></button>
 										<h4 class="alert-heading"><i class="icon-warning-sign"></i> Error!</h4>
 										<p> Error-handling  </p>
@@ -423,9 +423,6 @@
 											<span class="help">ENV set belongs to one group.</span>
 											<div class="controls" th:classappend="${#fields.hasErrors('group')}? 'error-control'">
 												<select id="group" name="group" style="width: 100%;" th:field="*{group}">
-													<option value="RST">RST</option>
-													<option value="CHS">CHS</option>
-													<option value="RP">RP</option>
 													<option th:each="group : ${allGroups}" th:value="${group}" th:text="${group}"></option>
 												</select>
 											</div>
@@ -462,12 +459,6 @@
 											<label class="form-label">Traffic Generator</label>
 											<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
 											<br />
-											<div class="col-md-3">
-												<div class="checkbox check-primary">
-													<input id="tg-checkbox1" type="checkbox" name="tg-checkbox"  value="Tgen-Traffic" />
-													<label for="tg-checkbox1">Tgen Traffic</label>
-												</div>
-											</div>
 											<div class="col-md-3" th:each="trafficGenerator : ${allTrafficGenerators}">
 												<div class="checkbox check-primary">
 													<input type="checkbox" th:field="*{envTrafficGenerator}" th:value="${trafficGenerator}"/>

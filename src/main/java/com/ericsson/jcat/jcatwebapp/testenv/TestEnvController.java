@@ -120,17 +120,17 @@ class TestEnvController {
 		return testEnvRepository.findAll().size();
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = "application/json")
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@ResponseBody
-	public TestEnv createTestEnv(@RequestBody CreateTestEnvForm createTestEnvform) {
-		logger.info("Comming POST {}", createTestEnvform.toString());
+	public TestEnv createTestEnv(@RequestBody TestEnv testEnv) {
+		logger.info("Comming POST {}", testEnv.toString());
 		// if (result.hasErrors()) {
 		// logger.error("post data has error: {}",
 		// result.getAllErrors().toString());
 		// return "testenv/create-testenv";
 		// }
-//		TestEnv te = testEnvRepository.save(createTestEnvform.createTestEnv());
-		return new TestEnv();
+		testEnvRepository.save(testEnv);
+		return new TestEnvCreatResultJson("success");
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -156,4 +156,6 @@ class TestEnvController {
 		model.addAttribute(new CreateTestEnvForm());
 		return "testenv/create-testenv";
 	}
+
+
 }

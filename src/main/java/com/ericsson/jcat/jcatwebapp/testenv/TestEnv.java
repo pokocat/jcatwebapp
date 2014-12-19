@@ -229,4 +229,20 @@ public class TestEnv {
 		this.owner = owner;
 	}
 
+	@Override
+	public String toString() {
+		return "TestEnv [id=" + id + ", " + (name != null ? "name=" + name + ", " : "")
+				+ (description != null ? "description=" + description + ", " : "") + "created=" + created + ", "
+				+ (owner != null ? "owner=" + owner + ", " : "")
+				+ (userGroup != null ? "userGroup=" + userGroup + ", " : "") + "pcSet=" + pcSet + ", "
+				+ (hwSet != null ? "hwSet=" + hwSet + ", " : "")
+				+ (imageSet != null ? "imageSet=" + imageSet + ", " : "")
+				+ (envTG != null ? "envTG=" + envTG + ", " : "") + (envTT != null ? "envTT=" + envTT + ", " : "")
+				+ (envSP != null ? "envSP=" + envSP + ", " : "") + (stpIp != null ? "stpIp=" + stpIp + ", " : "")
+				+ (expertUser != null ? "expertUser=" + expertUser + ", " : "")
+				+ (expertPass != null ? "expertPass=" + expertPass + ", " : "")
+				+ (customerUser != null ? "customerUser=" + customerUser + ", " : "")
+				+ (customerPass != null ? "customerPass=" + customerPass : "") + "]";
+	}
+
 }

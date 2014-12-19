@@ -3,6 +3,8 @@ package com.ericsson.jcat.jcatwebapp.testenv;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import junit.framework.Test;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -14,6 +16,7 @@ import com.ericsson.jcat.jcatwebapp.cusom.TestingTool;
 import com.ericsson.jcat.jcatwebapp.cusom.TrafficGenerator;
 import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
 
+@XmlRootElement
 public class CreateTestEnvForm {
 	private static final String NOT_BLANK_MESSAGE = "{notBlank.message}";
 

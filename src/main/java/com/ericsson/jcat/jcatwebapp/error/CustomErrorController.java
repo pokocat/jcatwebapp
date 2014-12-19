@@ -5,6 +5,8 @@ import java.text.MessageFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,7 @@ import com.google.common.base.Throwables;
 
 @Controller
 class CustomErrorController {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	/**
 	 * Display an error page, as defined in web.xml <code>custom-error</code> element.
@@ -41,7 +44,8 @@ class CustomErrorController {
 
 	private String getExceptionMessage(Throwable throwable, Integer statusCode) {
 		if (throwable != null) {
-			return Throwables.getRootCause(throwable).getMessage();
+			logger.error(throwable.getLocalizedMessage());
+			return Throwables.getStackTraceAsString(throwable);
 		}
 		HttpStatus httpStatus = HttpStatus.valueOf(statusCode);
 		return httpStatus.getReasonPhrase();

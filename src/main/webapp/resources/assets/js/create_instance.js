@@ -118,36 +118,104 @@ $(document).ready(function() {
     $("#form-createTestEnv").submit(function(event) {
         var name = $("#name").val();
         var desc = $("#description").val();
+        var group = $("select[name='group']").val();
+        var pcSet = $("input[name='pcSet']:checked").val();
+        var imageSet = $("select[name='imageSet']").val();
+        var hwSet = $("select[name='hwSet']").val();
+        var envTrafficGenerator = new Array();
+        $("input[name='envTrafficGenerator']:checked").each(function(index, el) {
+        	envTrafficGenerator.push($(el).val());	
+        });
+        var envTestingTool = new Array();
+        $("input[name='envTestingTool']:checked").each(function(index, el) {
+        	envTestingTool.push($(el).val());	
+        });
+        var stpIp = $("input[name='stpIp']").val();
+        var expertUser = $("input[name='expertUser']").val();
+        var expertPass = $("input[name='expertPass']").val();
+        var customerUser = $("input[name='customerUser']").val();
+        var customerPass = $("input[name='customerPass']").val();
+        
         var json = {"name" : name, "description" : desc};
 
         // for spring csrf verify
         // var token = $("meta[name='_csrf']").attr("content");
         var token = $("input[name='_csrf']").attr("value");
-  		
-        alert(JSON.stringify(json));
+
+        var el =  $(this);
+        blockUI(el);
+  		console.log($(this).attr("action"));
+        console.log(JSON.stringify(json));
         $.ajax({
         		url: $(this).attr("action"),
         		type: 'post',
         		data: JSON.stringify(json),
+        		dataType: "json",
+        		contentType:"application/json",
         		beforeSend: function(xhr) {
         			xhr.setRequestHeader("Accept", "application/json");
         			xhr.setRequestHeader("Content-Type", "application/json");
         			xhr.setRequestHeader("X-CSRF-TOKEN", token);
         		},
-        		complete: function (data) {
-        			alert(JSON.stringify(data));
-        		},
         		success: function (data) {
-        			alert(JSON.stringify(data));
+        			unblockUI(el, "Successfully created new Test Environment!");
+        			console.log(JSON.stringify(data));
+        			if (data.status == "success") {
+        				console.log(data.status);
+        				$("#resultBox").removeClass('hide');
+        				$("#resultBox > div").addClass("alert-success");
+        				$("#resultBox > div > h4").text("Success!");
+        				$("#resultBox > div > p").text("New test environment successfully created!");
+        				window.location.href="/jcatwebapp/testenv/";
+        			} else{
+        				$("#resultBox").removeClass('hide');
+        				$("#resultBox > div").addClass("alert-error");
+        				$("#resultBox > div > h4").text("Error!");
+        				$("#resultBox > div > p").text("New test environment creating failed!");
+        				alert("errror");
+        			};
         		},
         		error: function (data) {
-        			alert(JSON.stringify(data));
-        		},
-        		always: function (data) {
-        			alert(JSON.stringify(data));
+        			alert(data);
         		}
         	});
         event.preventDefault();
     });
 
+
+	function checkFormValid(){
+		if (!$("input[name='name']").val()) {
+    			$("input[name='name']").addClass("error");
+    			$("#name-span").show('fast', function(){});
+    		} else{
+    			$("input[name='name']").removeClass("error");
+    			$("#name-span").hide('fast', function(){});
+    			$("#env-name").text($(this).val());
+    	};
+	}
+
+
+
+	//***********************************BEGIN Function calls *****************************	
+    function blockUI(el) {		
+            $(el).block({
+                message: '<div class="loading-animator"></div>',
+                css: {
+                    border: 'none',
+                    padding: '2px',
+                    backgroundColor: 'none'
+                },
+                overlayCSS: {
+                    backgroundColor: '#fff',
+                    opacity: 0.5,
+                    cursor: 'wait'
+                }
+            });
+     }
+	 
+     // wrapper function to  un-block element(finish loading)
+     function unblockUI(el, msg) {
+     	$(".blockMsg > div").removeClass("loading-animator").html("<h1>"+msg+"</h1>");
+        $(el).unblock();
+    }
 });
