@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 <meta charset="utf-8" />
-<title>Create Instance</title>
+<title>Test Engine Setup - Jcat On Cloud</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="" name="description" />
 <meta content="" name="author" />
@@ -379,21 +379,24 @@
     			<p>YOU ARE HERE</p>
     		</li> 
     		<li>
-    			<a href="#" class="active">Create Instance</a>
+    			<a href="">Test Engine</a>
+    		</li>
+    		<li>
+    			<a href="" class="active">Test Engine Setup</a>
     		</li>
     	</ul>
 		<div class="page-title">	
-			<h3>VM Info</h3>		
+			<h3>Test Engine Setup</h3>		
 		</div>
 		<div class="row">
 			<div class="col-md-12">
 				<div class="grid simple">
 					<div class="grid-title no-border">
-						<h4>Instance Custom</h4>
+						<h4>TestEngine Setup</h4>
 					</div>
 					<fieldset>
 						<div class="grid-body no-border">
-							<form class="form-no-horizontal-spacing" id="form-createTestEnv" novalidate="novalidate" method="post" th:action="@{/testenv/create}" th:object="${createTestEnvForm}" th:fragment="createTestEnvForm">	
+							<form class="form-no-horizontal-spacing" id="form-createTestEnv" novalidate="novalidate" method="post" th:action="@{/}" th:object="${testEngineCreateForm}">	
 								<div id="resultBox" class="grid-body no-border hide fade-in">
 									<div class="alert alert-block  fade-in">
 										<button type="button" class="close" data-dismiss="alert"></button>
@@ -402,84 +405,121 @@
 									</div>
 								</div>
 								<div class="row column-seperation">
-									<div class="col-md-8 col-sm-8 col-xs-8">
+									<div class="col-md-6 col-sm-6 col-xs-6">
 										<div class="form-group">
-											<label class="form-label">Env-set Name</label>
-											<span class="help">e.g. "Mona Lisa's Instance"</span>
+											<label class="form-label">Jcat Extension Setting</label>
+											<span class="help">Settings for Jcat extension specification.</span>
 											<div class="controls">
-												<input type="text" class="form-control" id="name" name="name" th:field="*{name}"/>
+												<input type="text" class="form-control" id="group" name="group" th:field="*{groupId}" placeholder="Group ID, e.g. com.ericsson.axe.jcat"/>
+												<span id="name-span" class="error" style="display: none;"><label for="name" class="error">This field is required.</label></span>
+											</div>
+											<div class="controls">
+												<input type="text" class="form-control" id="artifact" name="artifact" th:field="*{artifactId}" placeholder="Artifact ID,  e.g. axe-jcat-tests"/>
+												<span id="name-span" class="error" style="display: none;"><label for="name" class="error">This field is required.</label></span>
+											</div>
+											<div class="controls">
+												<input type="text" class="form-control" id="version" name="version" th:field="*{version}" placeholder="Version Number,  e.g. 0.1.7"/>
 												<span id="name-span" class="error" style="display: none;"><label for="name" class="error">This field is required.</label></span>
 											</div>
 										</div>
-										<div class="form-group">
-											<label class="form-label">Description</label>
-											<span class="help">e.g. "Instance for Project ABC RST", can be empty.</span>
-											<div class="controls" th:classappend="${#fields.hasErrors('description')}? 'error-control'">
-												<input type="text" id="description" name="description" placeholder="You can put anything here" class="form-control" th:field="*{description}"/>
-											</div>
-										</div>
-										<div class="form-group">
-											<label class="form-label">Group</label>
-											<span class="help">ENV set belongs to one group.</span>
-											<div class="controls" th:classappend="${#fields.hasErrors('group')}? 'error-control'">
-												<select id="group" name="group" style="width: 100%;" th:field="*{group}">
-													<option th:each="group : ${allGroups}" th:value="${group}" th:text="${group}"></option>
-												</select>
-											</div>
-										</div>
 										<hr />
-										<div class="form-group ">
-											<label class="form-label">PC config</label>
-											<span class="help">Order a PC with OS or not.</span>
-
-											<div class="radio radio-primary" >
-												<input id="no-PC" type="radio" name="pcSet" th:field="*{pcSet}" value="false" checked="checked" />
-												<label for="no-PC">No PC</label>
-												<input id="has-PC" type="radio" name="pcSet" th:field="*{pcSet}" value="true" />
-												<label for="has-PC">Use PC</label>
-											</div>
-											<div id="pc-custom" style="display: none;">
-												<div class="col-md-6">
-													<p>Custom Image settings:</p>
-													<select id="image-set" style="width: 100%;" th:field="*{imageSet}">   
-														<option th:each="image : ${allImages}" th:value="${image}" th:text="${image}">Image</option>
-													</select>
-												</div>
-												<div class="col-md-6">
-													<p>Custom Hardware settings:</p>
-													<select id="hw-set" style="width: 100%;" th:field="*{hwSet}">   
-														<option th:each="flavor : ${allFlavors}" th:value="${flavor}" th:text="${flavor}">Hardware settings</option>
-													</select>
-												</div>
-											</div>
-										</div>
-										<div class="clearfix"></div>
-										<div class="clearfix"></div>
 										<div class="form-group">
-											<label class="form-label">Traffic Generator</label>
-											<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
-											<br />
-											<div class="col-md-3" th:each="trafficGenerator : ${allTrafficGenerators}">
-												<div class="checkbox check-primary">
-													<input type="checkbox" th:field="*{envTG}" th:value="${trafficGenerator}"/>
-													<label th:for="${#ids.prev('envTG')}" th:text="${trafficGenerator}">Traffic Gen</label>
+											<label class="form-label">Test Environment Setup</label>
+											<span class="help"></span>
+											<div class=" m-t-10">
+												<div class="checkbox check-primary" >
+													<input type="checkbox" id="use-openstack" name="use-openstack" />
+													<label for="use-openstack">Use Openstack-based Virtual Machine.</label>
+												</div>
+												<div class="os-custom"  style="display:none;">
+													<label class="form-label">Display Name</label>
+													<span class="help">e.g. Remote PC or other User-Friendly name.</span>
+													<div class="controls col-md-8">
+														<input type="text" class="form-control" id="" placeholder="Test Environment Element Name" th:field="*{osName}"/>
+														<span id="stp-span" class="error" style="display: none;">
+															<label for="name" class="error">This field is required.</label>
+														</span>
+													</div>
+													<div class="controls col-md-4">
+														<div class="checkbox  check-success " >
+															<input type="checkbox" id="openstack-singleton" name="openstack-singleton" />
+															<label for="openstack-singleton">Singleton</label>
+														</div>
+													</div>
+													<div class="clear-fix controls"></div>
+													<label class="form-label">Openstack Server Setting</label>
+													<span class="help"><br />Note: Just give the ip address of the Openstack server is enough, default port and path from Openstack API will be used.</span>
+													<div class="clear-fix"></div>
+													<div class="controls col-md-6">
+														<input type="text" class="form-control" id="" placeholder="Server IP" th:field="*{osServerIp}"/>
+														<span id="stp-span" class="error" style="display: none;">
+															<label for="name" class="error">This field is required.</label>
+														</span>
+													</div>
+													<div class="controls col-md-3">
+														<input type="text" class="form-control" id="" placeholder="Username" th:field="*{osServerUser}"/>
+														<span id="stp-span" class="error" style="display: none;">
+															<label for="name" class="error">This field is required.</label>
+														</span>
+													</div>
+													<div class="controls col-md-3">
+														<input type="text" class="form-control" id="" placeholder="Password" th:field="*{osServerPass}"/>
+														<span id="stp-span" class="error" style="display: none;">
+															<label for="name" class="error">This field is required.</label>
+														</span>
+													</div>
 												</div>
 											</div>
-										</div>
 										<div class="clearfix"></div>
-										<div class="form-group">
-											<label class="form-label">Testing Tool</label>
-											<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
-											<br />
-											<div class="checkbox">
-												<div class="col-md-3" th:each="testingTool : ${allTestingTools}">
-													<div class="checkbox check-primary" >
-														<input type="checkbox" th:field="*{envTT}" th:value="${testingTool}" />
-														<label th:for="${#ids.prev('envTT')}" th:text="${testingTool}">Winfiol</label>
+										<div class="clearfix"></div>
+											<div class=" m-t-10">
+												<div class="checkbox check-primary " >
+													<input type="checkbox" id="use-docker" name="use-docker" />
+													<label for="use-docker">Use Docker-based Instance.</label>
+												</div>
+												<div class="dc-custom" style="display:none;">
+													<label class="form-label">Display Name</label>
+													<span class="help">e.g. Remote PC or other User-Friendly name.</span>
+													<div class="controls col-md-8">
+														<input type="text" class="form-control" id="" placeholder="Test Environment Element Name" th:field="*{dcName}"/>
+														<span id="stp-span" class="error" style="display: none;">
+															<label for="name" class="error">This field is required.</label>
+														</span>
+													</div>
+													
+													<div class="controls col-md-4">
+														<div class="checkbox check-success" >
+															<input type="checkbox" id="docker-singleton" name="docker-singleton" />
+															<label for="docker-singleton">Singleton</label>
+														</div>
+													</div>
+													<div class="clear-fix controls"></div>
+													<label class="form-label">Docker Server Setting</label>
+													<span class="help"><br />Note: Just give the ip address of the Docker server is enough, default port and path from Openstack API will be used.</span>
+													<div class="clear-fix"></div>
+													<div class="controls col-md-6">
+														<input type="text" class="form-control" id="" placeholder="Server IP" th:field="*{dcServerIp}"/>
+														<span id="stp-span" class="error" style="display: none;">
+															<label for="name" class="error">This field is required.</label>
+														</span>
+													</div>
+													<div class="controls col-md-3">
+														<input type="text" class="form-control" id="" placeholder="Username" th:field="*{dcServerUser}"/>
+														<span id="stp-span" class="error" style="display: none;">
+															<label for="name" class="error">This field is required.</label>
+														</span>
+													</div>
+													<div class="controls col-md-3">
+														<input type="text" class="form-control" id="" placeholder="Password" th:field="*{dcServerPass}"/>
+														<span id="stp-span" class="error" style="display: none;">
+															<label for="name" class="error">This field is required.</label>
+														</span>
 													</div>
 												</div>
 											</div>
 										</div>
+										
+										
 										<!--<div class="clearfix"></div>
 										<div class="form-group">
 											<label class="form-label">Single process</label>
@@ -493,49 +533,7 @@
 											</div>
 										</div>-->
 										<div class="clearfix"></div>
-										<div class="form-group">
-											<label class="form-label">STP info</label>
-											<span class="help">Information about target STP.</span>
-											<br />
-											<div class="controls col-md-6">
-												<input type="text" class="form-control" id="stpIp" placeholder="STP IP address" th:field="*{stpIp}"/>
-												<span id="stp-span" class="error" style="display: none;">
-													<label for="name" class="error">This field is required.</label>
-												</span>
-											</div>
-											<div class="controls col-md-3">
-												<input type="text" class="form-control" id="expertUser" name="expertUser" placeholder="ExpertUser" th:field="*{expertUser}"/>
-												<span id="stp-span" class="error" style="display: none;">
-													<label for="name" class="error">This field is required.</label>
-												</span>
-											</div>
-											<div class="controls col-md-3">
-												<input type="text" class="form-control" id="expertPass" name="expertPass" placeholder="ExpertPass" th:field="*{expertPass}"/>
-												<span id="stp-span" class="error" style="display: none;">
-													<label for="name" class="error">This field is required.</label>
-												</span>
-											</div>
-											<div class="checkbox">
-												<div class="controls col-md-6">
-													<div class="checkbox check-primary" >
-														<input type="checkbox" id="customerUserSetting" name="customerUserSetting" />
-														<label for="customerUserSetting">Use Expert user as Customer user.</label>
-													</div>
-												</div>
-											</div>
-											<div class="controls col-md-3">
-												<input type="text" class="form-control" id="customerUser" name="customerUser" placeholder="CustomerUser" th:field="*{customerUser}"/>
-												<span id="stp-span" class="error" style="display: none;">
-													<label for="name" class="error">This field is required.</label>
-												</span>
-											</div>
-											<div class="controls col-md-3">
-												<input type="text" class="form-control" id="customerPass" name="customerPass" placeholder="CustomerPass" th:field="*{customerPass}"/>
-												<span id="stp-span" class="error" style="display: none;">
-													<label for="name" class="error">This field is required.</label>
-												</span>
-											</div>
-										</div>
+										
 									</div>
 									<!-- Break for column -->
 									<!-- Break for column -->
@@ -544,8 +542,8 @@
 									<!-- Break for column -->
 									<!-- Break for column -->
 
-									<div class="col-md-4">
-										<h4>Environment Information</h4>
+									<div class="col-md-6">
+										<h4>Test Engine Information</h4>
 										<p>Specify the details for launching an instance.The chart below shows the resources used by this project in relation to the project's quotas.</p>
 										<table class="table table-hover no-more-tables table-bordered">
 											<thead>
@@ -556,44 +554,48 @@
 											</thead>
 											<tbody>
 												<tr>
-													<td>Name</td>
-													<td id="env-name"></td>
+													<td>Group ID</td>
+													<td id="groupId"></td>
 												</tr>
 												<tr>
-													<td>Description</td>
-													<td id="env-description"></td>
+													<td>Artifact ID</td>
+													<td id="artifactId"></td>
 												</tr>
 												<tr>
-													<td>Group</td>
-													<td id="env-group"></td>
+													<td>Version</td>
+													<td id="version"></td>
 												</tr>
 												<tr>
-													<td>Use RPC</td>
-													<td id="env-rpc"></td>
+													<td>Use OpenstackVM</td>
+													<td id="use-openstack"></td>
 												</tr>
-												<tr class="env-hw">
-													<td>VCPUs</td>
+												<tr class="os-ip os-custom"  style="display:none;">
+													<td>Openstack server IP</td>
 													<td>2</td>
 												</tr>
-												<tr class="env-hw">
-													<td>RAM</td>
+												<tr class="os-user os-custom" style="display:none;">
+													<td>OS server user</td>
 													<td>1G</td>
 												</tr>
-												<tr class="env-hw">
-													<td>Total Disk</td>
+												<tr class="os-pass os-custom" style="display:none;">
+													<td>OS server pass</td>
 													<td colspan="2">1 GB</td>
 												</tr>
 												<tr>
-													<td>Traffic Generator</td>
-													<td id="env-tg"></td>
+													<td>Use Docker</td>
+													<td id="use-docker"></td>
 												</tr>
-												<tr>
-													<td>Testing Tool</td>
+												<tr class="dc-ip dc-custom" style="display:none;">
+													<td>Docker Server IP</td>
 													<td id="env-tt"></td>
 												</tr>
-												<tr>
-													<td>Single Process</td>
-													<td id="env-sp"></td>
+												<tr class="dc-user dc-custom" style="display:none;">
+													<td>Docker Server User</td>
+													<td id="env-tt"></td>
+												</tr>
+												<tr class="dc-pass dc-custom" style="display:none;">
+													<td>Docker Server Pass</td>
+													<td id="env-tt"></td>
 												</tr>
 											</tbody>
 										</table>
@@ -651,7 +653,7 @@
 
 <script src="../../../resources/assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootstrap-select2/select2.min.js}" ></script> 
 
-<script src="../../../resources/assets/js/create_instance.js" type="text/javascript" th:src="@{/resources/assets/js/create_instance.js}" ></script> 
+<script src="../../../resources/assets/js/testEngine.js" type="text/javascript" th:src="@{/resources/assets/js/testEngine.js}" ></script> 
 
 <!-- BEGIN CORE TEMPLATE JS --> 
 <script src="../../../resources/assets/js/core.js" type="text/javascript" th:src="@{/resources/assets/js/core.js}"></script> 

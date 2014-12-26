@@ -1,4 +1,4 @@
-package com.ericsson.jcat.jcatwebapp.user;
+package com.ericsson.jcat.jcatwebapp.login;
 
 import java.util.Arrays;
 import java.util.List;

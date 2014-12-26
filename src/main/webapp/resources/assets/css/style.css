@@ -3460,6 +3460,7 @@ form legend,
 	color:#fff;
 	background-color:#1b1e24;
 	display:inline-block;
+	margin-top: 12px;
 }
 .user-info-wrapper .user-info .status{
 	color:#929fa5;

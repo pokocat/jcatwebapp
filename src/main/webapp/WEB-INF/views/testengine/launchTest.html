@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 <meta charset="utf-8" />
-<title>Create Instance</title>
+<title>Launch Test - Jcat On Cloud</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="" name="description" />
 <meta content="" name="author" />
@@ -379,250 +379,103 @@
     			<p>YOU ARE HERE</p>
     		</li> 
     		<li>
-    			<a href="#" class="active">Create Instance</a>
+    			<a href="">Test Engine</a>
+    		</li>
+    		<li>
+    			<a href="" class="active">Test Engine Setup</a>
     		</li>
     	</ul>
 		<div class="page-title">	
-			<h3>VM Info</h3>		
+			<h3>Launch Test</h3>		
 		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<div class="grid simple">
-					<div class="grid-title no-border">
-						<h4>Instance Custom</h4>
-					</div>
-					<fieldset>
-						<div class="grid-body no-border">
-							<form class="form-no-horizontal-spacing" id="form-createTestEnv" novalidate="novalidate" method="post" th:action="@{/testenv/create}" th:object="${createTestEnvForm}" th:fragment="createTestEnvForm">	
-								<div id="resultBox" class="grid-body no-border hide fade-in">
-									<div class="alert alert-block  fade-in">
-										<button type="button" class="close" data-dismiss="alert"></button>
-										<h4 class="alert-heading"><i class="icon-warning-sign"></i> Error!</h4>
-										<p> Error-handling  </p>
-									</div>
-								</div>
-								<div class="row column-seperation">
-									<div class="col-md-8 col-sm-8 col-xs-8">
-										<div class="form-group">
-											<label class="form-label">Env-set Name</label>
-											<span class="help">e.g. "Mona Lisa's Instance"</span>
-											<div class="controls">
-												<input type="text" class="form-control" id="name" name="name" th:field="*{name}"/>
-												<span id="name-span" class="error" style="display: none;"><label for="name" class="error">This field is required.</label></span>
-											</div>
-										</div>
-										<div class="form-group">
-											<label class="form-label">Description</label>
-											<span class="help">e.g. "Instance for Project ABC RST", can be empty.</span>
-											<div class="controls" th:classappend="${#fields.hasErrors('description')}? 'error-control'">
-												<input type="text" id="description" name="description" placeholder="You can put anything here" class="form-control" th:field="*{description}"/>
-											</div>
-										</div>
-										<div class="form-group">
-											<label class="form-label">Group</label>
-											<span class="help">ENV set belongs to one group.</span>
-											<div class="controls" th:classappend="${#fields.hasErrors('group')}? 'error-control'">
-												<select id="group" name="group" style="width: 100%;" th:field="*{group}">
-													<option th:each="group : ${allGroups}" th:value="${group}" th:text="${group}"></option>
-												</select>
-											</div>
-										</div>
-										<hr />
-										<div class="form-group ">
-											<label class="form-label">PC config</label>
-											<span class="help">Order a PC with OS or not.</span>
-
-											<div class="radio radio-primary" >
-												<input id="no-PC" type="radio" name="pcSet" th:field="*{pcSet}" value="false" checked="checked" />
-												<label for="no-PC">No PC</label>
-												<input id="has-PC" type="radio" name="pcSet" th:field="*{pcSet}" value="true" />
-												<label for="has-PC">Use PC</label>
-											</div>
-											<div id="pc-custom" style="display: none;">
-												<div class="col-md-6">
-													<p>Custom Image settings:</p>
-													<select id="image-set" style="width: 100%;" th:field="*{imageSet}">   
-														<option th:each="image : ${allImages}" th:value="${image}" th:text="${image}">Image</option>
-													</select>
-												</div>
-												<div class="col-md-6">
-													<p>Custom Hardware settings:</p>
-													<select id="hw-set" style="width: 100%;" th:field="*{hwSet}">   
-														<option th:each="flavor : ${allFlavors}" th:value="${flavor}" th:text="${flavor}">Hardware settings</option>
-													</select>
-												</div>
-											</div>
-										</div>
-										<div class="clearfix"></div>
-										<div class="clearfix"></div>
-										<div class="form-group">
-											<label class="form-label">Traffic Generator</label>
-											<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
-											<br />
-											<div class="col-md-3" th:each="trafficGenerator : ${allTrafficGenerators}">
-												<div class="checkbox check-primary">
-													<input type="checkbox" th:field="*{envTG}" th:value="${trafficGenerator}"/>
-													<label th:for="${#ids.prev('envTG')}" th:text="${trafficGenerator}">Traffic Gen</label>
-												</div>
-											</div>
-										</div>
-										<div class="clearfix"></div>
-										<div class="form-group">
-											<label class="form-label">Testing Tool</label>
-											<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
-											<br />
-											<div class="checkbox">
-												<div class="col-md-3" th:each="testingTool : ${allTestingTools}">
-													<div class="checkbox check-primary" >
-														<input type="checkbox" th:field="*{envTT}" th:value="${testingTool}" />
-														<label th:for="${#ids.prev('envTT')}" th:text="${testingTool}">Winfiol</label>
-													</div>
-												</div>
-											</div>
-										</div>
-										<!--<div class="clearfix"></div>
-										<div class="form-group">
-											<label class="form-label">Single process</label>
-											<span class="help">Single service process.</span>
-											<br />
-											<div class="col-md-3" th:each="singleProcess : ${allSingleProcesses}">
-												<div class="checkbox check-primary">
-													<input  type="checkbox" th:field="*{envSingleProcess}" th:value="${singleProcess}"/>
-													<label  th:for="${#ids.prev('envSingleProcess')}" th:text="${singleProcess}">FTP</label>
-												</div>
-											</div>
-										</div>-->
-										<div class="clearfix"></div>
-										<div class="form-group">
-											<label class="form-label">STP info</label>
-											<span class="help">Information about target STP.</span>
-											<br />
-											<div class="controls col-md-6">
-												<input type="text" class="form-control" id="stpIp" placeholder="STP IP address" th:field="*{stpIp}"/>
-												<span id="stp-span" class="error" style="display: none;">
-													<label for="name" class="error">This field is required.</label>
-												</span>
-											</div>
-											<div class="controls col-md-3">
-												<input type="text" class="form-control" id="expertUser" name="expertUser" placeholder="ExpertUser" th:field="*{expertUser}"/>
-												<span id="stp-span" class="error" style="display: none;">
-													<label for="name" class="error">This field is required.</label>
-												</span>
-											</div>
-											<div class="controls col-md-3">
-												<input type="text" class="form-control" id="expertPass" name="expertPass" placeholder="ExpertPass" th:field="*{expertPass}"/>
-												<span id="stp-span" class="error" style="display: none;">
-													<label for="name" class="error">This field is required.</label>
-												</span>
-											</div>
-											<div class="checkbox">
-												<div class="controls col-md-6">
-													<div class="checkbox check-primary" >
-														<input type="checkbox" id="customerUserSetting" name="customerUserSetting" />
-														<label for="customerUserSetting">Use Expert user as Customer user.</label>
-													</div>
-												</div>
-											</div>
-											<div class="controls col-md-3">
-												<input type="text" class="form-control" id="customerUser" name="customerUser" placeholder="CustomerUser" th:field="*{customerUser}"/>
-												<span id="stp-span" class="error" style="display: none;">
-													<label for="name" class="error">This field is required.</label>
-												</span>
-											</div>
-											<div class="controls col-md-3">
-												<input type="text" class="form-control" id="customerPass" name="customerPass" placeholder="CustomerPass" th:field="*{customerPass}"/>
-												<span id="stp-span" class="error" style="display: none;">
-													<label for="name" class="error">This field is required.</label>
-												</span>
-											</div>
-										</div>
-									</div>
-									<!-- Break for column -->
-									<!-- Break for column -->
-									<!-- Break for column -->
-									<!-- Break for column -->
-									<!-- Break for column -->
-									<!-- Break for column -->
-
-									<div class="col-md-4">
-										<h4>Environment Information</h4>
-										<p>Specify the details for launching an instance.The chart below shows the resources used by this project in relation to the project's quotas.</p>
-										<table class="table table-hover no-more-tables table-bordered">
-											<thead>
-												<tr>
-													<th class="col-md-4">Name</th>
-													<th class="col-md-8">Detail</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Name</td>
-													<td id="env-name"></td>
-												</tr>
-												<tr>
-													<td>Description</td>
-													<td id="env-description"></td>
-												</tr>
-												<tr>
-													<td>Group</td>
-													<td id="env-group"></td>
-												</tr>
-												<tr>
-													<td>Use RPC</td>
-													<td id="env-rpc"></td>
-												</tr>
-												<tr class="env-hw">
-													<td>VCPUs</td>
-													<td>2</td>
-												</tr>
-												<tr class="env-hw">
-													<td>RAM</td>
-													<td>1G</td>
-												</tr>
-												<tr class="env-hw">
-													<td>Total Disk</td>
-													<td colspan="2">1 GB</td>
-												</tr>
-												<tr>
-													<td>Traffic Generator</td>
-													<td id="env-tg"></td>
-												</tr>
-												<tr>
-													<td>Testing Tool</td>
-													<td id="env-tt"></td>
-												</tr>
-												<tr>
-													<td>Single Process</td>
-													<td id="env-sp"></td>
-												</tr>
-											</tbody>
-										</table>
-										<div class="row small-text">
-											<p class="col-md-12">
-												NOTE - Facts to be considered, Simply remove or edit this as for what you desire. Disabled font Color and size
-											</p>
-										</div>
-
-									</div>
-								</div>
-								<div class="form-actions ">
-									<div class="pull-left">
-										<div class="checkbox checkbox check-success 	">
-											<input type="checkbox" value="1" id="chkTerms" />
-											<label for="chkTerms">I Here by agree on the Term and condition. </label>
-										</div>
-									</div>
-									<div class="pull-right">
-										<button id="submit-env" class="btn btn-danger btn-cons" type="submit"><i class="icon-ok"></i> Save</button>
-										<button class="btn btn-white btn-cons" type="button">Cancel</button>
-									</div>
-								</div>
-							</form>
-						</div>
-					</fieldset>
-				</div>
-			</div>
-		</div>
+		
+      <div class="row">
+        <div class="col-md-12">
+          <div class="grid simple transparent">
+            <div class="grid-title">
+              <h4>Form <span class="semi-bold">Wizard</span></h4>
+              <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="#grid-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="reload"></a> <a href="javascript:;" class="remove"></a> </div>
+            </div>
+            <div class="grid-body ">
+              <div class="row">
+                <form id="commentForm">
+                  <div id="rootwizard" class="col-md-12">
+                    <div class="form-wizard-steps">
+                      <ul class="wizard-steps">
+                        <li class="" data-target="#step1"> <a href="#tab1" data-toggle="tab"> <span class="step">1</span> <span class="title">Basic information</span> </a> </li>
+                        <li data-target="#step2" class=""> <a href="#tab2" data-toggle="tab"> <span class="step">2</span> <span class="title">Account information</span> </a> </li>
+                        <li data-target="#step3" class=""> <a href="#tab3" data-toggle="tab"> <span class="step">3</span> <span class="title">User settings</span> </a> </li>
+                        <li data-target="#step4" class=""> <a href="#tab4" data-toggle="tab"> <span class="step">4</span> <span class="title">Feedback <br />
+                          </span> </a> </li>
+                      </ul>
+                      <div class="clearfix"></div>
+                    </div>
+                    <div class="tab-content transparent">
+                      <div class="tab-pane" id="tab1"> <br />
+                        <h4 class="semi-bold">Step 1 - <span class="light">Basic Information</span></h4>
+                        <br />
+                        <div class="row form-row">
+                          <div class="col-md-12">
+                            <input type="text" placeholder="Full Name" class="form-control no-boarder " name="txtFullName" id="txtFullName" />
+                            
+                          </div>
+                          <div class="controls" >
+                          	<select id="group" name="group" style="width: 100%;" >
+                          		<option ></option>
+                          	</select>
+                          </div>
+                        </div>
+                        <div class="row form-row">
+                          <div class="col-md-6">
+                            <input type="text" placeholder="First Name" class="form-control no-boarder " name="txtFirstName" id="txtFirstName" />
+                          </div>
+                          <div class="col-md-6">
+                            <input type="text" placeholder="Last Name" class="form-control no-boarder " name="txtLastName" id="txtLastName" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tab-pane" id="tab2"> <br />
+                        <h4 class="semi-bold">Step 2 - <span class="light">Account Information</span></h4>
+                        <br />
+                        <div class="row form-row">
+                          <div class="col-md-8">
+                            <input type="text" placeholder="Country" class="form-control no-boarder " name="txtCountry" id="txtCountry" />
+                          </div>
+                          <div class="col-md-4">
+                            <input type="text" placeholder="Postal Code" class="form-control no-boarder " name="txtPostalCode" id="txtPostalCode" />
+                          </div>
+                        </div>
+                        <div class="row form-row">
+                          <div class="col-md-4">
+                            <input type="text" placeholder="+94" class="form-control no-boarder " name="txtPhoneCode" id="txtPhoneCode" />
+                          </div>
+                          <div class="col-md-8">
+                            <input type="text" placeholder="Phone Number" class="form-control no-boarder " name="txtPhoneNumber" id="txtPhoneNumber" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tab-pane" id="tab3"> <br />
+                        <h4 class="semi-bold">Step 3 - <span class="light">User Settings</span></h4>
+                        <br />
+                      </div>
+                      <div class="tab-pane" id="tab4"> <br />
+                        <h4 class="semi-bold">Step 4 - <span class="light">Feedback</span></h4>
+                        <br />
+                      </div>
+                      <ul class=" wizard wizard-actions">
+                        <li class="previous first" style="display:none;"><a href="javascript:;" class="btn">&nbsp;&nbsp;First&nbsp;&nbsp;</a></li>
+                        <li class="previous"><a href="javascript:;" class="btn">&nbsp;&nbsp;Previous&nbsp;&nbsp;</a></li>
+                        <li class="next last" style="display:none;"><a href="javascript:;" class="btn btn-primary">&nbsp;&nbsp;Last&nbsp;&nbsp;</a></li>
+                        <li class="next"><a href="javascript:;" class="btn btn-primary">&nbsp;&nbsp;Next&nbsp;&nbsp;</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
  </div>
@@ -646,13 +499,15 @@
 <script src="../../../resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js}"></script> 
 <script src="../../../resources/assets/plugins/pace/pace.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/pace/pace.min.js}"></script>  
 <script src="../../../resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js}"></script>
+<script src="../../../resources/assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootstrap-select2/select2.min.js}"></script>
+<script src="../../../resources/assets/plugins/boostrap-form-wizard/js/jquery.bootstrap.wizard.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/boostrap-form-wizard/js/jquery.bootstrap.wizard.min.js}"></script>
+<script src="../../../resources/assets/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-validation/js/jquery.validate.min.js}"></script>
 
 <!-- END PAGE LEVEL PLUGINS --> 	
 
 <script src="../../../resources/assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootstrap-select2/select2.min.js}" ></script> 
 
-<script src="../../../resources/assets/js/create_instance.js" type="text/javascript" th:src="@{/resources/assets/js/create_instance.js}" ></script> 
-
+<script src="../../../resources/assets/js/launch_test.js" type="text/javascript" th:src="@{/resources/assets/js/launch_test.js}"></script>
 <!-- BEGIN CORE TEMPLATE JS --> 
 <script src="../../../resources/assets/js/core.js" type="text/javascript" th:src="@{/resources/assets/js/core.js}"></script> 
 <script src="../../../resources/assets/js/chat.js" type="text/javascript" th:src="@{/resources/assets/js/chat.js}"></script> 

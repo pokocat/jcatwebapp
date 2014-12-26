@@ -10,6 +10,7 @@
       }, false);
 */
 $(document).ready(function() {
+
 	/*
     //Dropdown menu - select2 plug-in
     $("#source").select2();
@@ -34,73 +35,92 @@ $(document).ready(function() {
     });*/
 
 
-	$("input").change(function(event) {
-		var inputbox = $(this).attr("name");
-		if (inputbox == "name") {
-    		if (!$("input[name='name']").val()) {
-    			$("input[name='name']").addClass("error");
-    			$("#name-span").show('fast', function(){});
-    		} else{
-    			$("input[name='name']").removeClass("error");
-    			$("#name-span").hide('fast', function(){});
-    			$("#env-name").text($(this).val());
-    		};
-    	};
-		if (inputbox == "description") {
-            $("#env-description").text($(this).val());
-        }
-        if (inputbox == "pcSet") {
-        	var pc = $("input[name='pcSet']:checked").val();
-        	if (pc == 'true') {
-        		$("#pc-custom").show('fast', function() {});
-        		$(".env-hw").show('fast', function() {});
-        	} else {
-        		$("#pc-custom").hide('fast', function() {});
-        		$(".env-hw").hide('fast', function() {});
-        	};
-            $("#env-pc").text($(this).val());
-        }
-        if (inputbox == "envTG ") {
+    $("input").change(function(event) {
+        var inputbox = $(this).attr("name");
+        if (inputbox == "use-openstack") {
+           var os = $("input[name='use-openstack']:checked").val();
+           if (os == 'on') {
+               $(".os-custom").show('fast', function() {});
+           } else {
+               $(".os-custom").hide('fast', function() {});
+           };
+               // $("#env-os").text($(this).val());
+        };
+        if (inputbox == "use-docker") {
+            var dc = $("input[name='use-docker']:checked").val();
+            if (dc == 'on') {
+               $(".dc-custom").show('fast', function() {});
+            } else {
+               $(".dc-custom").hide('fast', function() {});
+            };
+        };
+        
 
-            var str = "";
-            $("input[name='envTG ']:checked").each(function(index, value) {
-                str += $(this).val() + ", ";
-            });
-            $("#env-tg").text(str.substr(0, str.length - 2));
-        }
-        if (inputbox == "envTT") {
+		// if (inputbox == "name") {
+  //   		if (!$("input[name='name']").val()) {
+  //   			$("input[name='name']").addClass("error");
+  //   			$("#name-span").show('fast', function(){});
+  //   		} else{
+  //   			$("input[name='name']").removeClass("error");
+  //   			$("#name-span").hide('fast', function(){});
+  //   			$("#env-name").text($(this).val());
+  //   		};
+  //   	};
+		// if (inputbox == "description") {
+  //           $("#env-description").text($(this).val());
+  //       }
+  //       if (inputbox == "pcSet") {
+  //       	var pc = $("input[name='pcSet']:checked").val();
+  //       	if (pc == 'true') {
+  //       		$("#pc-custom").show('fast', function() {});
+  //       		$(".env-hw").show('fast', function() {});
+  //       	} else {
+  //       		$("#pc-custom").hide('fast', function() {});
+  //       		$(".env-hw").hide('fast', function() {});
+  //       	};
+  //           $("#env-pc").text($(this).val());
+  //       }
+  //       if (inputbox == "envTG ") {
 
-            var str = "";
-            $("input[name='envTT']:checked").each(function(index, value) {
-                // console.log($(this).legnth());
-                // console.log($(this).val());
-                str += $(this).val() + ", ";
-            });
-            $("#env-tt").text(str.substr(0, str.length - 2));
-        }
-        if (inputbox == "envSingleProcess") {
+  //           var str = "";
+  //           $("input[name='envTG ']:checked").each(function(index, value) {
+  //               str += $(this).val() + ", ";
+  //           });
+  //           $("#env-tg").text(str.substr(0, str.length - 2));
+  //       }
+  //       if (inputbox == "envTT") {
 
-            var str = "";
-            $("input[name='envSingleProcess']:checked").each(function(index, value) {
-                // console.log($(this).legnth());
-                // console.log($(this).val());
-                str += $(this).val() + ", ";
-            });
-            $("#env-sp").text(str.substr(0, str.length - 2));
-        }
+  //           var str = "";
+  //           $("input[name='envTT']:checked").each(function(index, value) {
+  //               // console.log($(this).legnth());
+  //               // console.log($(this).val());
+  //               str += $(this).val() + ", ";
+  //           });
+  //           $("#env-tt").text(str.substr(0, str.length - 2));
+  //       }
+  //       if (inputbox == "envSingleProcess") {
 
-        if (inputbox == "customerUserSetting") {
-        	if ($("input[name='customerUserSetting']:checked").val() === "on") {
-        		$("input[name='customerUser']").prop('disabled', true);
-        		$("input[name='customerPass']").prop('disabled', true);
-        		$("input[name='customerUser']").val($("input[name='expertUser']").val());
-        		$("input[name='customerPass']").val($("input[name='expertPass']").val());
-        	} else {
-        		$("input[name='customerUser']").prop('disabled', false);
-        		$("input[name='customerPass']").prop('disabled', false);
-        	};
+  //           var str = "";
+  //           $("input[name='envSingleProcess']:checked").each(function(index, value) {
+  //               // console.log($(this).legnth());
+  //               // console.log($(this).val());
+  //               str += $(this).val() + ", ";
+  //           });
+  //           $("#env-sp").text(str.substr(0, str.length - 2));
+  //       }
+
+  //       if (inputbox == "customerUserSetting") {
+  //       	if ($("input[name='customerUserSetting']:checked").val() === "on") {
+  //       		$("input[name='customerUser']").prop('disabled', true);
+  //       		$("input[name='customerPass']").prop('disabled', true);
+  //       		$("input[name='customerUser']").val($("input[name='expertUser']").val());
+  //       		$("input[name='customerPass']").val($("input[name='expertPass']").val());
+  //       	} else {
+  //       		$("input[name='customerUser']").prop('disabled', false);
+  //       		$("input[name='customerPass']").prop('disabled', false);
+  //       	};
             
-        }
+  //       }
 
 	});
 

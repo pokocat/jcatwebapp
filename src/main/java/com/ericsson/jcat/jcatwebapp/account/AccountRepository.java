@@ -1,11 +1,15 @@
 package com.ericsson.jcat.jcatwebapp.account;
 
-import javax.persistence.*;
-import javax.inject.Inject;
+import java.util.List;
 
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Repository
 @Transactional(readOnly = true)
@@ -33,6 +37,9 @@ public class AccountRepository {
 			return null;
 		}
 	}
-
+	
+	public List<Account> findAll() {
+        return entityManager.createQuery("SELECT i FROM Account i", Account.class).getResultList();
+    }
 	
 }
