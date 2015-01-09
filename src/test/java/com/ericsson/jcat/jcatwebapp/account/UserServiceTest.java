@@ -53,7 +53,7 @@ public class UserServiceTest {
 	@Test
 	public void shouldReturnUserDetails() {
 		// arrange
-		Account demoUser = new Account("user@example.com", "demo", UserGroup.CHS, "ROLE_USER");
+		Account demoUser = new Account("user@example.com", "demo", "nickme", "CHS", "asdf@fdds.com", "ROLE_USER");
 		when(accountRepositoryMock.findByUserName("user@example.com")).thenReturn(demoUser);
 
 		// act
@@ -62,13 +62,13 @@ public class UserServiceTest {
 		// assert
 		assertThat(demoUser.getUserName()).isEqualTo(userDetails.getUsername());
 		assertThat(demoUser.getPassword()).isEqualTo(userDetails.getPassword());
-        assertThat(hasAuthority(userDetails, demoUser.getRole()));
+		assertThat(hasAuthority(userDetails, demoUser.getRole()));
 	}
 
 	private boolean hasAuthority(UserDetails userDetails, String role) {
 		Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
-		for(GrantedAuthority authority : authorities) {
-			if(authority.getAuthority().equals(role)) {
+		for (GrantedAuthority authority : authorities) {
+			if (authority.getAuthority().equals(role)) {
 				return true;
 			}
 		}

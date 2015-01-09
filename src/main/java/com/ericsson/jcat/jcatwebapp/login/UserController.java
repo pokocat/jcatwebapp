@@ -33,7 +33,7 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@ModelAttribute("allGroups")
 	public List<UserGroup> populateGroups() {
 		return Arrays.asList(UserGroup.values());
@@ -49,15 +49,18 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "signup", method = RequestMethod.POST)
-	public Account signup(@Valid @ModelAttribute SignupForm signupForm, Errors errors, RedirectAttributes ra) {
-		/*if (errors.hasErrors()) {
-			logger.error(errors.toString());
-			return account;
-		}*/
+	public String signup(@Valid @ModelAttribute SignupForm signupForm, Errors errors, RedirectAttributes ra) {
+		/*
+		 * if (errors.hasErrors()) {
+		 * logger.error(errors.toString());
+		 * return account;
+		 * }
+		 */
+		logger.info("====> New User: " + signupForm.toString());
 		Account account = accountRepository.save(signupForm.createAccount());
 		userService.signin(account);
 		MessageHelper.addSuccessAttribute(ra, "signup.success");
-		return account;
+		return "/";
 	}
 
 	@RequestMapping(value = "login")

@@ -1,18 +1,20 @@
 package com.ericsson.jcat.jcatwebapp.testenv;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.Calendar;
 
-import com.ericsson.jcat.jcatwebapp.cusom.OpenstackFlavor;
-import com.ericsson.jcat.jcatwebapp.cusom.OpenstackImage;
-import com.ericsson.jcat.jcatwebapp.cusom.SingleProcess;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Version;
+
+import org.hibernate.validator.constraints.NotEmpty;
+import org.openstack4j.openstack.compute.domain.NovaServer.Servers;
+
 import com.ericsson.jcat.jcatwebapp.cusom.TestingTool;
 import com.ericsson.jcat.jcatwebapp.cusom.TrafficGenerator;
 import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
-
-import javax.persistence.*;
-
-import java.util.ArrayList;
-import java.util.Calendar;
 
 @Entity
 public class TestEnv {
@@ -28,22 +30,22 @@ public class TestEnv {
 
 	@Version
 	private long created = Calendar.getInstance().getTimeInMillis();
-	
+
 	private String owner;
 
 	private UserGroup userGroup;
 
 	private boolean pcSet;
+	
+	private String imageSet;
 
-	private OpenstackFlavor hwSet;
-
-	private OpenstackImage imageSet;
+	private String vmServerId;
 
 	private ArrayList<TrafficGenerator> envTG;
 
 	private ArrayList<TestingTool> envTT;
 
-	private ArrayList<SingleProcess> envSP;
+	private ArrayList<String> envSP;
 
 	private String stpIp;
 
@@ -58,16 +60,16 @@ public class TestEnv {
 	public TestEnv() {
 	}
 
-	public TestEnv(String title, String text,String owner, UserGroup userGroup, boolean pcSet, OpenstackFlavor hwSet,
-			OpenstackImage imageSet, ArrayList<TrafficGenerator> envTG, ArrayList<TestingTool> envTT, String stpIp,
-			String expertUser, String expertPass, String customerUser, String customerPass) {
-		this.name = title;
-		this.description = text;
+	public TestEnv(String title, String text, String owner, UserGroup userGroup, boolean pcSet, String imageSet, String vmServerId,
+			ArrayList<TrafficGenerator> envTG, ArrayList<TestingTool> envTT, String stpIp, String expertUser,
+			String expertPass, String customerUser, String customerPass) {
+		this.setName(title);
+		this.setDescription(text);
 		this.setOwner(owner);
-		this.setGroup(userGroup);
-		this.setUseRPC(pcSet);
-		this.setHwSet(hwSet);
+		this.setUserGroup(userGroup);
+		this.setPcSet(pcSet);
 		this.setImageSet(imageSet);
+		this.setVmServerId(vmServerId);
 		this.setEnvTG(envTG);
 		this.setEnvTT(envTT);
 		this.setStpIp(stpIp);
@@ -85,6 +87,22 @@ public class TestEnv {
 		this.id = id;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public long getCreated() {
 		return created;
 	}
@@ -93,68 +111,12 @@ public class TestEnv {
 		this.created = created;
 	}
 
-	public String getName() {
-		return name;
+	public String getOwner() {
+		return owner;
 	}
 
-	public void setName(String title) {
-		this.name = title;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String text) {
-		this.description = text;
-	}
-
-	public UserGroup getGroup() {
-		return userGroup;
-	}
-
-	public void setGroup(UserGroup userGroup) {
-		this.userGroup = userGroup;
-	}
-
-	public boolean getUseRPC() {
-		return pcSet;
-	}
-
-	public void setUseRPC(boolean useRPC2) {
-		this.pcSet = useRPC2;
-	}
-
-	public OpenstackFlavor getHwSet() {
-		return hwSet;
-	}
-
-	public void setHwSet(OpenstackFlavor hwSet) {
-		this.hwSet = hwSet;
-	}
-
-	public ArrayList<TrafficGenerator> getEnvTG() {
-		return envTG;
-	}
-
-	public void setEnvTG(ArrayList<TrafficGenerator> envTG2) {
-		this.envTG = envTG2;
-	}
-
-	public ArrayList<TestingTool> getEnvTT() {
-		return envTT;
-	}
-
-	public void setEnvTT(ArrayList<TestingTool> envTT) {
-		this.envTT = envTT;
-	}
-
-	public ArrayList<SingleProcess> getEnvSP() {
-		return envSP;
-	}
-
-	public void setEnvSP(ArrayList<SingleProcess> envSP) {
-		this.envSP = envSP;
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 
 	public UserGroup getUserGroup() {
@@ -173,12 +135,36 @@ public class TestEnv {
 		this.pcSet = pcSet;
 	}
 
-	public OpenstackImage getImageSet() {
-		return imageSet;
+	public String getVmServerId() {
+		return vmServerId;
 	}
 
-	public void setImageSet(OpenstackImage imageSet) {
-		this.imageSet = imageSet;
+	public void setVmServerId(String vmServerId) {
+		this.vmServerId = vmServerId;
+	}
+
+	public ArrayList<TrafficGenerator> getEnvTG() {
+		return envTG;
+	}
+
+	public void setEnvTG(ArrayList<TrafficGenerator> envTG) {
+		this.envTG = envTG;
+	}
+
+	public ArrayList<TestingTool> getEnvTT() {
+		return envTT;
+	}
+
+	public void setEnvTT(ArrayList<TestingTool> envTT) {
+		this.envTT = envTT;
+	}
+
+	public ArrayList<String> getEnvSP() {
+		return envSP;
+	}
+
+	public void setEnvSP(ArrayList<String> envSP) {
+		this.envSP = envSP;
 	}
 
 	public String getStpIp() {
@@ -221,28 +207,12 @@ public class TestEnv {
 		this.customerPass = customerPass;
 	}
 
-	public String getOwner() {
-		return owner;
+	public String getImageSet() {
+		return imageSet;
 	}
 
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-	@Override
-	public String toString() {
-		return "TestEnv [id=" + id + ", " + (name != null ? "name=" + name + ", " : "")
-				+ (description != null ? "description=" + description + ", " : "") + "created=" + created + ", "
-				+ (owner != null ? "owner=" + owner + ", " : "")
-				+ (userGroup != null ? "userGroup=" + userGroup + ", " : "") + "pcSet=" + pcSet + ", "
-				+ (hwSet != null ? "hwSet=" + hwSet + ", " : "")
-				+ (imageSet != null ? "imageSet=" + imageSet + ", " : "")
-				+ (envTG != null ? "envTG=" + envTG + ", " : "") + (envTT != null ? "envTT=" + envTT + ", " : "")
-				+ (envSP != null ? "envSP=" + envSP + ", " : "") + (stpIp != null ? "stpIp=" + stpIp + ", " : "")
-				+ (expertUser != null ? "expertUser=" + expertUser + ", " : "")
-				+ (expertPass != null ? "expertPass=" + expertPass + ", " : "")
-				+ (customerUser != null ? "customerUser=" + customerUser + ", " : "")
-				+ (customerPass != null ? "customerPass=" + customerPass : "") + "]";
+	public void setImageSet(String imageSet) {
+		this.imageSet = imageSet;
 	}
 
 }

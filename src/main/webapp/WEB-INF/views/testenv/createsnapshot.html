@@ -3,10 +3,14 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 <meta charset="utf-8" />
-<title>VM instances</title>
+<title>Create Snapshot</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="" name="description" />
 <meta content="" name="author" />
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
+
+<link href="../../../resources/assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/bootstrap-select2/select2.css}"/>
 
 <link href="../../../resources/assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/pace/pace-theme-flash.css}"/>
 <link href="../../../resources/assets/plugins/jquery-slider/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/jquery-slider/css/jquery.sidr.light.css}"/>
@@ -36,11 +40,11 @@
 		 <li class="dropdown"> <a id="main-menu-toggle" href="#main-menu"  class="" > <div class="iconset top-menu-toggle-white"></div> </a> </li>		 
 		</ul>
       <!-- BEGIN LOGO -->	
-      <a href="index.html"><img src="../../../resources/assets/img/logo.png" class="logo" alt=""  data-src="../../../resources/assets/img/logo.png" data-src-retina="../../../resources/assets/img/logo2x.png" width="142" height="49"/></a>
+      <a href="index.html"><img src="../../../resources/assets/img/logo.png" class="logo" alt=""  th:src="@{/resources/assets/img/logo.png}" width="142" height="49"/></a>
       <!-- END LOGO --> 
       <ul class="nav pull-right notifcation-center">	
         <li class="dropdown" id="header_task_bar"> <a href="index.html" class="dropdown-toggle active" data-toggle=""> <div class="iconset top-home"></div> </a> </li>
-        <li class="dropdown" id="header_inbox_bar" > <a href="email.html" class="dropdown-toggle" > <div class="iconset top-messages"></div>  <span class="badge" id="msgs-badge">2</span> </a></li>
+        <li class="dropdown" id="header_inbox_bar" > <a href="email.html" class="dropdown-toggle" > <div class="iconset top-messages"></div>  <span class="badge" id="msps-badge">2</span> </a></li>
 		<li class="dropdown" id="portrait-chat-toggler" style="display:none"> <a href="#sidr" class="chat-menu-toggle"> <div class="iconset top-chat-white "></div> </a> </li>        
       </ul>
       </div>
@@ -190,7 +194,7 @@
     <div class="user-info">
       <div class="greeting">Welcome</div>
       <div class="username">John <span class="semi-bold">Smith</span></div>
-      <!-- <div class="status">Status<a href="#"><div class="status-icon green"></div>Online</a></div> -->
+      <div class="status">Status<a href="#"><div class="status-icon green"></div>Online</a></div>
     </div>
    </div>
   <!-- END MINI-PROFILE -->
@@ -375,7 +379,7 @@
     			<p>YOU ARE HERE</p>
     		</li> 
     		<li>
-    			<a href="#" class="active">VMInstances</a>
+    			<a href="#" class="active">Create Instance</a>
     		</li>
     	</ul>
 		<div class="page-title">	
@@ -383,197 +387,244 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<div class="grid simple ">
+				<div class="grid simple">
 					<div class="grid-title no-border">
-						<h4>VM instances List <span class="semi-bold">EXAMPLE</span></h4>
-						<div class="tools">	<a href="javascript:;" class="collapse"></a>
-							<a href="#grid-config" data-toggle="modal" class="config"></a>
-							<a href="javascript:;" class="reload"></a>
-							<a href="javascript:;" class="remove"></a>
-						</div>
+						<h4>Instance Custom</h4>
 					</div>
-					<div class="grid-body no-border">
-
-
-
-
-
-						<h3>Group  <span class="semi-bold">RST</span></h3>
-						<table class="table no-more-tables table-bordered">
-							<thead>
-								<tr>
-									<!-- <th style="width:1%" >
-										<div class="checkbox check-default">
-											<input id="checkbox10" type="checkbox" value="1" class="checkall">
-											<label for="checkbox10"></label>
-										</div>
-									</th> -->
-									<th style="width:9%; white-space: nowrap;" class="v-align-middle">ENV Set Name</th>
-									<!--<th style="width:3%; white-space: nowrap;" class="v-align-middle">IP Address</th>
-									<th style="width:3%; white-space: nowrap;" class="v-align-middle">PC Type</th>-->
-									<th style="width:20%; white-space: nowrap;" class="v-align-middle">Resources</th>
-									<th style="width:8%; white-space: nowrap;" class="v-align-middle">Status</th>
-									<th style="width:8%; white-space: nowrap;" class="v-align-middle">Time since created</th>
-									<th style="width:15%; white-space: nowrap;" class="v-align-middle">Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:if="${testEnvs.empty}">
-									<td class="center-text" colspan="12">No Test Environment exists currently</td>
-								</tr>
-								<tr th:each="testEnv,iterStat : ${testEnvs}">
-									<td>
-										<div class="env-name" data-toggle="tooltip" title="" data-placement="top" data-original-title="Hello there! Some description here." th:attr="data-original-title=${testEnv.description}">
-										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)" th:text="${testEnv.name}">INSTA-EXAMPLE</a>
-										</div>
-									</td>
-									<!--<td  class="v-align-middle muted" th:text="10.10.10.10">10.170.110.1</td>-->
-									<!--<td  class="v-align-middle"><span class="label" th:text="${testEnvs.imageSet}"><i class="fa fa-desktop" >&nbsp;</i>PURE_OS</span>
-									</td>-->
-									<td class="v-align-middle">
-										<div class="env-name inline" data-toggle="tooltip" title="" data-placement="top" data-original-title="PC config details.">
-											<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/vmserver/}+ ${testEnv.vmServerId}">
-												<span th:if="${testEnv.pcSet}" class="label label-inverse light normal-text" th:inline="text"><i class="fa fa-desktop" >&nbsp;</i>[[${testEnv.imageSet}]]</span>
-											</a>
-										</div>
-										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)">
-											<span class="label label-info light normal-text" th:each="env : ${testEnv.envTG}" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${env}]]</span>
-										</a>
-										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)">
-											<span class="label label-info light normal-text" th:each="env : ${testEnv.envTT}" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${env}]]</span>
-										</a>
-									</td>
-									<td class="v-align-middle">
-										<span class="label label-success" th:text="NORMAL">TERMINATED</span>
-									</td>
-									<td class="v-align-middle" th:text="${#dates.millisecond(testEnv.created) + ' | '+ (testEnv.created) }">0 minutes</td>
-									<td class="v-align-middle">
-										<div class="btn-group">
-											<button class="btn btn-white btn-small"> Create Snapshot</button>
-											<button class="btn btn-white dropdown-toggle btn-small" data-toggle="dropdown"> <span class="caret"></span> </button>
-											<ul class="dropdown-menu">
-												<li><a href="#">Create Snapshot</a></li>
-												<li><a href="">Restore Snapshot</a></li>
-												<li class="divider"></li>
-												<li><a href="#">Start</a></li>
-												<li><a href="#">Stop</a></li>
-												<li class="divider"></li>
-												<li><a href="#">Suspend</a></li>
-												<li><a href="#">Restore</a></li>
-												<li class="divider"></li>
-												<li><a href="#">Destroy</a></li>
-												<li><a href="#">Reset</a></li>
-
-											</ul>
-										</div>
-									</td>
-								</tr>
-								<!-- Modal -->
-									<div  class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-													<br />
-													<i class="icon-credit-card icon-7x"></i>
-													<h4 id="myModalLabel" class="semi-bold" >Testing ENV Set Name</h4>
-													<p class="no-margin" >Description </p>
-													<br />
-												</div>
-												<form  action="" method="post" accept-charset="utf-8">
-													<div class="modal-body">
-
-														<div class="row form-row">
-															<div class="col-md-4">
-																<label class="form-label bold">Name</label>
-															</div>
-															<div class="col-md-8">
-																<input type="text" class="form-control" value="test env name" />
-															</div>
-														</div>
-														<div class="row form-row">
-															<div class="col-md-4">
-																<label class="form-label bold">Description</label>
-															</div>
-															<div class="col-md-8">
-																<input type="text" class="form-control" value="Description"/>
-															</div>
-														</div>
-														<div class="row form-row" style="height: 47px;">
-															<div class="col-md-4">
-																<label class="form-label bold">Use RemotePC</label>
-															</div>
-															<div class="radio radio-primary col-md-8" style="padding: 6px 15px;">
-																<input type="radio" class="form-control" value="true" id="useRPC" name="useRPC"/>
-																<label for="useRPC">Yes</label>
-																<input type="radio" class="form-control" value="false" id="noRPC" name="useRPC" />
-																<label for="noRPC">no</label>
-															</div>
-														</div>
-														<div class="row form-row" id="rpcHwSet" >
-															<div class="col-md-4">
-																<label class="form-label bold"></label>
-															</div>
-															<div class="col-md-8">
-																<select id="hw-set" style="width: 100%;">
-																	<optgroup label="Default setting">
-																		<option value="medium">Medium</option>
-																	</optgroup>
-																	<optgroup label="Custom setting">
-																		<option value="mini">Mini</option>
-																		<option value="large">Large</option>
-																		<option value="xlarge">X-Large</option>
-																	</optgroup>
-																	<!-- <option th:each="flavor : ${allFlavors}" th:value="${flavor}" th:text="${flavor}"></option> -->
-																</select>
-															</div>
-														</div>
-														<div class="row form-row">
-															<div class="col-md-4">
-																<label class="form-label bold">Traffic Generator</label>
-															</div>
-															<div class="col-md-8">
-																<input type="text" class="form-control" value="tg env settings" />
-															</div>
-														</div>
-														<div class="row form-row">
-															<div class="col-md-4">
-																<label class="form-label bold">Testing Tools</label>
-															</div>
-															<div class="col-md-8">
-																<input type="text" class="form-control" value="tt env settings" />
-															</div>
-														</div>
-														<div class="row form-row">
-															<div class="col-md-4">
-																<label class="form-label bold">Single Process</label>
-															</div>
-															<div class="col-md-8">
-																<input type="text" class="form-control" value="sp env settings" />
-															</div>
-														</div>
-													</div>
-													<div class="modal-footer">
-														<button type="button" class="modalFormCancel btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&nbsp;Close</button>
-														<button type="submit" class="modalFormSubmit btn btn-primary reload"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Update</button>
-													</div>
-												</form>
-											</div>
-											<!-- /.modal-content -->
-										</div>
-										<!-- /.modal-dialog -->
+					<fieldset>
+						<div class="grid-body no-border">
+							<form class="form-no-horizontal-spacing" id="form-createTestEnv" novalidate="novalidate" method="post" th:action="@{/testenv/create}" th:object="${createTestEnvForm}" th:fragment="createTestEnvForm">	
+								<div id="resultBox" class="grid-body no-border hide fade-in">
+									<div class="alert alert-block  fade-in">
+										<button type="button" class="close" data-dismiss="alert"></button>
+										<h4 class="alert-heading"><i class="icon-warning-sign"></i> Error!</h4>
+										<p> Error-handling  </p>
 									</div>
-									<!-- /.modal -->
-						</tbody>
-						</table>
-					</div>
+								</div>
+								<div class="row column-seperation">
+									<div class="col-md-8 col-sm-8 col-xs-8">
+										<div class="form-group">
+											<label class="form-label">Env-set Name</label>
+											<span class="help">e.g. "Mona Lisa's Instance"</span>
+											<div class="controls">
+												<input type="text" class="form-control" id="name" name="name" th:field="*{name}"/>
+												<span id="name-span" class="error" style="display: none;"><label for="name" class="error">This field is required.</label></span>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="form-label">Description</label>
+											<span class="help">e.g. "Instance for Project ABC RST", can be empty.</span>
+											<div class="controls" th:classappend="${#fields.hasErrors('description')}? 'error-control'">
+												<input type="text" id="description" name="description" placeholder="You can put anything here" class="form-control" th:field="*{description}"/>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="form-label">Group</label>
+											<span class="help">ENV set belongs to one group.</span>
+											<div class="controls" >
+												<select id="group" name="group" style="width: 100%;" th:field="*{userGroup}">
+													<option th:each="group : ${allGroups}" th:value="${group}" th:text="${group}"></option>
+												</select>
+											</div>
+										</div>
+										<hr />
+										<div class="form-group ">
+											<label class="form-label">PC config</label>
+											<span class="help">Order a PC with OS or not.</span>
+
+											<div class="radio radio-primary" >
+												<input id="no-PC" type="radio" name="pcSet" th:field="*{pcSet}" value="false" checked="checked" />
+												<label for="no-PC">No PC</label>
+												<input id="has-PC" type="radio" name="pcSet" th:field="*{pcSet}" value="true" />
+												<label for="has-PC">Use PC</label>
+											</div>
+											<div id="pc-custom" style="display: none;">
+												<div class="col-md-6">
+													<p>Custom Image settings:</p>
+													<select id="image-set" style="width: 100%;" th:field="*{imageSet}">   
+														<option th:each="image : ${allImages}" th:value="${image}" th:text="${image}">Image</option>
+													</select>
+												</div>
+												<div class="col-md-6">
+													<p>Custom Hardware settings:</p>
+													<select id="hw-set" style="width: 100%;" th:field="*{hwSet}">
+														<option th:each="flavor : ${allFlavors}" th:value="${flavor.name}" th:text="${flavor.name}">Hardware settings</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="clearfix"></div>
+										<div class="clearfix"></div>
+										<div class="form-group">
+											<label class="form-label">Traffic Generator</label>
+											<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
+											<br />
+											<div class="col-md-3" th:each="trafficGenerator : ${allTrafficGenerators}">
+												<div class="checkbox check-primary">
+													<input type="checkbox" th:field="*{envTG}" th:value="${trafficGenerator}"/>
+													<label th:for="${#ids.prev('envTG')}" th:text="${trafficGenerator}">Traffic Gen</label>
+												</div>
+											</div>
+										</div>
+										<div class="clearfix"></div>
+										<div class="form-group">
+											<label class="form-label">Testing Tool</label>
+											<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
+											<br />
+											<div class="checkbox">
+												<div class="col-md-3" th:each="testingTool : ${allTestingTools}">
+													<div class="checkbox check-primary" >
+														<input type="checkbox" th:field="*{envTT}" th:value="${testingTool}" />
+														<label th:for="${#ids.prev('envTT')}" th:text="${testingTool}">Winfiol</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!--<div class="clearfix"></div>
+										<div class="form-group">
+											<label class="form-label">Single process</label>
+											<span class="help">Single service process.</span>
+											<br />
+											<div class="col-md-3" th:each="singleProcess : ${allSingleProcesses}">
+												<div class="checkbox check-primary">
+													<input  type="checkbox" th:field="*{envSingleProcess}" th:value="${singleProcess}"/>
+													<label  th:for="${#ids.prev('envSingleProcess')}" th:text="${singleProcess}">FTP</label>
+												</div>
+											</div>
+										</div>-->
+										<div class="clearfix"></div>
+										<div class="form-group">
+											<label class="form-label">STP info</label>
+											<span class="help">Information about target STP.</span>
+											<br />
+											<div class="controls col-md-6">
+												<input type="text" class="form-control" id="stpIp" placeholder="STP IP address" th:field="*{stpIp}"/>
+												<span id="stp-span" class="error" style="display: none;">
+													<label for="name" class="error">This field is required.</label>
+												</span>
+											</div>
+											<div class="controls col-md-3">
+												<input type="text" class="form-control" id="expertUser" name="expertUser" placeholder="ExpertUser" th:field="*{expertUser}"/>
+												<span id="stp-span" class="error" style="display: none;">
+													<label for="name" class="error">This field is required.</label>
+												</span>
+											</div>
+											<div class="controls col-md-3">
+												<input type="text" class="form-control" id="expertPass" name="expertPass" placeholder="ExpertPass" th:field="*{expertPass}"/>
+												<span id="stp-span" class="error" style="display: none;">
+													<label for="name" class="error">This field is required.</label>
+												</span>
+											</div>
+											<div class="checkbox">
+												<div class="controls col-md-6">
+													<div class="checkbox check-primary" >
+														<input type="checkbox" id="customerUserSetting" name="customerUserSetting" />
+														<label for="customerUserSetting">Use Expert user as Customer user.</label>
+													</div>
+												</div>
+											</div>
+											<div class="controls col-md-3">
+												<input type="text" class="form-control" id="customerUser" name="customerUser" placeholder="CustomerUser" th:field="*{customerUser}"/>
+												<span id="stp-span" class="error" style="display: none;">
+													<label for="name" class="error">This field is required.</label>
+												</span>
+											</div>
+											<div class="controls col-md-3">
+												<input type="text" class="form-control" id="customerPass" name="customerPass" placeholder="CustomerPass" th:field="*{customerPass}"/>
+												<span id="stp-span" class="error" style="display: none;">
+													<label for="name" class="error">This field is required.</label>
+												</span>
+											</div>
+										</div>
+									</div>
+									<!-- Break for column -->
+									<!-- Break for column -->
+									<!-- Break for column -->
+									<!-- Break for column -->
+									<!-- Break for column -->
+									<!-- Break for column -->
+
+									<div class="col-md-4">
+										<h4>Environment Information</h4>
+										<p>Specify the details for launching an instance.The chart below shows the resources used by this project in relation to the project's quotas.</p>
+										<table class="table table-hover no-more-tables table-bordered">
+											<thead>
+												<tr>
+													<th class="col-md-4">Name</th>
+													<th class="col-md-8">Detail</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Name</td>
+													<td id="env-name"></td>
+												</tr>
+												<tr>
+													<td>Description</td>
+													<td id="env-description"></td>
+												</tr>
+												<tr>
+													<td>Group</td>
+													<td id="env-group"></td>
+												</tr>
+												<tr>
+													<td>Use RPC</td>
+													<td id="env-rpc"></td>
+												</tr>
+												<th:block th:each="flavor : ${allFlavors}">
+													<tr class="env-hw" th:classappend="${#strings.replace(flavor.name,'.','')}" style="display: none;">
+														<td>vCPUs</td>
+														<td th:text="${flavor.vcpus}">2</td>
+													</tr>
+													<tr class="env-hw" th:classappend="${#strings.replace(flavor.name,'.','')}" style="display: none;">
+														<td>Memory</td>
+														<td th:text="${flavor.ram + ' MB'}">2048</td>
+													</tr>
+													<tr class="env-hw" th:classappend="${#strings.replace(flavor.name,'.','')}" style="display: none;">
+														<td>Disk</td>
+														<td th:text="${flavor.disk + ' GB'}">20</td>
+													</tr>
+												</th:block>
+												<tr>
+													<td>Traffic Generator</td>
+													<td id="env-tg"></td>
+												</tr>
+												<tr>
+													<td>Testing Tool</td>
+													<td id="env-tt"></td>
+												</tr>
+											</tbody>
+										</table>
+										<div class="row small-text">
+											<p class="col-md-12">
+												NOTE - Facts to be considered, Simply remove or edit this as for what you desire. Disabled font Color and size
+											</p>
+										</div>
+
+									</div>
+								</div>
+								<div class="form-actions ">
+									<div class="pull-left">
+										<div class="checkbox checkbox check-success 	">
+											<input type="checkbox" value="1" id="chkTerms" />
+											<label for="chkTerms">I Here by agree on the Term and condition. </label>
+										</div>
+									</div>
+									<div class="pull-right">
+										<button id="submit-env" class="btn btn-danger btn-cons" type="submit"><i class="icon-ok"></i> Save</button>
+										<button class="btn btn-white btn-cons" type="button">Cancel</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</fieldset>
 				</div>
 			</div>
 		</div>
     </div>
   </div>
-
  </div>
+
 <!-- END CONTAINER --> 
 <!-- BEGIN CHAT --> 
 
@@ -593,8 +644,13 @@
 <script src="../../../resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js}"></script> 
 <script src="../../../resources/assets/plugins/pace/pace.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/pace/pace.min.js}"></script>  
 <script src="../../../resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js}"></script>
+
 <!-- END PAGE LEVEL PLUGINS --> 	
-<script src="../../../resources/assets/js/list_env.js" type="text/javascript" charset="utf-8" th:src="@{/resources/assets/js/list_env.js}"></script>
+
+<script src="../../../resources/assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootstrap-select2/select2.min.js}" ></script> 
+
+<script src="../../../resources/assets/js/create_instance.js" type="text/javascript" th:src="@{/resources/assets/js/create_instance.js}" ></script> 
+
 <!-- BEGIN CORE TEMPLATE JS --> 
 <script src="../../../resources/assets/js/core.js" type="text/javascript" th:src="@{/resources/assets/js/core.js}"></script> 
 <script src="../../../resources/assets/js/chat.js" type="text/javascript" th:src="@{/resources/assets/js/chat.js}"></script> 

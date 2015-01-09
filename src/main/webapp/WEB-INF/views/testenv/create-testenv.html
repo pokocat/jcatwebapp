@@ -421,8 +421,8 @@
 										<div class="form-group">
 											<label class="form-label">Group</label>
 											<span class="help">ENV set belongs to one group.</span>
-											<div class="controls" th:classappend="${#fields.hasErrors('group')}? 'error-control'">
-												<select id="group" name="group" style="width: 100%;" th:field="*{group}">
+											<div class="controls" >
+												<select id="group" name="group" style="width: 100%;" th:field="*{userGroup}">
 													<option th:each="group : ${allGroups}" th:value="${group}" th:text="${group}"></option>
 												</select>
 											</div>
@@ -447,8 +447,8 @@
 												</div>
 												<div class="col-md-6">
 													<p>Custom Hardware settings:</p>
-													<select id="hw-set" style="width: 100%;" th:field="*{hwSet}">   
-														<option th:each="flavor : ${allFlavors}" th:value="${flavor}" th:text="${flavor}">Hardware settings</option>
+													<select id="hw-set" style="width: 100%;" th:field="*{hwSet}">
+														<option th:each="flavor : ${allFlavors}" th:value="${flavor.name}" th:text="${flavor.name}">Hardware settings</option>
 													</select>
 												</div>
 											</div>
@@ -571,18 +571,20 @@
 													<td>Use RPC</td>
 													<td id="env-rpc"></td>
 												</tr>
-												<tr class="env-hw">
-													<td>VCPUs</td>
-													<td>2</td>
-												</tr>
-												<tr class="env-hw">
-													<td>RAM</td>
-													<td>1G</td>
-												</tr>
-												<tr class="env-hw">
-													<td>Total Disk</td>
-													<td colspan="2">1 GB</td>
-												</tr>
+												<th:block th:each="flavor : ${allFlavors}">
+													<tr class="env-hw" th:classappend="${#strings.replace(flavor.name,'.','')}" style="display: none;">
+														<td>vCPUs</td>
+														<td th:text="${flavor.vcpus}">2</td>
+													</tr>
+													<tr class="env-hw" th:classappend="${#strings.replace(flavor.name,'.','')}" style="display: none;">
+														<td>Memory</td>
+														<td th:text="${flavor.ram + ' MB'}">2048</td>
+													</tr>
+													<tr class="env-hw" th:classappend="${#strings.replace(flavor.name,'.','')}" style="display: none;">
+														<td>Disk</td>
+														<td th:text="${flavor.disk + ' GB'}">20</td>
+													</tr>
+												</th:block>
 												<tr>
 													<td>Traffic Generator</td>
 													<td id="env-tg"></td>
@@ -590,10 +592,6 @@
 												<tr>
 													<td>Testing Tool</td>
 													<td id="env-tt"></td>
-												</tr>
-												<tr>
-													<td>Single Process</td>
-													<td id="env-sp"></td>
 												</tr>
 											</tbody>
 										</table>

@@ -240,6 +240,11 @@
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+        	<groupId>com.ericsson.axe.jcat</groupId>
+        	<artifactId>jcat-openstack-adapter</artifactId>
+        	<version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

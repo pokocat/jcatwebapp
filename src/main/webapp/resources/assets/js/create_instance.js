@@ -10,6 +10,7 @@
       }, false);
 */
 $(document).ready(function() {
+    $("#env-group").text($("select[id='group']").val());
 	/*
     //Dropdown menu - select2 plug-in
     $("#source").select2();
@@ -53,23 +54,23 @@ $(document).ready(function() {
         	var pc = $("input[name='pcSet']:checked").val();
         	if (pc == 'true') {
         		$("#pc-custom").show('fast', function() {});
-        		$(".env-hw").show('fast', function() {});
+                var hwset = "."+$("select[name='hwSet']").val().replace('.', '');
+                $(hwset).show();
+        		// $(".env-hw").show('fast', function() {});
         	} else {
         		$("#pc-custom").hide('fast', function() {});
         		$(".env-hw").hide('fast', function() {});
         	};
             $("#env-pc").text($(this).val());
         }
-        if (inputbox == "envTG ") {
-
+        if (inputbox == "envTG") {
             var str = "";
-            $("input[name='envTG ']:checked").each(function(index, value) {
+            $("input[name='envTG']:checked").each(function(index, value) {
                 str += $(this).val() + ", ";
             });
             $("#env-tg").text(str.substr(0, str.length - 2));
         }
         if (inputbox == "envTT") {
-
             var str = "";
             $("input[name='envTT']:checked").each(function(index, value) {
                 // console.log($(this).legnth());
@@ -88,6 +89,8 @@ $(document).ready(function() {
             });
             $("#env-sp").text(str.substr(0, str.length - 2));
         }
+
+
 
         if (inputbox == "customerUserSetting") {
         	if ($("input[name='customerUserSetting']:checked").val() === "on") {
@@ -109,9 +112,10 @@ $(document).ready(function() {
     $("select[id='group']").change(function(event) {
         $("#env-group").text($(this).val());
     });
-
-    $("select[id='hw-set']").change(function(event) {
-        $("#env-hw").text($(this).val());
+    $("select[name='hwSet']").change(function(event) {
+        var hwset = "."+$("select[name='hwSet']").val().replace('.', '');
+        $(".env-hw").hide();
+        $(hwset).show();
     });
 
 
@@ -200,7 +204,7 @@ $(document).ready(function() {
 	//***********************************BEGIN Function calls *****************************	
     function blockUI(el) {		
             $(el).block({
-                message: '<div class="loading-animator"></div>',
+                message: '<div class="loading-animator"></div><h3>Submitting...</h3>',
                 css: {
                     border: 'none',
                     padding: '2px',

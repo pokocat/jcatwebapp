@@ -1,45 +1,52 @@
 package com.ericsson.jcat.jcatwebapp.testenv;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.concurrent.TimeoutException;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-import junit.framework.Test;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.ericsson.jcat.jcatwebapp.cusom.OpenstackFlavor;
-import com.ericsson.jcat.jcatwebapp.cusom.OpenstackImage;
-import com.ericsson.jcat.jcatwebapp.cusom.SingleProcess;
 import com.ericsson.jcat.jcatwebapp.cusom.TestingTool;
 import com.ericsson.jcat.jcatwebapp.cusom.TrafficGenerator;
 import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
+import com.ericsson.jcat.jcatwebapp.service.ComputeService;
+import com.ericsson.jcat.osadapter.exceptions.FlavorNotFoundException;
+import com.ericsson.jcat.osadapter.exceptions.ImageNotFoundException;
+import com.ericsson.jcat.osadapter.exceptions.VmCreationFailureException;
 
-@XmlRootElement
+@Entity
 public class CreateTestEnvForm {
 	private static final String NOT_BLANK_MESSAGE = "{notBlank.message}";
+
+	@Id
+	@GeneratedValue
+	private Integer id;
 
 	@NotBlank(message = CreateTestEnvForm.NOT_BLANK_MESSAGE)
 	private String name;
 
 	private String description;
-	
+
 	private String owner;
 
-	private UserGroup group;
+	private UserGroup userGroup;
 
 	private boolean pcSet;
 
-	private OpenstackFlavor hwSet;
+	private String vmServerId;
 
-	private OpenstackImage imageSet;
+	private String hwSet;
 
-	private ArrayList<TrafficGenerator> envTrafficGenerator;
+	private String imageSet;
 
-	private ArrayList<TestingTool> envTestingTool;
+	private ArrayList<TrafficGenerator> envTG;
 
-	private ArrayList<SingleProcess> envSingleProcess;
+	private ArrayList<TestingTool> envTT;
+
+	private ArrayList<String> envSP;
 
 	private String stpIp;
 
@@ -67,60 +74,76 @@ public class CreateTestEnvForm {
 		this.description = description;
 	}
 
-	public UserGroup getGroup() {
-		return group;
+	public String getOwner() {
+		return owner;
 	}
 
-	public void setGroup(UserGroup group) {
-		this.group = group;
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 
-	public boolean getPcSet() {
+	public UserGroup getUserGroup() {
+		return userGroup;
+	}
+
+	public void setUserGroup(UserGroup userGroup) {
+		this.userGroup = userGroup;
+	}
+
+	public boolean isPcSet() {
 		return pcSet;
 	}
 
-	public void setPcSet(Boolean pcSet) {
+	public void setPcSet(boolean pcSet) {
 		this.pcSet = pcSet;
 	}
 
-	public OpenstackFlavor getHwSet() {
+	public String getVmServerId() {
+		return vmServerId;
+	}
+
+	public void setVmServerId(String vmServerId) {
+		this.vmServerId = vmServerId;
+	}
+
+	public String getHwSet() {
 		return hwSet;
 	}
 
-	public void setHwSet(OpenstackFlavor hwSet) {
+	public void setHwSet(String hwSet) {
 		this.hwSet = hwSet;
 	}
 
-	public ArrayList<TrafficGenerator> getEnvTrafficGenerator() {
-		return envTrafficGenerator;
-	}
-
-	public void setEnvTrafficGenerator(ArrayList<TrafficGenerator> envTrafficGenerator) {
-		this.envTrafficGenerator = envTrafficGenerator;
-	}
-
-	public ArrayList<TestingTool> getEnvTestingTool() {
-		return envTestingTool;
-	}
-
-	public void setEnvTestingTool(ArrayList<TestingTool> envTestingTool) {
-		this.envTestingTool = envTestingTool;
-	}
-
-	public ArrayList<SingleProcess> getEnvSingleProcess() {
-		return envSingleProcess;
-	}
-
-	public void setEnvSingleProcess(ArrayList<SingleProcess> envSingleProcess) {
-		this.envSingleProcess = envSingleProcess;
-	}
-
-	public OpenstackImage getImageSet() {
+	public String getImageSet() {
 		return imageSet;
 	}
 
-	public void setImageSet(OpenstackImage imageSet) {
+	public void setImageSet(String imageSet) {
 		this.imageSet = imageSet;
+	}
+
+	public ArrayList<TrafficGenerator> getEnvTG() {
+		return envTG;
+	}
+
+	public void setEnvTG(ArrayList<TrafficGenerator> envTG) {
+		this.envTG = envTG;
+	}
+
+	public ArrayList<TestingTool> getEnvTT() {
+		return envTT;
+	}
+
+	public void setEnvTT(ArrayList<TestingTool> envTT) {
+		this.envTT = envTT;
+	}
+
+	public ArrayList<String> getEnvSP() {
+		return envSP;
+	}
+
+	public void setEnvSP(ArrayList<String> envSP) {
+		this.envSP = envSP;
 	}
 
 	public String getStpIp() {
@@ -163,40 +186,28 @@ public class CreateTestEnvForm {
 		this.customerPass = customerPass;
 	}
 
-	public void setPcSet(boolean pcSet) {
-		this.pcSet = pcSet;
-	}
-
-	public String getOwner() {
-		return owner;
-	}
-
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-	public TestEnv createTestEnv() {
-		return new TestEnv(this.getName(), this.getDescription(), this.getOwner(), this.getGroup(), this.getPcSet(), this.getHwSet(),
-				this.getImageSet(), this.getEnvTrafficGenerator(), this.getEnvTestingTool(), this.getStpIp(),
-				this.getExpertUser(), this.getExpertPass(), this.getCustomerUser(), this.getCustomerPass());
+	public TestEnv createTestEnv() throws FlavorNotFoundException, ImageNotFoundException, VmCreationFailureException,
+			TimeoutException {
+		return new TestEnv(this.getName(), this.getDescription(), this.getOwner(), this.getUserGroup(), this.isPcSet(),
+				this.getImageSet(), this.getVmServerId(), this.getEnvTG(), this.getEnvTT(), this.getStpIp(), this.getExpertUser(),
+				this.getExpertPass(), this.getCustomerUser(), this.getCustomerPass());
 	}
 
 	@Override
 	public String toString() {
 		return "CreateTestEnvForm [" + (name != null ? "name=" + name + ", " : "")
 				+ (description != null ? "description=" + description + ", " : "")
-				+ (owner != null ? "owner=" + owner + ", " : "") + (group != null ? "group=" + group + ", " : "")
-				+ "pcSet=" + pcSet + ", " + (hwSet != null ? "hwSet=" + hwSet + ", " : "")
+				+ (owner != null ? "owner=" + owner + ", " : "")
+				+ (userGroup != null ? "userGroup=" + userGroup + ", " : "") + "pcSet=" + pcSet + ", "
+				+ (vmServerId != null ? "vmServerId=" + vmServerId + ", " : "")
+				+ (hwSet != null ? "hwSet=" + hwSet + ", " : "")
 				+ (imageSet != null ? "imageSet=" + imageSet + ", " : "")
-				+ (envTrafficGenerator != null ? "envTrafficGenerator=" + envTrafficGenerator + ", " : "")
-				+ (envTestingTool != null ? "envTestingTool=" + envTestingTool + ", " : "")
-				+ (envSingleProcess != null ? "envSingleProcess=" + envSingleProcess + ", " : "")
-				+ (stpIp != null ? "stpIp=" + stpIp + ", " : "")
+				+ (envTG != null ? "envTG=" + envTG + ", " : "") + (envTT != null ? "envTT=" + envTT + ", " : "")
+				+ (envSP != null ? "envSP=" + envSP + ", " : "") + (stpIp != null ? "stpIp=" + stpIp + ", " : "")
 				+ (expertUser != null ? "expertUser=" + expertUser + ", " : "")
 				+ (expertPass != null ? "expertPass=" + expertPass + ", " : "")
 				+ (customerUser != null ? "customerUser=" + customerUser + ", " : "")
 				+ (customerPass != null ? "customerPass=" + customerPass : "") + "]";
 	}
-	
-	
+
 }

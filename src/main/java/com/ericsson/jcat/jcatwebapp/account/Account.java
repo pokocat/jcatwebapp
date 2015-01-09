@@ -3,6 +3,7 @@ package com.ericsson.jcat.jcatwebapp.account;
 import javax.persistence.*;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.validator.constraints.Email;
 
 import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
 
@@ -24,7 +25,12 @@ public class Account implements java.io.Serializable {
 	@JsonIgnore
 	private String password;
 
-	private UserGroup userGroup;
+	private String nickName;
+
+	private String userGroup;
+
+	@Email
+	private String email;
 
 	private String role = "ROLE_USER";
 
@@ -32,15 +38,22 @@ public class Account implements java.io.Serializable {
 
 	}
 
-	public Account(String userName, String password, UserGroup userGroup, String role) {
+	public Account(String userName, String password, String nickName, String userGroup, String email, String role) {
+		super();
 		this.userName = userName;
 		this.password = password;
+		this.nickName = nickName;
 		this.userGroup = userGroup;
+		this.email = email;
 		this.role = role;
 	}
 
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getUserName() {
@@ -59,6 +72,30 @@ public class Account implements java.io.Serializable {
 		this.password = password;
 	}
 
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+	public String getUserGroup() {
+		return userGroup;
+	}
+
+	public void setUserGroup(String userGroup) {
+		this.userGroup = userGroup;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public String getRole() {
 		return role;
 	}
@@ -67,11 +104,4 @@ public class Account implements java.io.Serializable {
 		this.role = role;
 	}
 
-	public UserGroup getUserGroup() {
-		return userGroup;
-	}
-
-	public void setUserGroup(UserGroup userGroup) {
-		this.userGroup = userGroup;
-	}
 }

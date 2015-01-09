@@ -5,9 +5,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import javax.validation.Valid;
 
+import org.openstack4j.api.compute.ServerService;
+import org.openstack4j.model.compute.Flavor;
+import org.openstack4j.openstack.compute.domain.NovaFlavor;
+import org.openstack4j.openstack.compute.domain.NovaServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +41,15 @@ import com.ericsson.jcat.jcatwebapp.cusom.SingleProcess;
 import com.ericsson.jcat.jcatwebapp.cusom.TestingTool;
 import com.ericsson.jcat.jcatwebapp.cusom.TrafficGenerator;
 import com.ericsson.jcat.jcatwebapp.extension.AjaxUtils;
+import com.ericsson.jcat.jcatwebapp.service.ComputeService;
+import com.ericsson.jcat.jcatwebapp.service.OpenstackService;
+import com.ericsson.jcat.jcatwebapp.service.OpenstackHelper;
+import com.ericsson.jcat.osadapter.exceptions.FlavorNotFoundException;
+import com.ericsson.jcat.osadapter.exceptions.ImageNotFoundException;
+import com.ericsson.jcat.osadapter.exceptions.VmCreationFailureException;
 
 @Controller
-// @Secured("ROLE_USER")
+@Secured("ROLE_USER")
 @RequestMapping("/testenv")
 class TestEnvController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -52,16 +63,15 @@ class TestEnvController {
 	}
 
 	private void init() {
-		testEnvRepository.save(new TestEnv("ENV SET DEMO 1", "This is a demo env set", "admin",
-				UserGroup.CHS, true, OpenstackFlavor.MEDIUM, OpenstackImage.CentOS, new ArrayList<TrafficGenerator>(
-						Arrays.asList(TrafficGenerator.Client4, TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(
-						Arrays.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
+		testEnvRepository.save(new TestEnv("ENV SET DEMO 1", "This is a demo env set", "admin", UserGroup.CHS, true,
+				"centos", "centos", new ArrayList<TrafficGenerator>(Arrays.asList(TrafficGenerator.Client4,
+						TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(Arrays.asList(TestingTool.JCAT)),
+				"tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass", "customeruser", "customeruser"));
+		testEnvRepository.save(new TestEnv("ENV SET DEMO 2", "Isn't this demo fantacy? Created by me.", "admin",
+				UserGroup.RST, false, "centos_pure", "centos_pure", new ArrayList<TrafficGenerator>(Arrays.asList(
+						TrafficGenerator.Client4, TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(Arrays
+						.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
 				"customeruser", "customeruser"));
-		testEnvRepository.save(new TestEnv("ENV SET DEMO 2", "Isn't this demo fantacy? Created by me.",
-				"admin", UserGroup.RST, false, OpenstackFlavor.MEDIUM, OpenstackImage.Remote_PC_OS,
-				new ArrayList<TrafficGenerator>(Arrays.asList(TrafficGenerator.Client4, TrafficGenerator.MgwSim)),
-				new ArrayList<TestingTool>(Arrays.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se",
-				"expertuser", "expertpass", "customeruser", "customeruser"));
 	}
 
 	public String getUserLoggedIn() {
@@ -86,13 +96,18 @@ class TestEnvController {
 	}
 
 	@ModelAttribute("allImages")
-	public List<OpenstackImage> populateImages() {
-		return Arrays.asList(OpenstackImage.values());
+	public List<String> populateImages() {
+		return new OpenstackHelper().getImages();
 	}
 
 	@ModelAttribute("allFlavors")
-	public List<OpenstackFlavor> populateFlavors() {
-		return Arrays.asList(OpenstackFlavor.values());
+	public List<NovaFlavor> populateFlavors() {
+		return new OpenstackHelper().getFlavors();
+	}
+
+	@ModelAttribute("vmServers")
+	public List<NovaServer> populateServers() {
+		return new OpenstackHelper().getInstances();
 	}
 
 	@ModelAttribute("allGroups")
@@ -122,14 +137,12 @@ class TestEnvController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@ResponseBody
-	public TestEnv createTestEnv(@RequestBody TestEnv testEnv) {
-		logger.info("Comming POST {}", testEnv.toString());
-		// if (result.hasErrors()) {
-		// logger.error("post data has error: {}",
-		// result.getAllErrors().toString());
-		// return "testenv/create-testenv";
-		// }
-		testEnvRepository.save(testEnv);
+	public TestEnv createTestEnv(@RequestBody CreateTestEnvForm createTestEnvForm) throws FlavorNotFoundException,
+			ImageNotFoundException, VmCreationFailureException, TimeoutException {
+		logger.info("Comming POST {}", createTestEnvForm.toString());
+		createTestEnvForm.setVmServerId(new OpenstackHelper().launchServer(createTestEnvForm.getName(),
+				createTestEnvForm.getHwSet(), createTestEnvForm.getImageSet()));
+		testEnvRepository.save(createTestEnvForm.createTestEnv());
 		return new TestEnvCreatResultJson("success");
 	}
 
@@ -137,6 +150,23 @@ class TestEnvController {
 	public String getTestEnv(@PathVariable int id, Model model) {
 		model.addAttribute("updateTestEnv", testEnvRepository.findById(id));
 		return "testenv/env-modal";
+	}
+
+	@RequestMapping(value = "/createsnapshot/{id}", method = RequestMethod.GET)
+	public String createSnapshotModal(@PathVariable int id) {
+		return "testenv/createsnapshot";
+	}
+
+	@RequestMapping(value = "/createsnapshot", method = RequestMethod.POST)
+	public String createSnapshot(@RequestBody CreateSnapshotForm createSnapshotForm) {
+		new OpenstackHelper().createSnapshot(createSnapshotForm.getId(), createSnapshotForm.getDesc());
+		return "testenv/createsnapshot";
+	}
+
+	@RequestMapping(value = "/vmserver/{id}", method = RequestMethod.GET)
+	public String getVMServer(@PathVariable String id, Model model) {
+		model.addAttribute("vmServer", new ComputeService().getVMServer(id));
+		return "testenv/vmserver-modal";
 	}
 
 	@RequestMapping(value = "/update", produces = "application/json")
@@ -156,6 +186,5 @@ class TestEnvController {
 		model.addAttribute(new CreateTestEnvForm());
 		return "testenv/create-testenv";
 	}
-
 
 }

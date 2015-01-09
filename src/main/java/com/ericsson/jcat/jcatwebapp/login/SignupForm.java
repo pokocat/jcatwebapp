@@ -16,7 +16,12 @@ public class SignupForm {
 	@NotBlank(message = SignupForm.NOT_BLANK_MESSAGE)
 	private String password;
 
-	private UserGroup userGroup;
+	private String nickName;
+
+	@Email
+	private String email;
+
+	private String userGroup;
 
 	public String getUserName() {
 		return userName;
@@ -34,15 +39,38 @@ public class SignupForm {
 		this.password = password;
 	}
 
-	public UserGroup getUserGroup() {
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getUserGroup() {
 		return userGroup;
 	}
 
-	public void setUserGroup(UserGroup userGroup) {
+	public void setUserGroup(String userGroup) {
 		this.userGroup = userGroup;
 	}
 
 	public Account createAccount() {
-		return new Account(getUserName(), getPassword(), getUserGroup(), "ROLE_USER");
+		return new Account(getUserName(), getPassword(), getNickName(),getEmail(), getUserGroup(), "ROLE_USER");
+	}
+
+	@Override
+	public String toString() {
+		return "SignupForm [" + (userName != null ? "userName=" + userName + ", " : "")
+				+ (password != null ? "password=" + password + ", " : "")
+				+ (userGroup != null ? "userGroup=" + userGroup : "") + "]";
 	}
 }
