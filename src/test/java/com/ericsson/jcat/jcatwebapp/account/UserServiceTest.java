@@ -1,8 +1,10 @@
 package com.ericsson.jcat.jcatwebapp.account;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Collection;
 
@@ -16,8 +18,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -53,7 +53,7 @@ public class UserServiceTest {
 	@Test
 	public void shouldReturnUserDetails() {
 		// arrange
-		Account demoUser = new Account("user@example.com", "demo", "nickme", "CHS", "asdf@fdds.com", "ROLE_USER");
+		Account demoUser = new Account("user@example.com", "demo", "nickme", "CHS", "asdf@fdds.com","", "ROLE_USER");
 		when(accountRepositoryMock.findByUserName("user@example.com")).thenReturn(demoUser);
 
 		// act

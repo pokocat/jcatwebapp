@@ -1,9 +1,12 @@
 package com.ericsson.jcat.jcatwebapp.login;
 
-import org.hibernate.validator.constraints.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.ericsson.jcat.jcatwebapp.account.Account;
-import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
 
 public class SignupForm {
 
@@ -21,7 +24,7 @@ public class SignupForm {
 	@Email
 	private String email;
 
-	private String userGroup;
+	private ArrayList<String> userGroup;
 
 	public String getUserName() {
 		return userName;
@@ -55,16 +58,17 @@ public class SignupForm {
 		this.email = email;
 	}
 
-	public String getUserGroup() {
+	public ArrayList<String> getUserGroup() {
 		return userGroup;
 	}
 
-	public void setUserGroup(String userGroup) {
+	public void setUserGroup(ArrayList<String> userGroup) {
 		this.userGroup = userGroup;
 	}
 
 	public Account createAccount() {
-		return new Account(getUserName(), getPassword(), getNickName(),getEmail(), getUserGroup(), "ROLE_USER");
+		return new Account(getUserName(), getPassword(), getNickName(), getUserGroup(), "PROJECT_USER", getEmail(),
+				"ROLE_USER");
 	}
 
 	@Override

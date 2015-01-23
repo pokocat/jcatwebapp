@@ -101,20 +101,20 @@
                 </ul>
             </li>
 
-            <li class=""> 
+            <li class="" th:classappend="${fatherpage == 'usermanager' ? 'open active' : ''}"> 
             	<a href="javascript:;"> 
 	            	<i class="fa fa-users"></i> 
-	            	<span class="title">User Management</span> <span class="arrow " th:classappend="${page == '' ? 'open ' : ''}"></span>
+	            	<span class="title">User Management</span> <span class="arrow" th:classappend="${fatherpage == 'usermanager' ? 'open' : ''}"></span>
             	</a> 
             	<ul class="sub-menu">
-                    <li th:classappend="${page == '' ? 'active' : ''}">
-                        <a th:href="@{/UserManager}">Overview</a>
+                    <li th:classappend="${page == 'overview' ? 'active' : ''}">
+                        <a th:href="@{/UserManager/overview}">Overview</a>
                     </li>
-                    <li th:classappend="${page == '' ? 'active' : ''}">
-                        <a th:href="@{/UserManager/list}">User List</a>
+                    <li th:classappend="${page == 'userlist' ? 'active' : ''}">
+                        <a th:href="@{/UserManager/userlist}">User List</a>
                     </li>
-                    <li th:classappend="${page == '' ? 'active' : ''}">
-                        <a href="/" th:href="@{/}">Group Settings</a>
+                    <li th:classappend="${page == 'grouplist' ? 'active' : ''}">
+                        <a href="/" th:href="@{/UserManager/grouplist}">Group Settings</a>
                     </li>
                 </ul>
             </li>

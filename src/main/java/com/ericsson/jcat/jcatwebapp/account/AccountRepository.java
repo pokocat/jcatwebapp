@@ -14,32 +14,42 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional(readOnly = true)
 public class AccountRepository {
-	
+
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Inject
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Transactional
 	public Account save(Account account) {
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
 		entityManager.persist(account);
 		return account;
 	}
-	
+
+	@Transactional
+	public Account update(Account account) {
+		entityManager.refresh(entityManager.merge(account));
+		entityManager.flush();
+		return account;
+	}
+
+	public Account findByUserId(long id) {
+		return entityManager.find(Account.class, id);
+	}
+
 	public Account findByUserName(String userName) {
 		try {
 			return entityManager.createNamedQuery(Account.FIND_BY_NAME, Account.class)
-					.setParameter("userName", userName)
-					.getSingleResult();
+					.setParameter("userName", userName).getSingleResult();
 		} catch (PersistenceException e) {
 			return null;
 		}
 	}
-	
+
 	public List<Account> findAll() {
-        return entityManager.createQuery("SELECT i FROM Account i", Account.class).getResultList();
-    }
-	
+		return entityManager.createQuery("SELECT i FROM Account i", Account.class).getResultList();
+	}
+
 }

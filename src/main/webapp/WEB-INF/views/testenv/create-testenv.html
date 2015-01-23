@@ -423,7 +423,7 @@
 											<span class="help">ENV set belongs to one group.</span>
 											<div class="controls" >
 												<select id="group" name="group" style="width: 100%;" th:field="*{userGroup}">
-													<option th:each="group : ${allGroups}" th:value="${group}" th:text="${group}"></option>
+													<option th:each="group : ${allGroups}" th:value="${group.name}" th:text="${group.name}"></option>
 												</select>
 											</div>
 										</div>

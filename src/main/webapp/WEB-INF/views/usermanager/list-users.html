@@ -7,6 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="" name="description" />
 <meta content="" name="author" />
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
 
 <link href="../../../resources/assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/pace/pace-theme-flash.css}"/>
 <link href="../../../resources/assets/plugins/jquery-slider/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/jquery-slider/css/jquery.sidr.light.css}"/>
@@ -14,10 +16,11 @@
 <link href="../../../resources/assets/plugins/boostrapv3/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/plugins/boostrapv3/css/bootstrap.min.css}"/>
 <link href="../../../resources/assets/plugins/boostrapv3/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/plugins/boostrapv3/css/bootstrap-theme.min.css}"/>
 <link href="../../../resources/assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/plugins/font-awesome/css/font-awesome.css}"/>
-<link href="../../../resources/assets/css/animate.min.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/css/animate.min.css}"/>
 <!-- END CORE CSS FRAMEWORK -->
 
 <!-- BEGIN CSS TEMPLATE -->
+<link href="../../../resources/assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/plugins/bootstrap-select2/select2.css}"/>
+
 <link href="../../../resources/assets/css/style.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/css/style.css}"/>
 <link href="../../../resources/assets/css/responsive.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/css/responsive.css}"/>
 <link href="../../../resources/assets/css/custom-icon-set.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/css/custom-icon-set.css}"/>
@@ -402,171 +405,50 @@
 						<table class="table no-more-tables table-bordered">
 							<thead>
 								<tr>
-									<!-- <th style="width:1%" >
-										<div class="checkbox check-default">
-											<input id="checkbox10" type="checkbox" value="1" class="checkall">
-											<label for="checkbox10"></label>
-										</div>
-									</th> -->
-									<th style="width:9%; white-space: nowrap;" class="v-align-middle">Name</th>
+									<th style="width:1%; white-space: nowrap;" class="v-align-middle">ID</th>
+									<th style="width:9%; white-space: nowrap;" class="v-align-middle">Username</th>
+									<th style="width:15%; white-space: nowrap;" class="v-align-middle">Nickname</th>
+									<th style="width:20%; white-space: nowrap;" class="v-align-middle">Email</th>
 									<!--<th style="width:3%; white-space: nowrap;" class="v-align-middle">IP Address</th>
 									<th style="width:3%; white-space: nowrap;" class="v-align-middle">PC Type</th>-->
-									<th style="width:20%; white-space: nowrap;" class="v-align-middle">Group</th>
+									<th style="width:15%; white-space: nowrap;" class="v-align-middle">User Group</th>
+									<th style="width:8%; white-space: nowrap;" class="v-align-middle">Group Role</th>
 									<th style="width:8%; white-space: nowrap;" class="v-align-middle">Status</th>
-									<th style="width:8%; white-space: nowrap;" class="v-align-middle">Time since created</th>
-									<th style="width:15%; white-space: nowrap;" class="v-align-middle">Actions</th>
+									<th style="width:5%; white-space: nowrap;" class="v-align-middle">Actions</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr th:if="${users.empty}">
 									<td class="center-text" colspan="12">No Test Environment exists currently</td>
 								</tr>
-								<tr th:each="user,iterStat : ${users}">
-									<!-- <td>
-										<div class="env-name" data-toggle="tooltip" title="" data-placement="top" data-original-title="Hello there! Some description here." th:attr="data-original-title=${testEnv.description}">
-										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)" th:text="${testEnv.name}">INSTA-EXAMPLE</a>
-										</div>
-									</td> -->
-									<td  class="v-align-middle muted" th:text="${user.userName}">name</td>
-									<td  class="v-align-middle"><span class="label" th:text="${user.userGroup}"><i class="fa fa-desktop" >&nbsp;</i>Group</span>
-									</td>
-									<!-- <td class="v-align-middle">
-										<div class="env-name inline" data-toggle="tooltip" title="" data-placement="top" data-original-title="Hello there! Some description here." th:attr="data-original-title=${testEnv.description}">
-											<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)">
-												<span th:if="${testEnv.pcSet}" class="label label-inverse light normal-text" th:inline="text"><i class="fa fa-desktop" >&nbsp;</i>[[${testEnv.imageSet}]]</span>
-											</a>
-										</div>
-										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)">
-											<span class="label label-info light normal-text" th:each="env : ${testEnv.envTG}" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${env}]]</span>
-										</a>
-										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)">
-											<span class="label label-info light normal-text" th:each="env : ${testEnv.envTT}" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${env}]]</span>
-										</a>
-										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)">
-											<span class="label label-info light normal-text" th:each="env : ${testEnv.envSP}" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${env}]]</span>
-										</a>
-									</td> -->
-									<td class="v-align-middle">
-										<span class="label label-success" th:text="NORMAL">TERMINATED</span>
-									</td>
-									<td class="v-align-middle" th:text="aaaa">0 minutes</td>
-									<td class="v-align-middle">
-										<div class="btn-group">
-											<button class="btn btn-white btn-small"> Create Snapshot</button>
-											<button class="btn btn-white dropdown-toggle btn-small" data-toggle="dropdown"> <span class="caret"></span> </button>
-											<ul class="dropdown-menu">
-												<li><a href="#">Create Snapshot</a></li>
-												<li><a href="">Restore Snapshot</a></li>
-												<li class="divider"></li>
-												<li><a href="#">Start</a></li>
-												<li><a href="#">Stop</a></li>
-												<li class="divider"></li>
-												<li><a href="#">Suspend</a></li>
-												<li><a href="#">Restore</a></li>
-												<li class="divider"></li>
-												<li><a href="#">Destroy</a></li>
-												<li><a href="#">Reset</a></li>
-
-											</ul>
-										</div>
-									</td>
+								<tr th:each="user,iterStat : ${users}" th:id="${user.id}">
+										<td  class="v-align-middle muted" th:text="${user.id}">id</td>
+										<td  class="v-align-middle muted" th:text="${user.userName}">username</td>
+										<td  class="v-align-middle muted" th:text="${user.nickName}">nickname</td>
+										<td  class="v-align-middle muted" th:text="${user.email}">email</td>
+										<td  class="v-align-middle">
+											 <select class="multi" style="width:100%" multiple="multiple" th:id="${user.id}" th:attr="data-value=${user.userGroup}" name="userGroup">
+							                    <!-- <option value="RST" >RST</option>
+							                    <option value="CHS">CHS</option>
+							                    <option value="JCAT">JCAT</option> -->
+							                    <th:block  th:each="group : ${groups}">
+							                    	<option th:value="${group.name}" th:text="${group.name}"></option>
+							                    </th:block>
+							                  </select>
+										</td>
+										<td class="v-align-middle">
+											<select class="roleSetting" style="width:100%" value="user" name="groupRole">
+							                    <option value="admin">Admin</option>
+							                    <option value="user">User</option>
+						                    </select>
+										</td>
+										<td class="v-align-middle" ><span class="label" th:text="Offline">Offline</span></td>
+										<td class="v-align-middle">
+											<form action="post" th:action="@{/UserManager/user/update/}+${user.id}">
+											<button type="button" class="btn btn-white btn-xs btn-mini updateuser" disabled="disabled" th:id="${user.id}">Update</button>
+											</form>
+										</td>
 								</tr>
-								<!-- Modal -->
-									<div  class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<div class="modal-header">
-													<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-													<br />
-													<i class="icon-credit-card icon-7x"></i>
-													<h4 id="myModalLabel" class="semi-bold" >Testing ENV Set Name</h4>
-													<p class="no-margin" >Description </p>
-													<br />
-												</div>
-												<form  action="" method="post" accept-charset="utf-8">
-													<div class="modal-body">
-
-														<div class="row form-row">
-															<div class="col-md-4">
-																<label class="form-label bold">Name</label>
-															</div>
-															<div class="col-md-8">
-																<input type="text" class="form-control" value="test env name" />
-															</div>
-														</div>
-														<div class="row form-row">
-															<div class="col-md-4">
-																<label class="form-label bold">Description</label>
-															</div>
-															<div class="col-md-8">
-																<input type="text" class="form-control" value="Description"/>
-															</div>
-														</div>
-														<div class="row form-row" style="height: 47px;">
-															<div class="col-md-4">
-																<label class="form-label bold">Use RemotePC</label>
-															</div>
-															<div class="radio radio-primary col-md-8" style="padding: 6px 15px;">
-																<input type="radio" class="form-control" value="true" id="useRPC" name="useRPC"/>
-																<label for="useRPC">Yes</label>
-																<input type="radio" class="form-control" value="false" id="noRPC" name="useRPC" />
-																<label for="noRPC">no</label>
-															</div>
-														</div>
-														<div class="row form-row" id="rpcHwSet" >
-															<div class="col-md-4">
-																<label class="form-label bold"></label>
-															</div>
-															<div class="col-md-8">
-																<select id="hw-set" style="width: 100%;">
-																	<optgroup label="Default setting">
-																		<option value="medium">Medium</option>
-																	</optgroup>
-																	<optgroup label="Custom setting">
-																		<option value="mini">Mini</option>
-																		<option value="large">Large</option>
-																		<option value="xlarge">X-Large</option>
-																	</optgroup>
-																	<!-- <option th:each="flavor : ${allFlavors}" th:value="${flavor}" th:text="${flavor}"></option> -->
-																</select>
-															</div>
-														</div>
-														<div class="row form-row">
-															<div class="col-md-4">
-																<label class="form-label bold">Traffic Generator</label>
-															</div>
-															<div class="col-md-8">
-																<input type="text" class="form-control" value="tg env settings" />
-															</div>
-														</div>
-														<div class="row form-row">
-															<div class="col-md-4">
-																<label class="form-label bold">Testing Tools</label>
-															</div>
-															<div class="col-md-8">
-																<input type="text" class="form-control" value="tt env settings" />
-															</div>
-														</div>
-														<div class="row form-row">
-															<div class="col-md-4">
-																<label class="form-label bold">Single Process</label>
-															</div>
-															<div class="col-md-8">
-																<input type="text" class="form-control" value="sp env settings" />
-															</div>
-														</div>
-													</div>
-													<div class="modal-footer">
-														<button type="button" class="modalFormCancel btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&nbsp;Close</button>
-														<button type="submit" class="modalFormSubmit btn btn-primary reload"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Update</button>
-													</div>
-												</form>
-											</div>
-											<!-- /.modal-content -->
-										</div>
-										<!-- /.modal-dialog -->
-									</div>
-									<!-- /.modal -->
 						</tbody>
 						</table>
 					</div>
@@ -596,8 +478,9 @@
 <script src="../../../resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js}"></script> 
 <script src="../../../resources/assets/plugins/pace/pace.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/pace/pace.min.js}"></script>  
 <script src="../../../resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js}"></script>
-<!-- END PAGE LEVEL PLUGINS --> 	
-<script src="../../../resources/assets/js/list_env.js" type="text/javascript" charset="utf-8" th:src="@{/resources/assets/js/list_env.js}"></script>
+<script src="../../../resources/assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootstrap-select2/select2.min.js}"></script>
+<!-- END PAGE LEVEL PLUGINS --> 
+<script src="../../../resources/assets/js/list_user.js" type="text/javascript" th:src="@{/resources/assets/js/list_user.js}"></script> 
 <!-- BEGIN CORE TEMPLATE JS --> 
 <script src="../../../resources/assets/js/core.js" type="text/javascript" th:src="@{/resources/assets/js/core.js}"></script> 
 <script src="../../../resources/assets/js/chat.js" type="text/javascript" th:src="@{/resources/assets/js/chat.js}"></script> 

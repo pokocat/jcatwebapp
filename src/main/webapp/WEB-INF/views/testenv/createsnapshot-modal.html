@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<meta charset="utf-8" />
+<title>Create Snapshot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta content="" name="description" />
+<meta content="" name="author" />
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
+
+<link href="../../../resources/assets/plugins/bootstrap-select2/select2.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/bootstrap-select2/select2.css}"/>
+
+<link href="../../../resources/assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/pace/pace-theme-flash.css}"/>
+<link href="../../../resources/assets/plugins/jquery-slider/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/jquery-slider/css/jquery.sidr.light.css}"/>
+<!-- BEGIN CORE CSS FRAMEWORK -->
+<link href="../../../resources/assets/plugins/boostrapv3/css/bootstrap.min.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/plugins/boostrapv3/css/bootstrap.min.css}"/>
+<link href="../../../resources/assets/plugins/boostrapv3/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/plugins/boostrapv3/css/bootstrap-theme.min.css}"/>
+<link href="../../../resources/assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/plugins/font-awesome/css/font-awesome.css}"/>
+<link href="../../../resources/assets/css/animate.min.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/css/animate.min.css}"/>
+<!-- END CORE CSS FRAMEWORK -->
+
+<!-- BEGIN CSS TEMPLATE -->
+<link href="../../../resources/assets/css/style.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/css/style.css}"/>
+<link href="../../../resources/assets/css/responsive.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/css/responsive.css}"/>
+<link href="../../../resources/assets/css/custom-icon-set.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/css/custom-icon-set.css}"/>
+<!-- END CSS TEMPLATE -->
+</head>
+<!-- END HEAD -->
+
+<body>
+<!-- Modal -->
+<!-- <div  class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#x2717;</button>
+				<br />
+				<i class="icon-credit-card icon-7x"></i>
+				<h4 id="myModalLabel" class="semi-bold" >Create Snapshot</h4>
+				<p class="no-margin">Snapshots preserve the disk state of a running instance. </p>
+				<br />
+			</div>
+				<form action="" method="post" accept-charset="utf-8" th:action="@{/testenv/createsnapshot}" th:object="${createSnapshotForm}">
+				<div class="modal-body">
+					<div class="row form-row">
+						<div class="col-md-4">
+							<label class="form-label bold">Snapshot Name</label>
+						</div>
+						<div class="col-md-8">
+							<input type="text" class="form-control" value="" th:field="*{snapshotName}"/>
+						</div>
+					</div>
+					<div class="row form-row hide">
+						<div class="col-md-4">
+							<label class="form-label bold">TestEnv ID</label>
+						</div>
+						<div>
+							<input type="text" th:value="${createSnapshotForm.id}" th:field="*{id}"/>
+						</div>
+					</div>
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class=" btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&nbsp;Cancel</button>
+					<button type="submit" class=" btn btn-primary reload"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Submit</button>
+				</div>
+				</form>
+</div>
+		<!-- /.modal-content -->
+		<script src="../../../resources/assets/js/list_env.js" type="text/javascript" charset="utf-8" th:src="@{/resources/assets/js/list_env.js}"></script>
+</div> 
+	<!-- /.modal-dialog -->
+<!-- </div> -->
+<!-- /.modal -->
+
+<!-- END CONTAINER --> 
+<!-- BEGIN CHAT --> 
+
+<!-- END CHAT --> 
+<!-- END CONTAINER -->
+
+<!-- BEGIN CORE JS FRAMEWORK--> 
+<script src="../../../resources/assets/plugins/jquery-1.8.3.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-1.8.3.min.js}"></script> 
+<script src="../../../resources/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js}"></script> 
+<script src="../../../resources/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootstrap/js/bootstrap.min.js}"></script> 
+<script src="../../../resources/assets/plugins/breakpoints.js" type="text/javascript" th:src="@{/resources/assets/plugins/breakpoints.js}"></script> 
+<script src="../../../resources/assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-unveil/jquery.unveil.min.js}"></script> 
+<script src="../../../resources/assets/plugins/jquery-block-ui/jqueryblockui.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-block-ui/jqueryblockui.js}"></script> 
+<!-- END CORE JS FRAMEWORK --> 
+<!-- BEGIN PAGE LEVEL JS --> 	
+<script src="../../../resources/assets/plugins/jquery-slider/jquery.sidr.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-slider/jquery.sidr.min.js}"></script> 	
+<script src="../../../resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js}"></script> 
+<script src="../../../resources/assets/plugins/pace/pace.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/pace/pace.min.js}"></script>  
+<script src="../../../resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js}"></script>
+<script src="../../../resources/assets/plugins/jquery.age.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery.age.js}"></script> 
+<!-- END PAGE LEVEL PLUGINS --> 	
+<!-- BEGIN CORE TEMPLATE JS --> 
+<script src="../../../resources/assets/js/core.js" type="text/javascript" th:src="@{/resources/assets/js/core.js}"></script> 
+<script src="../../../resources/assets/js/chat.js" type="text/javascript" th:src="@{/resources/assets/js/chat.js}"></script> 
+<script src="../../../resources/assets/js/demo.js" type="text/javascript" th:src="@{/resources/assets/js/demo.js}"></script> 
+<!-- END CORE TEMPLATE JS --> 
+</body>
+</html>

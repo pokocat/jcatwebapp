@@ -1,11 +1,19 @@
 package com.ericsson.jcat.jcatwebapp.account;
 
-import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.Email;
-
-import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
 
 @SuppressWarnings("serial")
 @Entity
@@ -27,23 +35,30 @@ public class Account implements java.io.Serializable {
 
 	private String nickName;
 
-	private String userGroup;
+	private ArrayList<String> userGroup;
+
+	private String groupRole;
 
 	@Email
 	private String email;
 
 	private String role = "ROLE_USER";
 
+	@Version
+	private long created = Calendar.getInstance().getTimeInMillis();
+
 	protected Account() {
 
 	}
 
-	public Account(String userName, String password, String nickName, String userGroup, String email, String role) {
+	public Account(String userName, String password, String nickName, ArrayList<String> userGroup, String groupRole,
+			String email, String role) {
 		super();
 		this.userName = userName;
 		this.password = password;
 		this.nickName = nickName;
 		this.userGroup = userGroup;
+		this.groupRole = groupRole;
 		this.email = email;
 		this.role = role;
 	}
@@ -80,11 +95,11 @@ public class Account implements java.io.Serializable {
 		this.nickName = nickName;
 	}
 
-	public String getUserGroup() {
+	public ArrayList<String> getUserGroup() {
 		return userGroup;
 	}
 
-	public void setUserGroup(String userGroup) {
+	public void setUserGroup(ArrayList<String> userGroup) {
 		this.userGroup = userGroup;
 	}
 
@@ -102,6 +117,34 @@ public class Account implements java.io.Serializable {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public String getGroupRole() {
+		return groupRole;
+	}
+
+	public void setGroupRole(String list) {
+		this.groupRole = list;
+	}
+
+	public long getCreated() {
+		return created;
+	}
+
+	public void setCreated(long created) {
+		this.created = created;
+	}
+
+	@Override
+	public String toString() {
+		return "Account [" + (id != null ? "id=" + id + ", " : "")
+				+ (userName != null ? "userName=" + userName + ", " : "")
+				+ (password != null ? "password=" + password + ", " : "")
+				+ (nickName != null ? "nickName=" + nickName + ", " : "")
+				+ (userGroup != null ? "userGroup=" + userGroup + ", " : "")
+				+ (groupRole != null ? "groupRole=" + groupRole + ", " : "")
+				+ (email != null ? "email=" + email + ", " : "") + (role != null ? "role=" + role + ", " : "")
+				+ "created=" + created + "]";
 	}
 
 }

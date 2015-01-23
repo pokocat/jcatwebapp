@@ -360,39 +360,38 @@
   		<div id="container">
   			<div class="row">
   				<div class="col-md-12">
-  					<div class="grid simple">
+  					<div class="grid simple" th:object="${limits}">
   						<div class="grid-title no-border">
   							<h4>Limit Summary</h4>
   							<div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="#grid-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="reload"></a> <a href="javascript:;" class="remove"></a> </div>
   						</div>
   						<div class="grid-body no-border">
   							<div class="row">
-  								<div class="col-md-3  text-center">
-  									<div id="Usage_1" class="easy-pie-custom" data-percent="33"><span class="easy-pie-percent">33</span><canvas height="110" width="110"></canvas></div>
+  								<div class="col-md-3  text-center" th:with="instanceUsage=*{totalInstancesUsed}/*{maxTotalInstances}*100">
+  									<div id="Usage_1" class="easy-pie-custom" data-percent="33" th:attr="data-percent=${instanceUsage}"><span class="easy-pie-percent" th:text="${instanceUsage} + ' %'">33</span><canvas height="110" width="110"></canvas></div>
   									<h5>Instance Usage</h5>
-  									<p>Used 1 of 3</p>
+  									<p th:inline="text">Used [[*{totalInstancesUsed}]] of [[*{maxTotalInstances}]]</p>
   								</div>
-  								<div class="col-md-3  text-center">
-  									<div id="Usage_2" class="easy-pie-custom" data-percent="50"><span class="easy-pie-percent">50</span><canvas height="110" width="110"></canvas></div>
-  									<h5>VCPUs </h5>
-  									<p>Used 3 of 6</p>
-  								</div>
-  								<div class="col-md-3 text-center">
-  									<div id="Usage_3" class="easy-pie-custom" data-percent="75"><span class="easy-pie-percent">75</span><canvas height="110" width="110"></canvas></div>
+  								<div class="col-md-3  text-center" th:with="floatingIpUsage=*{totalFloatingIpsUsed}/*{maxTotalFloatingIps}*100">
+  									<div id="Usage_2" class="easy-pie-custom" data-percent="50" th:attr="data-percent=${floatingIpUsage}"><span class="easy-pie-percent" th:text="${floatingIpUsage} + ' %'">50</span><canvas height="110" width="110"></canvas></div>
   									<h5>Floating IPs </h5>
-  									<p >Used 3 of 4</p>
+  									<p th:inline="text">Used [[*{totalFloatingIpsUsed}]] of [[*{maxTotalFloatingIps}]]</p>
   								</div>
-  								<div class="col-md-3  text-center">
-  									<div id="Usage_4" class="easy-pie-custom" data-percent="25"><span class="easy-pie-percent">25</span><canvas height="110" width="110"></canvas></div>
+  								<div class="col-md-3 text-center" th:with="coreUsage=*{totalCoresUsed}/*{maxTotalCores}*100">
+  									<div id="Usage_3" class="easy-pie-custom" data-percent="75" th:attr="data-percent=${coreUsage}"><span class="easy-pie-percent" th:text="${coreUsage} + ' %'">75</span><canvas height="110" width="110"></canvas></div>
+  									<h5>vCPUs</h5>
+  									<p th:inline="text">Used [[*{totalCoresUsed}]] of [[*{maxTotalCores}]]</p>
+  								</div>
+  								<div class="col-md-3  text-center" th:with="ramUsage=*{totalRAMUsed}/*{maxTotalRAMSize}*100">
+  									<div id="Usage_4" class="easy-pie-custom" data-percent="25" th:attr="data-percent=${ramUsage}"><span class="easy-pie-percent" th:text="${ramUsage} + ' %'">25</span><canvas height="110" width="110"></canvas></div>
   									<h5>RAM </h5>
-  									<p>Used 3GBytes of 12GB</p>
+  									<p th:inline="text">Used [[*{totalRAMUsed}/1024]]GB of [[*{maxTotalRAMSize}/1024]]GB</p>
   								</div>
   							</div>
   						</div>
   					</div>
   				</div>
   			</div>
-
 
 
   			<div class="row">		
@@ -582,7 +581,15 @@
   		<!-- END PAGE --> 
   	</div>
   </div>
+<script th:inline="javascript">
+/*<![CDATA[*/
+    ...
 
+    var user = /*[[${cpuUtilStats}]]*/ null;
+
+    ...
+/*]]>*/
+</script>
 <!-- END CONTAINER --> 
 </div>
 <!-- BEGIN CORE JS FRAMEWORK--> 

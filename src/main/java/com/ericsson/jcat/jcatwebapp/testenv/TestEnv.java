@@ -10,11 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.Version;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.openstack4j.openstack.compute.domain.NovaServer.Servers;
 
 import com.ericsson.jcat.jcatwebapp.cusom.TestingTool;
 import com.ericsson.jcat.jcatwebapp.cusom.TrafficGenerator;
-import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
 
 @Entity
 public class TestEnv {
@@ -33,10 +31,10 @@ public class TestEnv {
 
 	private String owner;
 
-	private UserGroup userGroup;
+	private String userGroup;
 
 	private boolean pcSet;
-	
+
 	private String imageSet;
 
 	private String vmServerId;
@@ -46,6 +44,8 @@ public class TestEnv {
 	private ArrayList<TestingTool> envTT;
 
 	private ArrayList<String> envSP;
+
+//	private Map<String, String> dockerInstances;
 
 	private String stpIp;
 
@@ -60,9 +60,9 @@ public class TestEnv {
 	public TestEnv() {
 	}
 
-	public TestEnv(String title, String text, String owner, UserGroup userGroup, boolean pcSet, String imageSet, String vmServerId,
-			ArrayList<TrafficGenerator> envTG, ArrayList<TestingTool> envTT, String stpIp, String expertUser,
-			String expertPass, String customerUser, String customerPass) {
+	public TestEnv(String title, String text, String owner, String userGroup, boolean pcSet, String imageSet,
+			String vmServerId, ArrayList<TrafficGenerator> envTG, ArrayList<TestingTool> envTT, String stpIp,
+			String expertUser, String expertPass, String customerUser, String customerPass) {
 		this.setName(title);
 		this.setDescription(text);
 		this.setOwner(owner);
@@ -119,11 +119,11 @@ public class TestEnv {
 		this.owner = owner;
 	}
 
-	public UserGroup getUserGroup() {
+	public String getUserGroup() {
 		return userGroup;
 	}
 
-	public void setUserGroup(UserGroup userGroup) {
+	public void setUserGroup(String userGroup) {
 		this.userGroup = userGroup;
 	}
 
@@ -214,5 +214,13 @@ public class TestEnv {
 	public void setImageSet(String imageSet) {
 		this.imageSet = imageSet;
 	}
+
+//	public Map<String, String> getDockerInstances() {
+//		return dockerInstances;
+//	}
+//
+//	public void setDockerInstances(Map<String, String> dockerInstances) {
+//		this.dockerInstances = dockerInstances;
+//	}
 
 }

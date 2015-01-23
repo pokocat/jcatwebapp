@@ -32,14 +32,15 @@
 <body>
 <!-- Modal -->
 <!-- <div  class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
-	<div class="modal-dialog" th:object="${vmServer}">
+	<div class="modal-dialog" th:object="${dockerInstance}">
+		<div class="hide" th:text="${dockerInstance}"></div>
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">close</button>
 				<br />
 				<i class="icon-credit-card icon-7x"></i>
-				<h4 id="myModalLabel" class="semi-bold" th:text="*{name}">name</h4>
-				<p class="no-margin" th:text="*{image.id}">Description </p>
+				<h4 id="myModalLabel" class="semi-bold" th:text="*{name}">NAME</h4>
+				<p class="no-margin" th:text="*{id}">Description </p>
 				<br />
 			</div>
 				<form action="" method="post" accept-charset="utf-8">
@@ -54,18 +55,18 @@
 					</div>
 					<div class="row form-row">
 						<div class="col-md-4">
-							<label class="form-label bold">Image</label>
+							<label class="form-label bold">Id</label>
 						</div>
 						<div class="col-md-8">
-							<input type="text" class="form-control modalInputControl" value="Image" th:value="*{image.id}"/>
+							<input type="text" class="form-control modalInputControl" value="Image" th:value="*{id}"/>
 						</div>
 					</div>
 					<div class="row form-row">
 						<div class="col-md-4">
-							<label class="form-label bold">Flavor</label>
+							<label class="form-label bold">Image</label>
 						</div>
 						<div class="col-md-8">
-							<input type="text" class="form-control modalInputControl" value="flavor" th:value="*{flavor.id}"/>
+							<input type="text" class="form-control modalInputControl" value="flavor" th:value="*{imageId}"/>
 						</div>
 					</div>
 					<div class="row form-row">
@@ -73,7 +74,7 @@
 							<label class="form-label bold">Status</label>
 						</div>
 						<div class="col-md-8">
-							<input type="text" class="form-control" value="status" th:value="*{status}"  disabled="disabled"/>
+							<input type="text" class="form-control" value="status" th:value="*{state.running}"  disabled="disabled"/>
 						</div>
 					</div>
 					<div class="row form-row">
@@ -86,18 +87,10 @@
 					</div>
 					<div class="row form-row">
 						<div class="col-md-4">
-							<label class="form-label bold">Time updated</label>
+							<label class="form-label bold">hostnamePath</label>
 						</div>
 						<div class="col-md-8">
-							<input type="text" class="form-control" value="time updated" th:value="*{updated}"  disabled="disabled"/>
-						</div>
-					</div>
-					<div class="row form-row">
-						<div class="col-md-4">
-							<label class="form-label bold">Addresses</label>
-						</div>
-						<div class="col-md-8" th:each="novaAddr : *{addresses}">
-							<input type="text" class="form-control" value="time launched" th:value="${novaAddr.addresses}"  disabled="disabled"/>
+							<input type="text" class="form-control" value="time launched" th:value="${hostnamePath}"  disabled="disabled"/>
 						</div>
 					</div>
 				</div>
@@ -114,5 +107,25 @@
 <!-- </div> -->
 <!-- /.modal -->
 
+<!-- BEGIN CORE JS FRAMEWORK--> 
+<script src="../../../resources/assets/plugins/jquery-1.8.3.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-1.8.3.min.js}"></script> 
+<script src="../../../resources/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js}"></script> 
+<script src="../../../resources/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootstrap/js/bootstrap.min.js}"></script> 
+<script src="../../../resources/assets/plugins/breakpoints.js" type="text/javascript" th:src="@{/resources/assets/plugins/breakpoints.js}"></script> 
+<script src="../../../resources/assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-unveil/jquery.unveil.min.js}"></script> 
+<script src="../../../resources/assets/plugins/jquery-block-ui/jqueryblockui.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-block-ui/jqueryblockui.js}"></script> 
+<!-- END CORE JS FRAMEWORK --> 
+<!-- BEGIN PAGE LEVEL JS --> 	
+<script src="../../../resources/assets/plugins/jquery-slider/jquery.sidr.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-slider/jquery.sidr.min.js}"></script> 	
+<script src="../../../resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js}"></script> 
+<script src="../../../resources/assets/plugins/pace/pace.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/pace/pace.min.js}"></script>  
+<script src="../../../resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js}"></script>
+<script src="../../../resources/assets/plugins/jquery.age.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery.age.js}"></script> 
+<!-- END PAGE LEVEL PLUGINS --> 	
+<!-- BEGIN CORE TEMPLATE JS --> 
+<script src="../../../resources/assets/js/core.js" type="text/javascript" th:src="@{/resources/assets/js/core.js}"></script> 
+<script src="../../../resources/assets/js/chat.js" type="text/javascript" th:src="@{/resources/assets/js/chat.js}"></script> 
+<script src="../../../resources/assets/js/demo.js" type="text/javascript" th:src="@{/resources/assets/js/demo.js}"></script> 
+<!-- END CORE TEMPLATE JS --> 
 </body>
 </html>

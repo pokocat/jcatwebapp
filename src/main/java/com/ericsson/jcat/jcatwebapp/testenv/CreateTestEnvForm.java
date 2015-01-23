@@ -11,8 +11,6 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.ericsson.jcat.jcatwebapp.cusom.TestingTool;
 import com.ericsson.jcat.jcatwebapp.cusom.TrafficGenerator;
-import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
-import com.ericsson.jcat.jcatwebapp.service.ComputeService;
 import com.ericsson.jcat.osadapter.exceptions.FlavorNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.ImageNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.VmCreationFailureException;
@@ -32,7 +30,7 @@ public class CreateTestEnvForm {
 
 	private String owner;
 
-	private UserGroup userGroup;
+	private String userGroup;
 
 	private boolean pcSet;
 
@@ -47,6 +45,8 @@ public class CreateTestEnvForm {
 	private ArrayList<TestingTool> envTT;
 
 	private ArrayList<String> envSP;
+
+//	private Map<String, String> dockerInstances;
 
 	private String stpIp;
 
@@ -82,11 +82,11 @@ public class CreateTestEnvForm {
 		this.owner = owner;
 	}
 
-	public UserGroup getUserGroup() {
+	public String getUserGroup() {
 		return userGroup;
 	}
 
-	public void setUserGroup(UserGroup userGroup) {
+	public void setUserGroup(String userGroup) {
 		this.userGroup = userGroup;
 	}
 
@@ -186,11 +186,19 @@ public class CreateTestEnvForm {
 		this.customerPass = customerPass;
 	}
 
+//	public Map<String, String> getDockerInstances() {
+//		return dockerInstances;
+//	}
+//
+//	public void setDockerInstances(Map<String, String> dockerInstances) {
+//		this.dockerInstances = dockerInstances;
+//	}
+
 	public TestEnv createTestEnv() throws FlavorNotFoundException, ImageNotFoundException, VmCreationFailureException,
 			TimeoutException {
 		return new TestEnv(this.getName(), this.getDescription(), this.getOwner(), this.getUserGroup(), this.isPcSet(),
-				this.getImageSet(), this.getVmServerId(), this.getEnvTG(), this.getEnvTT(), this.getStpIp(), this.getExpertUser(),
-				this.getExpertPass(), this.getCustomerUser(), this.getCustomerPass());
+				this.getImageSet(), this.getVmServerId(), this.getEnvTG(), this.getEnvTT(), this.getStpIp(),
+				this.getExpertUser(), this.getExpertPass(), this.getCustomerUser(), this.getCustomerPass());
 	}
 
 	@Override

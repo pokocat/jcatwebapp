@@ -14,28 +14,33 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TestEnvRepository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestEnvRepository.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestEnvRepository.class);
 
-    @PersistenceContext
-    private EntityManager entityManager;
+	@PersistenceContext
+	private EntityManager entityManager;
 
-    @Transactional
-    public TestEnv save(TestEnv testEnv) {
-        entityManager.persist(testEnv);
-        return testEnv;
-    }
-    
-    @Transactional
-    public TestEnv update(TestEnv testEnv) {
-        entityManager.refresh(testEnv);
-        return testEnv;
-    }
+	@Transactional
+	public TestEnv save(TestEnv testEnv) {
+		entityManager.persist(testEnv);
+		return testEnv;
+	}
 
-    public List<TestEnv> findAll() {
-        return entityManager.createQuery("SELECT i FROM TestEnv i", TestEnv.class).getResultList();
-    }
+	@Transactional
+	public TestEnv update(TestEnv testEnv) {
+		entityManager.refresh(testEnv);
+		return testEnv;
+	}
 
-    public TestEnv findById(int id) {
-        return entityManager.find(TestEnv.class, id);
-    }
+	public List<TestEnv> findAll() {
+		return entityManager.createQuery("SELECT i FROM TestEnv i", TestEnv.class).getResultList();
+	}
+
+	public TestEnv findById(int id) {
+		return entityManager.find(TestEnv.class, id);
+	}
+
+	public void deleteById(int id) {
+		entityManager.remove(this.findById(id));
+		entityManager.flush();
+	}
 }

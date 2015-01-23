@@ -1,6 +1,5 @@
 package com.ericsson.jcat.jcatwebapp.login;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -19,8 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ericsson.jcat.jcatwebapp.account.Account;
 import com.ericsson.jcat.jcatwebapp.account.AccountRepository;
+import com.ericsson.jcat.jcatwebapp.account.UserGroup;
+import com.ericsson.jcat.jcatwebapp.account.UserGroupRepository;
 import com.ericsson.jcat.jcatwebapp.account.UserService;
-import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
 import com.ericsson.jcat.jcatwebapp.support.web.MessageHelper;
 
 @Controller
@@ -30,13 +30,16 @@ public class UserController {
 
 	@Autowired
 	private AccountRepository accountRepository;
+	
+	@Autowired
+	private UserGroupRepository userGroupRepository;
 
 	@Autowired
 	private UserService userService;
 
 	@ModelAttribute("allGroups")
 	public List<UserGroup> populateGroups() {
-		return Arrays.asList(UserGroup.values());
+		return userGroupRepository.findAll();
 	}
 
 	@RequestMapping(value = "signup")

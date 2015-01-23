@@ -1,20 +1,6 @@
 package com.ericsson.jcat.jcatwebapp.testengine;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import javax.xml.bind.annotation.XmlRootElement;
-
-import junit.framework.Test;
-
 import org.hibernate.validator.constraints.NotBlank;
-
-import com.ericsson.jcat.jcatwebapp.cusom.OpenstackFlavor;
-import com.ericsson.jcat.jcatwebapp.cusom.OpenstackImage;
-import com.ericsson.jcat.jcatwebapp.cusom.SingleProcess;
-import com.ericsson.jcat.jcatwebapp.cusom.TestingTool;
-import com.ericsson.jcat.jcatwebapp.cusom.TrafficGenerator;
-import com.ericsson.jcat.jcatwebapp.cusom.UserGroup;
 
 public class TestEngineCreateForm {
 	private static final String NOT_BLANK_MESSAGE = "{notBlank.message}";

@@ -1,16 +1,23 @@
+
+
+
 $(document).ready(function() {	
+
+
+	$(function() {
+		updateStatus();
+	});
+
 	$('.env-name').tooltip();
 
-	$(".modal-body input").prop('disabled', true);
-	$(".modal-body select").prop('disabled', true);
+	$(".modal-body input.modalInputControl").prop('disabled', true);
+	$(".modal-body select.modalInputControl").prop('disabled', true);
 
 
 	$(".modalFormSubmit").click(function(event) {
 		$(this).html('<i class="fa fa-wrench"></i>&nbsp;&nbsp;Save changes');
-		$(".modal-body input").prop('disabled', false);
-		$(".modal-body select").prop('disabled', false);
-
-
+		$(".modal-body input.modalInputControl").prop('disabled', false);
+		$(".modal-body select.modalInputControl").prop('disabled', false);
 
 		$.ajax({
 			url: '/path/to/file',
@@ -27,27 +34,15 @@ $(document).ready(function() {
 		.always(function() {
 			console.log("complete");
 		});
-
 		event.preventDefault();
 	});
 
 	$(".modalFormCancel").click(function(event) {
-		$(".modal-body input").prop('disabled', true);
-		$(".modal-body select").prop('disabled', true);
+		$(".modal-body input.modalInputControl").prop('disabled', true);
+		$(".modal-body select.modalInputControl").prop('disabled', true);
 		$(".modalFormSubmit").html('<i class="fa fa-cogs"></i>&nbsp;&nbsp;Update');
 	});
-	$("input[name='useRPC']").change(function(event) {
-		if ($("input[name='useRPC']:checked").val() == 'true') {
-			$("#rpcHwSet").fadeIn('slow', function() {
-			});
-
-		} else {
-			$("#rpcHwSet").fadeOut('slow', function() {
-				
-			});
-		};
-	});
-
+	
 	$('[data-load-remote]').on('click',function(e) {
 		e.preventDefault();
 		var $this = $(this);
@@ -56,6 +51,25 @@ $(document).ready(function() {
 			$($this.data('remote-target')).load(remote);
 		}
 	});	
+	
+	$('.age').age();
+	
+	$('#myModal').on('hidden.bs.modal', function (e) {
+		  $(this).html($("#modalLoadingTemp").html());
+		});
 
+
+
+	function updateStatus () {
+		$("#envstatus span").each(function(index, el) {
+			var statusGrid = $(this);
+			$.get('status/'+(index+1), function(data) {
+				console.log("env" + index + ' is '+ data);
+				statusGrid.text(data);
+			});
+		});
+	}
 });
+
+
 
