@@ -3,10 +3,13 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 <meta charset="utf-8" />
-<title>VM instances</title>
+<title>Test Environment List - Jcat</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="" name="description" />
 <meta content="" name="author" />
+<link href="../../../resources/assets/plugins/jquery-notifications/css/messenger.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/plugins/jquery-notifications/css/messenger.css}"/>
+<link href="../../../resources/assets/plugins/jquery-notifications/css/messenger-theme-future.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/plugins/jquery-notifications/css/messenger-theme-future.css}"/>
+<link href="../../../resources/assets/plugins/jquery-notifications/css/messenger-theme-flat.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/plugins/jquery-notifications/css/messenger-theme-flat.css}"/>
 
 <link href="../../../resources/assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/pace/pace-theme-flash.css}"/>
 <link href="../../../resources/assets/plugins/jquery-slider/css/jquery.sidr.light.css" rel="stylesheet" type="text/css" media="screen" th:href="@{/resources/assets/plugins/jquery-slider/css/jquery.sidr.light.css}"/>
@@ -375,7 +378,7 @@
     			<p>YOU ARE HERE</p>
     		</li> 
     		<li>
-    			<a href="#" class="active">VMInstances</a>
+    			<a href="#" class="active">TestEnv List</a>
     		</li>
     	</ul>
 		<div class="page-title">	
@@ -385,7 +388,7 @@
 			<div class="col-md-12">
 				<div class="grid simple ">
 					<div class="grid-title no-border">
-						<h4>VM instances List <span class="semi-bold">EXAMPLE</span></h4>
+						<h4>Test Environment List <span class="semi-bold"></span></h4>
 						<div class="tools">	<a href="javascript:;" class="collapse"></a>
 							<a href="#grid-config" data-toggle="modal" class="config"></a>
 							<a href="javascript:;" class="reload"></a>
@@ -398,19 +401,22 @@
 
 
 
-						<h3>Group  <span class="semi-bold">RST</span></h3>
+						<h3>User Group:  <span class="semi-bold" th:text="${currentGroups}">RST</span></h3>
 						<table class="table no-more-tables table-bordered">
 							<thead>
 								<tr>
 									<th style="width:1%; white-space: nowrap;" class="v-align-middle" >
 										ID
 									</th>
+									<th style="width:1%; white-space: nowrap;" class="v-align-middle" >
+										Owner
+									</th>
 									<th style="width:9%; white-space: nowrap;" class="v-align-middle">ENV Set Name</th>
 									<!--<th style="width:3%; white-space: nowrap;" class="v-align-middle">IP Address</th>
 									<th style="width:3%; white-space: nowrap;" class="v-align-middle">PC Type</th>-->
 									<th style="width:25%; white-space: nowrap;" class="v-align-middle">Resources</th>
 									<th style="width:8%; white-space: nowrap;" class="v-align-middle">Status</th>
-									<th style="width:8%; white-space: nowrap;" class="v-align-middle">Time since created</th>
+									<th style="width:8%; white-space: nowrap;" class="v-align-middle">Live time</th>
 									<th style="width:15%; white-space: nowrap;" class="v-align-middle">Actions</th>
 								</tr>
 							</thead>
@@ -418,8 +424,12 @@
 								<tr th:if="${testEnvs.empty}">
 									<td class="center-text" colspan="12">No Test Environment exists currently</td>
 								</tr>
-								<tr th:each="testEnv,iterStat : ${testEnvs}">
+								<tr th:each="testEnv,iterStat : ${testEnvs}" th:id="${testEnv.id}">
 									<td id="id" th:text="${iterStat.count}">1</td>
+									<td id="">
+										<i class="fa fa-user" th:if="${#httpServletRequest.remoteUser} == ${testEnv.owner}">&nbsp;</i>
+										<i class="fa fa-users">&nbsp;</i>
+									</td>
 									<td>
 										<div class="env-name" data-toggle="tooltip" title="" data-placement="top" data-original-title="Hello there! Some description here." th:attr="data-original-title=${testEnv.description}">
 										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)" th:text="${testEnv.name}">INSTA-EXAMPLE</a>
@@ -442,25 +452,24 @@
 										</a>
 									</td>
 									<td id="envstatus" class="v-align-middle ">
-										<span class="label label-success">TERMINATED</span>
+										<span class="label label-success">UPDATING...</span>
 									</td>
 									<td class="v-align-middle"><time class="age" th:attr="datetime=${#dates.format(testEnv.created, 'dd/MMM/yyyy HH:mm')}">10 minutes</time></td>
 									<td class="v-align-middle">
-										<div class="btn-group">
+										<div id="action-btn-group" class="btn-group">
 											<button class="btn btn-white btn-small"><a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/createsnapshot/}+ (${testEnv.id})">Create Snapshot</a></button>
 											<button class="btn btn-white dropdown-toggle btn-small" data-toggle="dropdown"> <span class="caret"></span> </button>
 											<ul class="dropdown-menu">
 												<li><a href="">Restore Snapshot</a></li>
 												<li class="divider"></li>
-												<li><a href="" th:href="@{/testenv/start/}+${testEnv.id}">Start</a></li>
-												<li><a href="#" th:href="@{/testenv/stop/}+${testEnv.id}">Stop</a></li>
+												<li><a href=""  th:attr="data-href=@{/testenv/start/}+${testEnv.id}">Start</a></li>
+												<li><a href="#" th:attr="data-href=@{/testenv/stop/}+${testEnv.id}">Stop</a></li>
 												<li class="divider"></li>
-												<li><a href="#" th:href="@{/testenv/suspend/}+${testEnv.id}">Suspend</a></li>
-												<li><a href="#" th:href="@{/testenv/resume/}+${testEnv.id}">Resume</a></li>
+												<li><a href="#" th:attr="data-href=@{/testenv/suspend/}+${testEnv.id}">Suspend</a></li>
+												<li><a href="#" th:attr="data-href=@{/testenv/resume/}+${testEnv.id}">Resume</a></li>
 												<li class="divider"></li>
-												<li><a href="#"  th:attr="href=@{/testenv/destroy/}+ (${testEnv.id})">Destroy</a></li>
-												<li><a href="#" th:href="@{/testenv/reset/}+${testEnv.id}">Reset</a></li>
-
+												<li><a href="#" th:attr="data-attr=@{/testenv/destroy/}+(${testEnv.id})">Destroy</a></li>
+												<li><a href="#" th:attr="data-href=@{/testenv/reset/}+${testEnv.id}">Reset</a></li>
 											</ul>
 										</div>
 									</td>
@@ -530,6 +539,9 @@
 <script src="../../../resources/assets/plugins/pace/pace.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/pace/pace.min.js}"></script>  
 <script src="../../../resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js}"></script>
 <script src="../../../resources/assets/plugins/jquery.age.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery.age.js}"></script> 
+<script src="../../../resources/assets/plugins/bootbox.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootbox.js}"></script>
+<script src="../../../resources/assets/plugins/jquery-notifications/js/messenger.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-notifications/js/messenger.min.js}"></script>
+<script src="../../../resources/assets/plugins/jquery-notifications/js/messenger-theme-future.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-notifications/js/messenger-theme-future.js}"></script>
 <!-- END PAGE LEVEL PLUGINS --> 	
 <script src="../../../resources/assets/js/list_env.js" type="text/javascript" charset="utf-8" th:src="@{/resources/assets/js/list_env.js}"></script>
 <!-- BEGIN CORE TEMPLATE JS --> 

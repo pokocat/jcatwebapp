@@ -71,7 +71,6 @@ class UserManagementController {
 	@ResponseBody
 	public ResponseEntity<String> updateUser(@PathVariable long id, @RequestBody Account userUpdate) {
 		//TODO response with error callback in .ajax of Jquery.
-		System.out.println(userUpdate.toString());
 		Account accountToUpdate = accountRepo.findByUserId(id);
 		if (userUpdate.getGroupRole() != null && !userUpdate.getGroupRole().isEmpty()) {
 			accountToUpdate.setGroupRole(userUpdate.getGroupRole());
@@ -81,6 +80,20 @@ class UserManagementController {
 		}
 		accountRepo.update(accountToUpdate);
 		System.out.println(accountToUpdate.toString());
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/group/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<String> addUserGroup(@RequestBody UserGroup userGroup) {
+		UserGroup userGroupToAdd = groupRepository.save(userGroup);
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/delete/group/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<String> addUserGroup(@PathVariable long id) {
+		groupRepository.deleteById((int) id);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 }

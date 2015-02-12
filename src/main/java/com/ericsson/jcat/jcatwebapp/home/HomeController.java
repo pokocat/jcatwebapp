@@ -7,6 +7,7 @@ import org.openstack4j.model.compute.AbsoluteLimit;
 import org.openstack4j.openstack.compute.domain.NovaAbsoluteLimit;
 import org.openstack4j.openstack.telemetry.domain.CeilometerStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +16,11 @@ import com.ericsson.jcat.jcatwebapp.testenv.TestEnvRepository;
 
 @Controller
 public class HomeController {
+	@Autowired
 	private ServiceHelper sh;
 
-	@Autowired
-	public HomeController(ServiceHelper serviceHelper) {
-		this.sh = serviceHelper;
-	}
+	@Value("${openstack.ip}")
+	private String aaa;
 
 	@ModelAttribute("page")
 	public String module() {
@@ -29,14 +29,16 @@ public class HomeController {
 
 	@ModelAttribute("limits")
 	public NovaAbsoluteLimit getAbsoluteLimits() {
-		return new ServiceHelper().getAbsoluteLimit();
+		sh = new ServiceHelper();
+		return sh.getAbsoluteLimit();
 	}
-/*
-	@ModelAttribute("cpuUtilStats")
-	public List<CeilometerStatistics> getCpuUtilStats() {
-		return new ServiceHelper().getCpuUtilStats(86400);
-	}
-*/
+
+	/*
+	 * @ModelAttribute("cpuUtilStats")
+	 * public List<CeilometerStatistics> getCpuUtilStats() {
+	 * return new ServiceHelper().getCpuUtilStats(86400);
+	 * }
+	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String index(Principal principal) {
 		return principal != null ? "home/homeSignedIn" : "home/homeNotSignedIn";

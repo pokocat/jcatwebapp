@@ -423,7 +423,7 @@
 								</tr>
 								<tr th:each="user,iterStat : ${users}" th:id="${user.id}">
 										<td  class="v-align-middle muted" th:text="${user.id}">id</td>
-										<td  class="v-align-middle muted" th:text="${user.userName}">username</td>
+										<td id="user-name" class="v-align-middle muted" th:text="${user.userName}">username</td>
 										<td  class="v-align-middle muted" th:text="${user.nickName}">nickname</td>
 										<td  class="v-align-middle muted" th:text="${user.email}">email</td>
 										<td  class="v-align-middle">
@@ -437,7 +437,7 @@
 							                  </select>
 										</td>
 										<td class="v-align-middle">
-											<select class="roleSetting" style="width:100%" value="user" name="groupRole">
+											<select class="roleSetting" style="width:100%" value="user" th:attr="data-value=${user.groupRole}" name="groupRole">
 							                    <option value="admin">Admin</option>
 							                    <option value="user">User</option>
 						                    </select>
@@ -479,6 +479,7 @@
 <script src="../../../resources/assets/plugins/pace/pace.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/pace/pace.min.js}"></script>  
 <script src="../../../resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js}"></script>
 <script src="../../../resources/assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootstrap-select2/select2.min.js}"></script>
+<script src="../../../resources/assets/plugins/bootbox.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootbox.js}"></script>
 <!-- END PAGE LEVEL PLUGINS --> 
 <script src="../../../resources/assets/js/list_user.js" type="text/javascript" th:src="@{/resources/assets/js/list_user.js}"></script> 
 <!-- BEGIN CORE TEMPLATE JS --> 

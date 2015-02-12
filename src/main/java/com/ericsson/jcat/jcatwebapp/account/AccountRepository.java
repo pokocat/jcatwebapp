@@ -30,9 +30,10 @@ public class AccountRepository {
 
 	@Transactional
 	public Account update(Account account) {
-		entityManager.refresh(entityManager.merge(account));
-		entityManager.flush();
-		return account;
+//		Account a = entityManager.merge(account);
+//		entityManager.refresh(a);
+//		entityManager.persist(a);
+		return entityManager.merge(account);
 	}
 
 	public Account findByUserId(long id) {

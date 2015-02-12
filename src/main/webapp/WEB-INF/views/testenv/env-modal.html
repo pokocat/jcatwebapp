@@ -39,13 +39,13 @@
 							<label class="form-label bold">Use RemotePC</label>
 						</div>
 						<div class="radio radio-primary col-md-8" style="padding: 6px 15px;">
-							<input type="radio" class="form-control" value="true" id="useRPC" name="useRPC" th:checked="*{useRPC}"/>
+							<input type="radio" class="form-control" value="true" id="useRPC" name="useRPC" th:checked="*{pcSet}"/>
 							<label for="useRPC">Yes</label>
-							<input type="radio" class="form-control" value="false" id="noRPC" name="useRPC" th:checked="*{useRPC} ? false : 'true'"/>
+							<input type="radio" class="form-control" value="false" id="noRPC" name="useRPC" th:checked="*{pcSet} ? false : 'true'"/>
 							<label for="noRPC">no</label>
 						</div>
 					</div>
-					<div class="row form-row" id="rpcHwSet" th:style="*{useRPC} ? 'display:;' : 'display:none;'">
+					<div class="row form-row" id="rpcHwSet" th:style="*{pcSet} ? 'display:;' : 'display:none;'">
 						<div class="col-md-4">
 							<label class="form-label bold"></label>
 						</div>
@@ -77,14 +77,6 @@
 						</div>
 						<div class="col-md-8">
 							<input type="text" class="form-control" value="tt env settings" th:value="*{envTT}"/>
-						</div>
-					</div>
-					<div class="row form-row">
-						<div class="col-md-4">
-							<label class="form-label bold">Single Process</label>
-						</div>
-						<div class="col-md-8">
-							<input type="text" class="form-control" value="sp env settings" th:value="*{envSP}"/>
 						</div>
 					</div>
 				</div>

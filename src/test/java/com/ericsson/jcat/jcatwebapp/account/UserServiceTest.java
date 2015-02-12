@@ -6,6 +6,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.Rule;
@@ -53,7 +55,7 @@ public class UserServiceTest {
 	@Test
 	public void shouldReturnUserDetails() {
 		// arrange
-		Account demoUser = new Account("user@example.com", "demo", "nickme", "CHS", "asdf@fdds.com","", "ROLE_USER");
+		Account demoUser = new Account("user@example.com", "demo", "nickme", new ArrayList<String>(Arrays.asList("CHS")), "asdf@fdds.com","", "ROLE_USER");
 		when(accountRepositoryMock.findByUserName("user@example.com")).thenReturn(demoUser);
 
 		// act

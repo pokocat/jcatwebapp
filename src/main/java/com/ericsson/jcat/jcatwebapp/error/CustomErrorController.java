@@ -44,7 +44,7 @@ class CustomErrorController {
 
 	private String getExceptionMessage(Throwable throwable, Integer statusCode) {
 		if (throwable != null) {
-			logger.error(throwable.getLocalizedMessage());
+			logger.error(throwable.getMessage());
 			return Throwables.getStackTraceAsString(throwable);
 		}
 		HttpStatus httpStatus = HttpStatus.valueOf(statusCode);

@@ -3,6 +3,7 @@ package com.ericsson.jcat.jcatwebapp.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -25,16 +26,18 @@ public class IdentityService {
 
 	private JcatOSCompute osc;
 
-	public IdentityService() {
-		JcatOSCompute josc = new JcatOSCompute("127.0.0.1", "admin", "admin", "admin", "127.0.0.1");
+	public IdentityService(String openstackIp, String openstackUser, String openstackPass, String openstackTenent,
+			String openstackAltNatIp) {
+		JcatOSCompute josc = new JcatOSCompute(openstackIp, openstackUser, openstackPass, openstackTenent,
+				openstackAltNatIp);
 		setOsc(josc);
 	}
 
-	public JcatOSCompute auth() {
-		JcatOSCompute josc = new JcatOSCompute("127.0.0.1", "admin", "admin", "admin");
-		setOsc(josc);
-		return josc;
-	}
+	// public JcatOSCompute auth() {
+	// JcatOSCompute josc = new JcatOSCompute("127.0.0.1", "admin", "admin", "admin");
+	// setOsc(josc);
+	// return josc;
+	// }
 
 	public JcatOSCompute getOsc() {
 		return osc;

@@ -20,6 +20,7 @@ class DefaultDataSourceConfig implements DataSourceConfig {
     private String username;
     @Value("${dataSource.password}")
     private String password;
+    
 
     @Bean
     @Override

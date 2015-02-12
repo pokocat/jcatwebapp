@@ -37,18 +37,20 @@ public class OpenstackService {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	private JcatOSCompute josc;
 
-	private IdentityService is;
-
-	public OpenstackService() {
-		this.josc = new IdentityService().getOsc();
+	public OpenstackService(String openstackIp, String openstackUser, String openstackPass, String openstackTenent,
+			String openstackAltNatIp) {
+		this.josc = new IdentityService(openstackIp, openstackUser, openstackPass, openstackTenent, openstackAltNatIp)
+				.getOsc();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<NovaServer> getInstances() {
 		List<? extends Server> servers = josc.getOsc().compute().servers().list();
-		logger.info(servers.toString());
+		logger.debug(servers.toString());
 		return (List<NovaServer>) servers;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getImages() {
 		List<NovaImage> images = (List<NovaImage>) josc.getOsc().compute().images().list();
 
@@ -59,6 +61,7 @@ public class OpenstackService {
 		return imageNameList;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<NovaFlavor> getFlavors() {
 		List<NovaFlavor> flavors = (List<NovaFlavor>) josc.getOsc().compute().flavors().list();
 		List<String> flavorList = new ArrayList<String>();
@@ -74,6 +77,7 @@ public class OpenstackService {
 		return vm.getId();
 	}
 
+	@SuppressWarnings("unchecked")
 	public String getIntNetworkId() {
 		List<NeutronNetwork> networkList = (List<NeutronNetwork>) josc.getOsc().networking().network().list();
 		for (NeutronNetwork network : networkList) {
@@ -134,6 +138,7 @@ public class OpenstackService {
 		return (NovaAbsoluteLimit) josc.getOsc().compute().quotaSets().limits().getAbsolute();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<CeilometerStatistics> getCpuUtilStats(int period) {
 		return (List<CeilometerStatistics>) josc.getOsc().telemetry().meters().statistics("cpu_util", period);
 	}

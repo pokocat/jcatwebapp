@@ -1,5 +1,6 @@
 package com.ericsson.jcat.jcatwebapp.testenv;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,11 +12,15 @@ import org.openstack4j.openstack.compute.domain.NovaServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +31,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 import com.ericsson.axe.jcat.docker.adapter.exceptions.ContainerExecutionException;
+import com.ericsson.jcat.jcatwebapp.account.Account;
+import com.ericsson.jcat.jcatwebapp.account.AccountRepository;
 import com.ericsson.jcat.jcatwebapp.account.UserGroup;
 import com.ericsson.jcat.jcatwebapp.account.UserGroupRepository;
 import com.ericsson.jcat.jcatwebapp.cusom.SingleProcess;
@@ -46,18 +53,18 @@ class TestEnvController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private TestEnvRepository testEnvRepository;
-
+	@Autowired
+	private AccountRepository accountRepository;
+	@Autowired
 	private ServiceHelper sh;
 
 	private UserGroupRepository userGroupRepository;
 
 	@Autowired
-	public TestEnvController(TestEnvRepository testEnvRepository, UserGroupRepository userGroupRepository,
-			ServiceHelper sh) {
+	public TestEnvController(TestEnvRepository testEnvRepository, UserGroupRepository userGroupRepository) {
 		this.testEnvRepository = testEnvRepository;
 		this.userGroupRepository = userGroupRepository;
 		init();
-		this.sh = sh;
 	}
 
 	private void init() {
@@ -66,7 +73,7 @@ class TestEnvController {
 						TrafficGenerator.Client4, TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(Arrays
 						.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
 				"customeruser", "customeruser"));
-		testEnvRepository.save(new TestEnv("ENV SET DEMO 2", "Isn't this demo fantacy? Created by me.", "admin", "RST",
+		testEnvRepository.save(new TestEnv("ENV SET DEMO 2", "Isn't this demo fantacy? Created by me.", "eduowan", "RST",
 				false, "centos_pure", "1864a699-bd93-45ec-be99-2cd4afb1050b", new ArrayList<TrafficGenerator>(Arrays
 						.asList(TrafficGenerator.Client4, TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(Arrays
 						.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
@@ -76,18 +83,12 @@ class TestEnvController {
 						.asList(TrafficGenerator.Client4, TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(Arrays
 						.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
 				"customeruser", "customeruser"));
-
 	}
 
 	public String getUserLoggedIn() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String name = auth.getName();
 		return name;
-	}
-
-	@ModelAttribute("limits")
-	public NovaAbsoluteLimit getAbsoluteLimits() {
-		return sh.getAbsoluteLimit();
 	}
 
 	@ModelAttribute
@@ -100,6 +101,12 @@ class TestEnvController {
 		return new TestEnv();
 	}
 
+	@ModelAttribute("limits")
+	public NovaAbsoluteLimit getAbsoluteLimits() {
+		sh =  new ServiceHelper();
+		return sh.getAbsoluteLimit();
+	}
+
 	@ModelAttribute("page")
 	public String module() {
 		return "instances";
@@ -107,7 +114,8 @@ class TestEnvController {
 
 	@ModelAttribute("allFlavors")
 	public List<NovaFlavor> populateFlavors() {
-		return new ServiceHelper().getFlavors();
+		sh = new ServiceHelper();
+		return sh.getFlavors();
 	}
 
 	@ModelAttribute("allImages")
@@ -170,36 +178,36 @@ class TestEnvController {
 	}
 
 	@RequestMapping(value = "/{action}/{id}", method = RequestMethod.GET)
-	public String createSnapshotModal(@PathVariable String action, @PathVariable int id, Model model) {
+	@ResponseBody
+	public ResponseEntity<String> createSnapshotModal(@PathVariable String action, @PathVariable int id, Model model) {
 		if (action.equalsIgnoreCase("createsnapshot")) {
 			CreateSnapshotForm createSnapshotForm = new CreateSnapshotForm();
 			createSnapshotForm.setId(id);
 			model.addAttribute("createSnapshotForm", createSnapshotForm);
-			return "testenv/createsnapshot-modal";
+			return new ResponseEntity<String>("success", new HttpHeaders(), HttpStatus.OK);
 		} else if (action.equalsIgnoreCase("restoresnapshot")) {
 
 		} else if (action.equalsIgnoreCase("start")) {
 			sh.startServer(testEnvRepository.findById(id).getVmServerId());
-			return "redirect:/testenv/";
+			return new ResponseEntity<String>("success", new HttpHeaders(), HttpStatus.OK);
 		} else if (action.equalsIgnoreCase("stop")) {
 			sh.stopServer(testEnvRepository.findById(id).getVmServerId());
-			return "redirect:/testenv/";
+			return new ResponseEntity<String>("success", new HttpHeaders(), HttpStatus.OK);
 		} else if (action.equalsIgnoreCase("suspend")) {
 			sh.suspendServer(testEnvRepository.findById(id).getVmServerId());
-			return "redirect:/testenv/";
+			return new ResponseEntity<String>("success", new HttpHeaders(), HttpStatus.OK);
 		} else if (action.equalsIgnoreCase("restore")) {
 			sh.resumeServer(testEnvRepository.findById(id).getVmServerId());
-			return "redirect:/testenv/";
+			return new ResponseEntity<String>("success", new HttpHeaders(), HttpStatus.OK);
 		} else if (action.equalsIgnoreCase("destroy")) {
 			sh.destroyServer(testEnvRepository.findById(id).getVmServerId());
 			testEnvRepository.deleteById(id);
-			return "redirect:/testenv/";
+			return new ResponseEntity<String>("success", new HttpHeaders(), HttpStatus.OK);
 		} else if (action.equalsIgnoreCase("reset")) {
 			sh.resetServer(testEnvRepository.findById(id).getVmServerId());
-			return "redirect:/testenv/";
+			return new ResponseEntity<String>("success", new HttpHeaders(), HttpStatus.OK);
 		}
-
-		return null;
+		return new ResponseEntity<String>("fail", new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "/createsnapshot", method = RequestMethod.POST)
@@ -228,8 +236,11 @@ class TestEnvController {
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String listTestEnv(Model model) {
-		model.addAttribute("testEnvs", testEnvRepository.findAll());
+	public String listTestEnv(Model model, Principal principal) {
+		Assert.notNull(principal);
+		ArrayList<String> currentGroups = accountRepository.findByUserName(principal.getName()).getUserGroup();
+		model.addAttribute("currentGroups", currentGroups);
+		model.addAttribute("testEnvs", testEnvRepository.findByGroup(currentGroups));
 		return "testenv/list-testenv";
 	}
 

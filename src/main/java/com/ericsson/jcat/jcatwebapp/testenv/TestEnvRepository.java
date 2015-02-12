@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -37,6 +39,16 @@ public class TestEnvRepository {
 
 	public TestEnv findById(int id) {
 		return entityManager.find(TestEnv.class, id);
+	}
+
+	public List<TestEnv> findByGroup(List<String> grps) {
+		List<TestEnv> testEnvList = new ArrayList<TestEnv>();
+		for (String userGroup : grps) {
+			testEnvList.addAll(entityManager
+					.createQuery("SELECT i FROM TestEnv i where i.userGroup = :userGroup", TestEnv.class)
+					.setParameter("userGroup", userGroup).getResultList());
+		}
+		return testEnvList;
 	}
 
 	public void deleteById(int id) {

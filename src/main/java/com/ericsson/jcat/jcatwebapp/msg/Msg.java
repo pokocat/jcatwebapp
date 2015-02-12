@@ -16,19 +16,19 @@ public class Msg {
 	@Version
 	private long createdTime = Calendar.getInstance().getTimeInMillis();;
 
-	private String from;
+	private String fromUser;
 
-	private String to;
+	private String toUser;
 
 	private String msgTitle;
 
 	private String msgContent;
-	
+
 	private boolean isRead;
 
 	public Msg(String from, String to, String msgTitle, String msgContent) {
-		this.from = from;
-		this.to = to;
+		this.fromUser = from;
+		this.toUser = to;
 		this.msgTitle = msgTitle;
 		this.msgContent = msgContent;
 	}
@@ -50,19 +50,19 @@ public class Msg {
 	}
 
 	public String getFrom() {
-		return from;
+		return fromUser;
 	}
 
 	public void setFrom(String from) {
-		this.from = from;
+		this.fromUser = from;
 	}
 
 	public String getTo() {
-		return to;
+		return toUser;
 	}
 
 	public void setTo(String to) {
-		this.to = to;
+		this.toUser = to;
 	}
 
 	public String getMsgTitle() {
@@ -83,8 +83,9 @@ public class Msg {
 
 	@Override
 	public String toString() {
-		return "Msg [id=" + id + ", createdTime=" + createdTime + ", " + (from != null ? "from=" + from + ", " : "")
-				+ (to != null ? "to=" + to + ", " : "") + (msgTitle != null ? "msgTitle=" + msgTitle + ", " : "")
+		return "Msg [id=" + id + ", createdTime=" + createdTime + ", "
+				+ (fromUser != null ? "from=" + fromUser + ", " : "") + (toUser != null ? "to=" + toUser + ", " : "")
+				+ (msgTitle != null ? "msgTitle=" + msgTitle + ", " : "")
 				+ (msgContent != null ? "msgContent=" + msgContent : "") + "]";
 	}
 

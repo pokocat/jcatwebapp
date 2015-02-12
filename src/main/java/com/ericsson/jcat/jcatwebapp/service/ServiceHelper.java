@@ -1,9 +1,11 @@
 package com.ericsson.jcat.jcatwebapp.service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
-import org.openstack4j.model.compute.AbsoluteLimit;
 import org.openstack4j.model.compute.ActionResponse;
 import org.openstack4j.openstack.compute.domain.NovaAbsoluteLimit;
 import org.openstack4j.openstack.compute.domain.NovaFlavor;
@@ -11,9 +13,19 @@ import org.openstack4j.openstack.compute.domain.NovaServer;
 import org.openstack4j.openstack.telemetry.domain.CeilometerStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.PropertiesBeanDefinitionReader;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 import com.ericsson.axe.jcat.docker.adapter.exceptions.ContainerCreationException;
 import com.ericsson.axe.jcat.docker.adapter.exceptions.ContainerExecutionException;
@@ -21,28 +33,70 @@ import com.ericsson.axe.jcat.docker.adapter.exceptions.ContainerRunningException
 import com.ericsson.axe.jcat.docker.adapter.exceptions.ContainerStartingException;
 import com.ericsson.axe.jcat.docker.adapter.implementations.JcatDockerAdapter;
 import com.ericsson.axe.jcat.docker.adapter.interfaces.IJcatDockerContainerClient;
+import com.ericsson.jcat.jcatwebapp.config.TestConfig;
 import com.ericsson.jcat.jcatwebapp.cusom.TestEnvStatus;
 import com.ericsson.jcat.osadapter.exceptions.FlavorNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.ImageNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.VmCreationFailureException;
-import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 
-@Component
+@Service
 public class ServiceHelper {
+
 	public enum InstanceType {
 		Openstack, docker
 	}
+
+	// Configs for openstack
+	@Value("${openstack.ip}")
+	private String openstackIp;
+	@Value("${openstack.user}")
+	private String openstackUser;
+	@Value("${openstack.pass}")
+	private String openstackPass;
+	@Value("${openstack.tenent}")
+	private String openstackTenent;
+	@Value("${openstack.altNatIp}")
+	private String openstackAltNatIp;
+	// Configs for docker
+	@Value("${docker.ip}")
+	private String dockerIp;
+	@Value("${docker.port}")
+	private String dockerPort;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private OpenstackService cs;
 
-	DockerClient dockerClient;
+	IJcatDockerContainerClient conClient;
 
 	public ServiceHelper() {
-		dockerClient = new JcatDockerAdapter("http://127.0.0.1:2375").dokcerClient();
-		this.cs = new OpenstackService();
+		logger.debug("Servicehelper====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. ", openstackIp, openstackUser,
+				openstackPass, openstackTenent, openstackAltNatIp);
+		if (openstackIp == null || dockerIp == null) {
+			readPropsManually();
+		}
+		logger.debug("Servicehelper====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. ", openstackIp, openstackUser,
+				openstackPass, openstackTenent, openstackAltNatIp);
+		conClient = new JcatDockerAdapter("http://" + dockerIp + ":" + dockerPort).containerClient();
+		this.cs = new OpenstackService(openstackIp, openstackUser, openstackPass, openstackTenent, openstackAltNatIp);
+	}
+
+	private void readPropsManually() {
+		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("server-config.properties");
+		Properties p = new Properties();
+		try {
+			p.load(inputStream);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		openstackIp = p.getProperty("openstack.ip");
+		openstackUser = p.getProperty("openstack.user");
+		openstackPass = p.getProperty("openstack.pass");
+		openstackTenent = p.getProperty("openstack.tenent");
+		openstackAltNatIp = p.getProperty("openstack.altNatIp");
+		dockerIp = p.getProperty("docker.ip");
+		dockerPort = p.getProperty("docker.port");
 	}
 
 	public List<String> getImages() {
@@ -113,17 +167,22 @@ public class ServiceHelper {
 	}
 
 	public String createTgen(String name) throws ContainerExecutionException {
-		// test docker container client
-		IJcatDockerContainerClient conClient = new JcatDockerAdapter("http://127.0.0.1:2375").containerClient();
 		// boot container
 		String containerId = null;
+
 		try {
 			conClient.runContainer(name, "tgencom/centos", 22);
-		} catch (ContainerCreationException | ContainerStartingException | ContainerExecutionException
-				| ContainerRunningException e) {
+		} catch (ContainerCreationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ContainerStartingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ContainerRunningException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return containerId;
 	}
 
@@ -137,14 +196,15 @@ public class ServiceHelper {
 	}
 
 	public InspectContainerResponse getDockerInstance(String id) {
-		return dockerClient.inspectContainerCmd(id).exec();
+		return conClient.inspectContainer(id);
+
 	}
 
 	public NovaAbsoluteLimit getAbsoluteLimit() {
 		return cs.getAbsoluteLimits();
 	}
-	
-	public List<CeilometerStatistics> getCpuUtilStats(int period){
+
+	public List<CeilometerStatistics> getCpuUtilStats(int period) {
 		return cs.getCpuUtilStats(period);
 	}
 

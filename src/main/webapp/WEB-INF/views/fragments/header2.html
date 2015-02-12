@@ -50,9 +50,9 @@
 		<div class="chat-toggler">	
 				<a href="#" class="dropdown-toggle" id="my-task-list" data-placement="bottom"  data-content='' data-toggle="dropdown" data-original-title="Notifications">
 					<div class="user-details"> 
-						<div class="username">
+						<div class="username" th:inline="text">
 							<span class="badge badge-important">3</span> 
-							John <span class="bold">Smith</span>									
+							[[${#httpServletRequest.remoteUser}]]								
 						</div>						
 					</div> 
 					<div class="iconset top-down-arrow"></div>
@@ -60,9 +60,6 @@
 				<div id="notification-list" style="display:none">
 					<div style="width:300px">
 						  <div class="notification-messages info">
-									<div class="user-profile">
-										<img src="../../../resources/assets/img/br.jpg"  th:src="@{/resources/assets/img/br.jpg}" width="35" height="35" />
-									</div>
 									<div class="message-wrapper">
 										<div class="heading">
 											David Nester - Commented on your wall
@@ -77,9 +74,6 @@
 									<div class="clearfix"></div>									
 								</div>	
 							<div class="notification-messages danger">
-								<div class="iconholder">
-									<i class="icon-warning-sign"></i>
-								</div>
 								<div class="message-wrapper">
 									<div class="heading">
 										Server load limited
@@ -94,9 +88,6 @@
 								<div class="clearfix"></div>
 							</div>	
 							<div class="notification-messages success">
-								<div class="user-profile">
-									<img src="../../../resources/assets/img/profiles/h.jpg"  th:src="@{/resources/assets/img/br.jpg}" width="35" height="35" />
-								</div>
 								<div class="message-wrapper">
 									<div class="heading">
 										You haveve got 150 messages
@@ -113,7 +104,7 @@
 						</div>				
 				</div>
 				<div class="profile-pic"> 
-					<img src="../../../resources/assets/img/profiles/avatar_small.jpg"   th:src="@{/resources/assets/img/br.jpg}" width="35" height="35" /> 
+					<img src="../../../resources/assets/img/profiles/avatar_small.jpg"   th:src="@{/resources/assets/img/profiles/avatar_small.jpg}" width="35" height="35" /> 
 				</div>       			
 			</div>
 		 <ul class="nav quick-section ">

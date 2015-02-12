@@ -2,12 +2,16 @@ package com.ericsson.jcat.jcatwebapp.config;
 
 import static org.springframework.context.annotation.ComponentScan.Filter;
 
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -22,9 +26,10 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
 import com.ericsson.jcat.jcatwebapp.Application;
+import com.ericsson.jcat.jcatwebapp.service.ServiceHelper;
 
 @Configuration
-@ComponentScan(basePackageClasses = Application.class, includeFilters = @Filter(Controller.class), useDefaultFilters = false)
+@ComponentScan(basePackageClasses = Application.class, includeFilters = @Filter({Controller.class, Service.class}), useDefaultFilters = false)
 class WebMvcConfig extends WebMvcConfigurationSupport {
 
     private static final String MESSAGE_SOURCE = "/WEB-INF/i18n/messages";
@@ -74,6 +79,14 @@ class WebMvcConfig extends WebMvcConfigurationSupport {
         thymeleafViewResolver.setCharacterEncoding("UTF-8");
         return thymeleafViewResolver;
     }
+    
+//	@Bean 
+//	public static PropertyPlaceholderConfigurer myProps() {
+//		PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
+//		ppc.setBeanName("myProps");
+//		ppc.setLocation(new ClassPathResource("/server-config.properties"));
+//		return ppc;
+//	}
 
     @Override
     public Validator getValidator() {

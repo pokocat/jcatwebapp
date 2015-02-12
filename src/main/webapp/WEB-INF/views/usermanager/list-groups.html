@@ -493,11 +493,13 @@
                                             <td class="center-text" colspan="12">No group exists currently</td>
                                         </tr>
                                         <tr th:each="group,iterStat : ${groups}" th:id="group+${group.id}">
-                                            <td class="v-align-middle muted" th:text="${group.id}">id</td>
-                                            <td class="v-align-middle muted" th:text="${group.name}">name</td>
+                                            <td id="usergroup-id" class="v-align-middle muted" th:text="${group.id}">id</td>
+                                            <td id="usergroup-name" class="v-align-middle muted" th:text="${group.name}">name</td>
                                             <td class="v-align-middle muted" th:text="${group.desc}">description</td>
                                             <td class="v-align-middle">
+                                            	<form method="GET" action="" th:action="@{/UserManager/delete/group/} + ${group.id}">
                                                 <button type="button" class="btn btn-danger btn-xs btn-mini deleteGroup" th:id="group+${group.id}" style="">Delete</button>
+                                                </form>
                                             </td>
                                         </tr>
 
@@ -512,13 +514,14 @@
                 </div>
             </div>
             <div class="admin-bar" id="quick-access" style="display:">
-                <form action="post" method="post" >
+                <form method="post" action="" th:action="@{/UserManager/group/add}" id="addUserGroup">
                     <div class="admin-bar-inner">
                         <div class="form-horizontal" style="top: -11px;">
                             <input id="groupName" name="groupName" type="text" placeholder="Group Name" />
                             <input id="groupDesc" name="groupDesc" type="text" placeholder="Group Description" />
                         </div>
-                        <button class="btn btn-primary btn-cons btn-add" type="button">Add Browser</button>
+                        <button class="btn btn-primary btn-cons btn-add" type="button">Add Group</button>
+                        
                         <button class="btn btn-white btn-cons btn-cancel" type="button">Cancel</button>
                     </div>
                 </form>
@@ -541,6 +544,7 @@
     <script src="../../../resources/assets/plugins/breakpoints.js" type="text/javascript" th:src="@{/resources/assets/plugins/breakpoints.js}"></script>
     <script src="../../../resources/assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-unveil/jquery.unveil.min.js}"></script>
     <script src="../../../resources/assets/plugins/jquery-block-ui/jqueryblockui.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-block-ui/jqueryblockui.js}"></script>
+    <script src="../../../resources/assets/plugins/bootbox.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootbox.js}"></script>
     <!-- END CORE JS FRAMEWORK -->
     <!-- BEGIN PAGE LEVEL JS -->
     <script src="../../../resources/assets/plugins/jquery-slider/jquery.sidr.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-slider/jquery.sidr.min.js}"></script>
