@@ -59,7 +59,7 @@ $(document).ready(function() {
         // Multiselect - Select2 plug-in
         $("select.multi").each(function(index, el) {
             $(this).prev("div").remove();
-            $(this).val($(this).attr("data-value").replace("[", "").replace("]", "").replace(" ", "").split(",")).select2();
+            $(this).val($(this).attr("data-value").replace("[", "").replace("]", "").replace(/ /g, "").split(",")).select2();
         });
 
 

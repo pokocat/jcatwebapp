@@ -408,16 +408,14 @@
 									<th style="width:1%; white-space: nowrap;" class="v-align-middle" >
 										ID
 									</th>
-									<th style="width:1%; white-space: nowrap;" class="v-align-middle" >
-										Owner
-									</th>
-									<th style="width:9%; white-space: nowrap;" class="v-align-middle">ENV Set Name</th>
+									
+									<th style="width:19%; white-space: nowrap;" class="v-align-middle">ENV Set Name</th>
 									<!--<th style="width:3%; white-space: nowrap;" class="v-align-middle">IP Address</th>
 									<th style="width:3%; white-space: nowrap;" class="v-align-middle">PC Type</th>-->
-									<th style="width:25%; white-space: nowrap;" class="v-align-middle">Resources</th>
-									<th style="width:8%; white-space: nowrap;" class="v-align-middle">Status</th>
-									<th style="width:8%; white-space: nowrap;" class="v-align-middle">Live time</th>
-									<th style="width:15%; white-space: nowrap;" class="v-align-middle">Actions</th>
+									<th style="width:40%; white-space: nowrap;" class="v-align-middle">Resources</th>
+									<th style="width:5%; white-space: nowrap;" class="v-align-middle">Status</th>
+									<th style="width:15%; white-space: nowrap;" class="v-align-middle">Live time</th>
+									<th style="width:20%; white-space: nowrap;" class="v-align-middle">Actions</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -426,13 +424,13 @@
 								</tr>
 								<tr th:each="testEnv,iterStat : ${testEnvs}" th:id="${testEnv.id}">
 									<td id="id" th:text="${iterStat.count}">1</td>
-									<td id="">
-										<i class="fa fa-user" th:if="${#httpServletRequest.remoteUser} == ${testEnv.owner}">&nbsp;</i>
-										<i class="fa fa-users">&nbsp;</i>
-									</td>
+									
 									<td>
-										<div class="env-name" data-toggle="tooltip" title="" data-placement="top" data-original-title="Hello there! Some description here." th:attr="data-original-title=${testEnv.description}">
-										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)" th:text="${testEnv.name}">INSTA-EXAMPLE</a>
+										<div class="env-name nowrap" data-toggle="tooltip" title="" data-placement="top" data-original-title="Hello there! Some description here." th:attr="data-original-title=${testEnv.description}">
+										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)" th:text="${testEnv.name}">
+											INSTA-EXAMPLE</a>
+											<i class="fa fa-user" >&nbsp;</i>
+											<i class="fa fa-users" th:if="${testEnv.shared} == true">&nbsp;</i>
 										</div>
 									</td>
 									<!--<td  class="v-align-middle muted" th:text="10.10.10.10">10.170.110.1</td>-->

@@ -30,6 +30,8 @@ public class TestEnv {
 	private long created = Calendar.getInstance().getTimeInMillis();
 
 	private String owner;
+	
+	private boolean shared;
 
 	private String userGroup;
 
@@ -66,6 +68,7 @@ public class TestEnv {
 		this.setName(title);
 		this.setDescription(text);
 		this.setOwner(owner);
+		this.setShared(true);
 		this.setUserGroup(userGroup);
 		this.setPcSet(pcSet);
 		this.setImageSet(imageSet);
@@ -117,6 +120,14 @@ public class TestEnv {
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+
+	public boolean isShared() {
+		return shared;
+	}
+
+	public void setShared(boolean isShared) {
+		this.shared = isShared;
 	}
 
 	public String getUserGroup() {

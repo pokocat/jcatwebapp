@@ -79,6 +79,18 @@
 							<input type="text" class="form-control" value="tt env settings" th:value="*{envTT}"/>
 						</div>
 					</div>
+					<div class="row form-row">
+						<div class="col-md-4">
+							<label class="form-label bold">Share to project</label>
+						</div>
+						<div class="col-md-8">
+							<div class="checkbox check-primary">
+								<input id="checkbox3" type="checkbox" value="true" th:checked="*{shared} ? 'checked':'' "/> 
+								<label for="checkbox3">Shared</label>
+							</div>
+						</div>
+					</div>
+					
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="modalFormCancel btn btn-default" data-dismiss="modal"><i class="fa fa-ban"></i>&nbsp;&nbsp;Close</button>
