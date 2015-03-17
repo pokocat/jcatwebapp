@@ -71,13 +71,13 @@ public class ServiceHelper {
 	IJcatDockerContainerClient conClient;
 
 	public ServiceHelper() {
-		logger.debug("Servicehelper====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. ", openstackIp, openstackUser,
+		logger.debug("Servicehelper auto inject ====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. ", openstackIp, openstackUser,
 				openstackPass, openstackTenent, openstackAltNatIp);
 		if (openstackIp == null || dockerIp == null) {
 			readPropsManually();
 		}
-		logger.debug("Servicehelper====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. ", openstackIp, openstackUser,
-				openstackPass, openstackTenent, openstackAltNatIp);
+		logger.debug("Servicehelper final ====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. docker ip:{}, docker port:{}.", openstackIp, openstackUser,
+				openstackPass, openstackTenent, openstackAltNatIp, dockerIp, dockerPort);
 		conClient = new JcatDockerAdapter("http://" + dockerIp + ":" + dockerPort).containerClient();
 		this.cs = new OpenstackService(openstackIp, openstackUser, openstackPass, openstackTenent, openstackAltNatIp);
 	}
@@ -171,7 +171,7 @@ public class ServiceHelper {
 		String containerId = null;
 
 		try {
-			conClient.runContainer(name, "tgencom/centos", 22);
+			conClient.runContainer(name, "tgen/centos", 22);
 		} catch (ContainerCreationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
