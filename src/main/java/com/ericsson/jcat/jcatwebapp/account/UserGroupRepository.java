@@ -34,6 +34,10 @@ public class UserGroupRepository {
 	public UserGroup findById(int id) {
 		return entityManager.find(UserGroup.class, id);
 	}
+	
+	public UserGroup findByName(String name){
+		return entityManager.createQuery("SELECT i FROM UserGroup i where i.ugName = :ugName", UserGroup.class).setParameter("ugName", name).getSingleResult();
+	}
 
 	public void deleteById(int id) {
 		entityManager.remove(this.findById(id));

@@ -19,34 +19,68 @@ $(document).ready(function() {
         var url = action.attr("data-href");
         var text = action.text();
         action.click(function(event) {
+            console.log("gonna::::"+url);
             event.preventDefault();
             bootbox.confirm("Are you sure to " + text + " test env: " + action.closest("tr").attr("id") + " ?", function(result) {
                 if (result == true) {
-                    $.get(url, function(data) {
-                            console.log(data);
+                    $.get(url, function() {
                             Messenger().post({
-                                message: data,
+                                message: "Operation: "+ text + " successfully done!",
                                 type: 'success',
                                 showCloseButton: true
                             });
+                            if (text == 'Destroy') {
+                                window.location.reload(true);
+			    }
                         })
                         .fail(function(data) {
                             Messenger().post({
-                                message: data,
+                                message: "Something Wrong!!",
                                 type: 'fail',
                                 showCloseButton: true
                             });
                         })
                         .always(function(data) {
-                            console.log(data);
+//                            console.log(data);
 //                            window.location.reload(true);
                             updateStatus();
                         });;
                 }
             });
         });
+        
     });
-
+    
+    $(".stp").click(function(event) {
+	event.preventDefault();
+	var it = $(this).attr("id") -1;
+	console.log(alertVariable[it]);
+	bootbox.dialog({
+	    title: "target STP info",
+	    message: 
+		'<table class="table no-more-tables table-bordered table-hover"">'+
+    		   '<tbody>'+
+            		'<tr>'+
+            			'<td>STP IP</td>'+
+            			'<td>'+alertVariable[it].stpIp+'</td>'+
+            		'</tr>'+
+            		'<tr>'+
+            			'<td>ExpertUser : Pass</td>'+
+            			'<td>'+alertVariable[it].expertUser +' : '+ alertVariable[it].expertPass +'</td>'+
+            		'</tr>'+
+            		'<tr>'+
+            			'<td>CustomerUser&nbsp;: Pass</td>'+
+            			'<td>'+alertVariable[it].customerUser +' : '+ alertVariable[it].customerPass +'</td>'+
+            		'</tr>'+
+                    '</tbody>'+
+                '</table>'+
+                
+                '<p>&nbsp;</p>'
+		
+	});
+	
+    });
+    
 
     $(".modalFormSubmit").click(function(event) {
         $(this).html('<i class="fa fa-wrench"></i>&nbsp;&nbsp;Save changes');
@@ -99,9 +133,15 @@ $(document).ready(function() {
     function updateStatus() {
         $("#envstatus span").each(function(index, el) {
             var statusGrid = $(this);
-            $.get('status/' + (index + 1), function(data) {
-                console.log("env" + index + ' is ' + data);
+            var vmId = statusGrid.closest("tr").attr("id");
+            $.get('status/' + vmId, function(data) {
+//                console.log("env" + index + ' is ' + data);
+        	statusGrid.addClass("label-success");
                 statusGrid.text(data);
+            }).fail(function() {
+        	console.log( "error updating envs... " + (vmId) );
+        	statusGrid.addClass("label-warning");
+        	statusGrid.text("UNKNOWN");
             });
         });
     }

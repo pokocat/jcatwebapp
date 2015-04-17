@@ -6,8 +6,11 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -24,7 +27,7 @@ public class Account implements java.io.Serializable {
 	public static final String FIND_BY_NAME = "Account.findByName";
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@Column(unique = true)
@@ -35,7 +38,8 @@ public class Account implements java.io.Serializable {
 
 	private String nickName;
 
-	private ArrayList<String> userGroup;
+	@ManyToMany(targetEntity = UserGroup.class, cascade = {javax.persistence.CascadeType.ALL}, fetch = FetchType.EAGER)
+	private List<UserGroup> userGroup = new ArrayList<UserGroup>();
 
 	private String groupRole;
 
@@ -50,8 +54,14 @@ public class Account implements java.io.Serializable {
 	protected Account() {
 
 	}
+	
+	public Account(String userName, String password, String nickName, String groupRole,
+			String email, String role) {
+		this(userName, password, nickName, new ArrayList<UserGroup>(), groupRole, email, role);
+	}
 
-	public Account(String userName, String password, String nickName, ArrayList<String> userGroup, String groupRole,
+
+	public Account(String userName, String password, String nickName, List<UserGroup> userGroup, String groupRole,
 			String email, String role) {
 		super();
 		this.userName = userName;
@@ -95,11 +105,11 @@ public class Account implements java.io.Serializable {
 		this.nickName = nickName;
 	}
 
-	public ArrayList<String> getUserGroup() {
+	public List<UserGroup> getUserGroup() {
 		return userGroup;
 	}
 
-	public void setUserGroup(ArrayList<String> userGroup) {
+	public void setUserGroup(List<UserGroup> userGroup) {
 		this.userGroup = userGroup;
 	}
 
@@ -146,5 +156,12 @@ public class Account implements java.io.Serializable {
 				+ (email != null ? "email=" + email + ", " : "") + (role != null ? "role=" + role + ", " : "")
 				+ "created=" + created + "]";
 	}
-
+	
+	public List<String>	getUserGroupNameList(){
+		List<String> nameList = new ArrayList<String>();
+		for (UserGroup ug : this.getUserGroup()) {
+			nameList.add(ug.getName());
+		}
+		return nameList;
+	}
 }

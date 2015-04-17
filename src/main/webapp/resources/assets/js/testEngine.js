@@ -138,7 +138,7 @@ $(document).ready(function() {
     $("#form-createTestEnv").submit(function(event) {
         var name = $("#name").val();
         var desc = $("#description").val();
-        var group = $("select[name='group']").val();
+        var userGroup = $("select[name='userGroup']").val();
         var pcSet = $("input[name='pcSet']:checked").val();
         var imageSet = $("select[name='imageSet']").val();
         var hwSet = $("select[name='hwSet']").val();
@@ -156,7 +156,7 @@ $(document).ready(function() {
         var customerUser = $("input[name='customerUser']").val();
         var customerPass = $("input[name='customerPass']").val();
         
-        var json = {"name" : name, "description" : desc, "group" : group,"pcSet" : pcSet,"imageSet" : imageSet,"hwSet" : hwSet,"envTG" : envTG ,"envTT" : envTT,"stpIp" : stpIp,"expertUser" : expertUser,"expertPass" : expertPass,"customerUser" : customerUser,"customerPass" : customerPass};
+        var json = {"name" : name, "description" : desc, "userGroup" : userGroup,"pcSet" : pcSet,"imageSet" : imageSet,"hwSet" : hwSet,"envTG" : envTG ,"envTT" : envTT,"stpIp" : stpIp,"expertUser" : expertUser,"expertPass" : expertPass,"customerUser" : customerUser,"customerPass" : customerPass};
 
 
         // for spring csrf verify
@@ -166,7 +166,7 @@ $(document).ready(function() {
         var el =  $(this);
         blockUI(el);
   		console.log($(this).attr("action"));
-        console.log(JSON.stringify(json));
+        console.log("json data: "+JSON.stringify(json));
         $.ajax({
         		url: $(this).attr("action"),
         		type: 'post',

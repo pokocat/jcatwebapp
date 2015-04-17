@@ -69,18 +69,18 @@ class TestEnvController {
 
 	private void init() {
 		testEnvRepository.save(new TestEnv("ENV SET DEMO 1", "This is a demo env set", "admin", "JCAT", true, "centos",
-				"1864a699-bd93-45ec-be99-2cd4afb1050b", new ArrayList<TrafficGenerator>(Arrays.asList(
-						TrafficGenerator.Client4, TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(Arrays
-						.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
-				"customeruser", "customeruser"));
-		testEnvRepository.save(new TestEnv("ENV SET DEMO 2", "Isn't this demo fantacy? Created by me.", "eduowan", "RST",
-				false, "centos_pure", "1864a699-bd93-45ec-be99-2cd4afb1050b", new ArrayList<TrafficGenerator>(Arrays
-						.asList(TrafficGenerator.Client4, TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(Arrays
-						.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
+				"b58cf29c-3ca0-4476-850e-f2a1e7268c40", null, new ArrayList<TrafficGenerator>(Arrays
+						.asList(TrafficGenerator.Client4)),
+				new ArrayList<TestingTool>(Arrays.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se",
+				"expertuser", "expertpass", "customeruser", "customeruser"));
+		testEnvRepository.save(new TestEnv("ENV SET DEMO 2", "Isn't this demo fantacy? Created by me.", "eduowan",
+				"RST", false, "centos_pure", "b58cf29c-3ca0-4476-850e-f2a1e7268c40", null,
+				new ArrayList<TrafficGenerator>(Arrays.asList(TrafficGenerator.Client4)), new ArrayList<TestingTool>(
+						Arrays.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
 				"customeruser", "customeruser"));
 		testEnvRepository.save(new TestEnv("ENV SET DEMO 3", "Isn't this demo fantacy? Created by me.", "admin", "RST",
-				false, "centos_pure", "1864a699-bd93-45ec-be99-2cd4afb1050b", new ArrayList<TrafficGenerator>(Arrays
-						.asList(TrafficGenerator.Client4, TrafficGenerator.MgwSim)), new ArrayList<TestingTool>(Arrays
+				false, "centos_pure", "1864a699-bd93-45ec-be99-2cd4afb1050b", null, new ArrayList<TrafficGenerator>(
+						Arrays.asList(TrafficGenerator.Client4)), new ArrayList<TestingTool>(Arrays
 						.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
 				"customeruser", "customeruser"));
 	}
@@ -103,7 +103,7 @@ class TestEnvController {
 
 	@ModelAttribute("limits")
 	public NovaAbsoluteLimit getAbsoluteLimits() {
-		sh =  new ServiceHelper();
+		sh = new ServiceHelper();
 		return sh.getAbsoluteLimit();
 	}
 
@@ -167,6 +167,11 @@ class TestEnvController {
 			logger.info(":::: gonna create tgen .... ");
 			sh.createTgen(createTestEnvForm.getName());
 		}
+
+		if (createTestEnvForm.getEnvTG().contains(TrafficGenerator.MgwSim)) {
+			logger.info(":::: gonna create MGWSim - {}", createTestEnvForm.getMgwSimStp());
+			createTestEnvForm.setMgwSimVmServerId(sh.createMGWSim(createTestEnvForm.getMgwSimStp()));
+		}
 		testEnvRepository.save(createTestEnvForm.createTestEnv());
 		return new TestEnvCreatResultJson("success");
 	}
@@ -181,7 +186,7 @@ class TestEnvController {
 	@ResponseBody
 	public ResponseEntity<String> createSnapshotModal(@PathVariable String action, @PathVariable int id, Model model) {
 		if (action.equalsIgnoreCase("createsnapshot")) {
-			CreateSnapshotForm createSnapshotForm = new CreateSnapshotForm();
+			TestEnvSnapshot createSnapshotForm = new TestEnvSnapshot();
 			createSnapshotForm.setId(id);
 			model.addAttribute("createSnapshotForm", createSnapshotForm);
 			return new ResponseEntity<String>("success", new HttpHeaders(), HttpStatus.OK);
@@ -200,7 +205,14 @@ class TestEnvController {
 			sh.resumeServer(testEnvRepository.findById(id).getVmServerId());
 			return new ResponseEntity<String>("success", new HttpHeaders(), HttpStatus.OK);
 		} else if (action.equalsIgnoreCase("destroy")) {
-			sh.destroyServer(testEnvRepository.findById(id).getVmServerId());
+			String vmServerId;
+			if ((vmServerId = testEnvRepository.findById(id).getVmServerId()) != null) {
+				sh.destroyServer(vmServerId);
+			}
+			String mgwServerId;
+			if ((mgwServerId = testEnvRepository.findById(id).getMgwSimVmServerId()) != null) {
+				sh.destroyServer(mgwServerId);
+			}
 			testEnvRepository.deleteById(id);
 			return new ResponseEntity<String>("success", new HttpHeaders(), HttpStatus.OK);
 		} else if (action.equalsIgnoreCase("reset")) {
@@ -211,7 +223,7 @@ class TestEnvController {
 	}
 
 	@RequestMapping(value = "/createsnapshot", method = RequestMethod.POST)
-	public String createSnapshot(@ModelAttribute CreateSnapshotForm createSnapshotForm) {
+	public String createSnapshot(@ModelAttribute TestEnvSnapshot createSnapshotForm) {
 		// new OpenstackHelper().createSnapshot(createSnapshotForm.getId(), createSnapshotForm.getDesc());
 		logger.info("Commint Post:::: {}", createSnapshotForm.toString());
 		return "redirect:/testenv/";
@@ -238,9 +250,10 @@ class TestEnvController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String listTestEnv(Model model, Principal principal) {
 		Assert.notNull(principal);
-		ArrayList<String> currentGroups = accountRepository.findByUserName(principal.getName()).getUserGroup();
+		Account curAccount = accountRepository.findByUserName(principal.getName());
+		List<String> currentGroups = curAccount.getUserGroupNameList();
 		model.addAttribute("currentGroups", currentGroups);
-		model.addAttribute("testEnvs", testEnvRepository.findByGroup(currentGroups));
+		model.addAttribute("testEnvs", testEnvRepository.findByGroup(curAccount.getUserGroup()));
 		return "testenv/list-testenv";
 	}
 

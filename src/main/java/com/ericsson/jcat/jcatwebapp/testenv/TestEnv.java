@@ -40,6 +40,8 @@ public class TestEnv {
 	private String imageSet;
 
 	private String vmServerId;
+	
+	private String mgwSimVmServerId;
 
 	private ArrayList<TrafficGenerator> envTG;
 
@@ -63,7 +65,7 @@ public class TestEnv {
 	}
 
 	public TestEnv(String title, String text, String owner, String userGroup, boolean pcSet, String imageSet,
-			String vmServerId, ArrayList<TrafficGenerator> envTG, ArrayList<TestingTool> envTT, String stpIp,
+			String vmServerId,String mgwSimVmServerId, ArrayList<TrafficGenerator> envTG, ArrayList<TestingTool> envTT, String stpIp,
 			String expertUser, String expertPass, String customerUser, String customerPass) {
 		this.setName(title);
 		this.setDescription(text);
@@ -73,6 +75,7 @@ public class TestEnv {
 		this.setPcSet(pcSet);
 		this.setImageSet(imageSet);
 		this.setVmServerId(vmServerId);
+		this.setMgwSimVmServerId(mgwSimVmServerId);
 		this.setEnvTG(envTG);
 		this.setEnvTT(envTT);
 		this.setStpIp(stpIp);
@@ -224,6 +227,14 @@ public class TestEnv {
 
 	public void setImageSet(String imageSet) {
 		this.imageSet = imageSet;
+	}
+
+	public String getMgwSimVmServerId() {
+		return mgwSimVmServerId;
+	}
+
+	public void setMgwSimVmServerId(String mgwSimVmServerId) {
+		this.mgwSimVmServerId = mgwSimVmServerId;
 	}
 
 //	public Map<String, String> getDockerInstances() {

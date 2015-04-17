@@ -8,7 +8,7 @@ import javax.persistence.Id;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class CreateSnapshotForm {
+public class TestEnvSnapshot {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
@@ -59,12 +59,12 @@ public class CreateSnapshotForm {
 		this.dockerSnapshotId = dockerSnapshotId;
 	}
 
-	public CreateSnapshotForm(int id, int testenvId, String snapshotName) {
+	public TestEnvSnapshot(int id, int testenvId, String snapshotName) {
 		this.testenvId = testenvId;
 		this.snapshotName = snapshotName;
 	}
 
-	public CreateSnapshotForm() {
+	public TestEnvSnapshot() {
 		// TODO Auto-generated constructor stub
 	}
 

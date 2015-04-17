@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
+import org.openstack4j.api.Builders;
 import org.openstack4j.model.compute.AbsoluteLimit;
 import org.openstack4j.model.compute.Action;
 import org.openstack4j.model.compute.ActionResponse;
@@ -14,6 +15,7 @@ import org.openstack4j.model.compute.Limits;
 import org.openstack4j.model.compute.RebootType;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.compute.Server.Status;
+import org.openstack4j.model.network.Port;
 import org.openstack4j.openstack.compute.domain.NovaAbsoluteLimit;
 import org.openstack4j.openstack.compute.domain.NovaFlavor;
 import org.openstack4j.openstack.compute.domain.NovaImage;
@@ -25,9 +27,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.testng.xml.LaunchSuite;
 
 import com.ericsson.jcat.jcatwebapp.cusom.TestEnvStatus;
 import com.ericsson.jcat.osadapter.compute.JcatOSCompute;
+import com.ericsson.jcat.osadapter.exceptions.AssignFloatingIPFailException;
 import com.ericsson.jcat.osadapter.exceptions.FlavorNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.ImageNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.VmCreationFailureException;
@@ -71,10 +75,35 @@ public class OpenstackService {
 		return flavors;
 	}
 
-	public String launchServer(String name, String flavorName, String imageName) throws FlavorNotFoundException,
-			ImageNotFoundException, VmCreationFailureException, TimeoutException {
-		JcatVmServer vm = josc.createAndBootVM(name, flavorName, imageName, Arrays.asList(getIntNetworkId()), false);
-		return vm.getId();
+	public String launchServer(String name, String flavorName, String imageName, boolean isAutoAlloFloatingIp)
+			throws FlavorNotFoundException, ImageNotFoundException, VmCreationFailureException, TimeoutException {
+		return this.launchServer(name, flavorName, imageName, Arrays.asList(getIntNetworkId()), isAutoAlloFloatingIp);
+	}
+
+	public String launchServer(String name, String flavorName, String imageName, List<String> networkIdList,
+			boolean isAutoAlloFloatingIp) throws FlavorNotFoundException, ImageNotFoundException,
+			VmCreationFailureException, TimeoutException {
+		return this.launchServer(name, flavorName, imageName, networkIdList, null, isAutoAlloFloatingIp);
+	}
+
+	public String launchServer(String name, String flavorName, String imageName, List<String> networkIdList,
+			String portId, boolean isAutoAlloFloatingIp) throws FlavorNotFoundException, ImageNotFoundException,
+			TimeoutException, VmCreationFailureException {
+		JcatVmServer createdVM = josc.createAndBootVM(name, flavorName, imageName, networkIdList, portId);
+
+		try {
+			josc.associateFloatingIP(createdVM);
+		} catch (AssignFloatingIPFailException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return createdVM.getId();
+	}
+
+	public String launchServer(String name, String flavorName, String imageName, List<String> networkIdList,
+			String portId, String availablityZone) throws FlavorNotFoundException, ImageNotFoundException,
+			TimeoutException, VmCreationFailureException {
+		return josc.createAndBootVM(name, flavorName, imageName, networkIdList, portId, availablityZone).getId();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -142,4 +171,29 @@ public class OpenstackService {
 	public List<CeilometerStatistics> getCpuUtilStats(int period) {
 		return (List<CeilometerStatistics>) josc.getOsc().telemetry().meters().statistics("cpu_util", period);
 	}
+
+	public String createPort(String mgwSimStp) {
+		if (mgwSimStp.equalsIgnoreCase("TP019")) {
+			Port tp19Port = Builders.port().name("tp19-int-net")
+					.fixedIp("10.2.110.34", "6e9cc400-4f50-4452-916f-812c698e599c")
+					.fixedIp("10.2.110.2", "6e9cc400-4f50-4452-916f-812c698e599c")
+					.fixedIp("10.2.110.98", "6e9cc400-4f50-4452-916f-812c698e599c")
+					.fixedIp("10.2.110.66", "6e9cc400-4f50-4452-916f-812c698e599c")
+					.networkId("d158084b-a5f9-431b-9ef6-d3654520caa5").build();
+			Port portCreated = josc.getOsc().networking().port().create(tp19Port);
+			logger.info("Created port::::{}", portCreated.toString());
+			return portCreated.getId();
+		}
+		if (mgwSimStp.equalsIgnoreCase("TP025")) {
+			Port tp25Port = Builders.port().name("tp25-int-net")
+					.fixedIp("10.2.110.34", "26d76fd6-7807-40b3-b41d-07d0c642b03f")
+					.fixedIp("10.2.110.2", "26d76fd6-7807-40b3-b41d-07d0c642b03f")
+					.fixedIp("10.2.110.98", "26d76fd6-7807-40b3-b41d-07d0c642b03f")
+					.fixedIp("10.2.110.66", "26d76fd6-7807-40b3-b41d-07d0c642b03f")
+					.networkId("17f644f7-6fc2-4720-9c98-561f5f91a83c").build();
+			return josc.getOsc().networking().port().create(tp25Port).getId();
+		}
+		return null;
+	}
+
 }

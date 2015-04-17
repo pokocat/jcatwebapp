@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.ericsson.jcat.jcatwebapp.account.Account;
+import com.ericsson.jcat.jcatwebapp.account.UserGroup;
 
 public class SignupForm {
 
@@ -24,7 +25,7 @@ public class SignupForm {
 	@Email
 	private String email;
 
-	private ArrayList<String> userGroup;
+	private ArrayList<UserGroup> userGroup;
 
 	public String getUserName() {
 		return userName;
@@ -58,11 +59,11 @@ public class SignupForm {
 		this.email = email;
 	}
 
-	public ArrayList<String> getUserGroup() {
+	public ArrayList<UserGroup> getUserGroup() {
 		return userGroup;
 	}
 
-	public void setUserGroup(ArrayList<String> userGroup) {
+	public void setUserGroup(ArrayList<UserGroup> userGroup) {
 		this.userGroup = userGroup;
 	}
 

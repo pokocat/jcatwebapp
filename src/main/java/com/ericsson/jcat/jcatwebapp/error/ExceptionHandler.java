@@ -2,6 +2,9 @@ package com.ericsson.jcat.jcatwebapp.error;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
@@ -29,9 +32,9 @@ class ExceptionHandler {
 
 	@org.springframework.web.bind.annotation.ExceptionHandler(value = NullPointerException.class)
 	@ResponseBody
-	public Exception nullPointerException(Exception exception, WebRequest request) {
-		logger.error(exception.getMessage());
-		return exception;
+	public ResponseEntity<String> nullPointerException(Exception exception, WebRequest request) {
+		logger.error(exception.toString());
+		return new ResponseEntity<String>(exception.toString(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
 
 }

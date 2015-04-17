@@ -1,5 +1,6 @@
 package com.ericsson.jcat.jcatwebapp.um;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,31 +70,57 @@ class UserManagementController {
 
 	@RequestMapping(value = "/user/update/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<String> updateUser(@PathVariable long id, @RequestBody Account userUpdate) {
-		//TODO response with error callback in .ajax of Jquery.
+	public ResponseEntity<String> updateUser(@PathVariable long id, @RequestBody AccountUpdateData userUpdate) {
+		// TODO response with error callback in .ajax of Jquery.
 		Account accountToUpdate = accountRepo.findByUserId(id);
 		if (userUpdate.getGroupRole() != null && !userUpdate.getGroupRole().isEmpty()) {
 			accountToUpdate.setGroupRole(userUpdate.getGroupRole());
 		}
 		if (userUpdate.getUserGroup() != null && !userUpdate.getUserGroup().isEmpty()) {
-			accountToUpdate.setUserGroup(userUpdate.getUserGroup());
+			List<UserGroup> ugList = new ArrayList<UserGroup>();
+			for (String ugName : userUpdate.getUserGroup()) {
+				ugList.add(groupRepository.findByName(ugName));
+			}
+			accountToUpdate.setUserGroup(ugList);
 		}
 		accountRepo.update(accountToUpdate);
 		System.out.println(accountToUpdate.toString());
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/group/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<String> addUserGroup(@RequestBody UserGroup userGroup) {
 		UserGroup userGroupToAdd = groupRepository.save(userGroup);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/delete/group/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> addUserGroup(@PathVariable long id) {
 		groupRepository.deleteById((int) id);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
+}
+
+class AccountUpdateData {
+	List<String> userGroup;
+	String groupRole;
+
+	public List<String> getUserGroup() {
+		return userGroup;
+	}
+
+	public void setUserGroup(List<String> userGroup) {
+		this.userGroup = userGroup;
+	}
+
+	public String getGroupRole() {
+		return groupRole;
+	}
+
+	public void setGroupRole(String groupRole) {
+		this.groupRole = groupRole;
+	}
+
 }

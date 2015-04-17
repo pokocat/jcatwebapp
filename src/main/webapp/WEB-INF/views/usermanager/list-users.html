@@ -427,7 +427,7 @@
 										<td  class="v-align-middle muted" th:text="${user.nickName}">nickname</td>
 										<td  class="v-align-middle muted" th:text="${user.email}">email</td>
 										<td  class="v-align-middle">
-											 <select class="multi" style="width:100%" multiple="multiple" th:id="${user.id}" th:attr="data-value=${user.userGroup}" name="userGroup">
+											 <select class="multi" style="width:100%" multiple="multiple" th:id="${user.id}" th:attr="data-value=${user.getUserGroupNameList()}" name="userGroup">
 							                    <!-- <option value="RST" >RST</option>
 							                    <option value="CHS">CHS</option>
 							                    <option value="JCAT">JCAT</option> -->

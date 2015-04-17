@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ericsson.jcat.jcatwebapp.account.UserGroup;
+
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -41,12 +43,12 @@ public class TestEnvRepository {
 		return entityManager.find(TestEnv.class, id);
 	}
 
-	public List<TestEnv> findByGroup(List<String> grps) {
+	public List<TestEnv> findByGroup(List<UserGroup> currentGroups) {
 		List<TestEnv> testEnvList = new ArrayList<TestEnv>();
-		for (String userGroup : grps) {
+		for (UserGroup userGroup : currentGroups) {
 			testEnvList.addAll(entityManager
 					.createQuery("SELECT i FROM TestEnv i where i.userGroup = :userGroup", TestEnv.class)
-					.setParameter("userGroup", userGroup).getResultList());
+					.setParameter("userGroup", userGroup.getName()).getResultList());
 		}
 		return testEnvList;
 	}

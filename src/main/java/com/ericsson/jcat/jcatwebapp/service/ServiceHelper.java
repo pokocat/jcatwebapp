@@ -2,6 +2,7 @@ package com.ericsson.jcat.jcatwebapp.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
@@ -71,13 +72,14 @@ public class ServiceHelper {
 	IJcatDockerContainerClient conClient;
 
 	public ServiceHelper() {
-		logger.debug("Servicehelper auto inject ====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. ", openstackIp, openstackUser,
-				openstackPass, openstackTenent, openstackAltNatIp);
+		logger.debug("Servicehelper auto inject ====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. ", openstackIp,
+				openstackUser, openstackPass, openstackTenent, openstackAltNatIp);
 		if (openstackIp == null || dockerIp == null) {
 			readPropsManually();
 		}
-		logger.debug("Servicehelper final ====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. docker ip:{}, docker port:{}.", openstackIp, openstackUser,
-				openstackPass, openstackTenent, openstackAltNatIp, dockerIp, dockerPort);
+		logger.debug(
+				"Servicehelper final ====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. docker ip:{}, docker port:{}.",
+				openstackIp, openstackUser, openstackPass, openstackTenent, openstackAltNatIp, dockerIp, dockerPort);
 		conClient = new JcatDockerAdapter("http://" + dockerIp + ":" + dockerPort).containerClient();
 		this.cs = new OpenstackService(openstackIp, openstackUser, openstackPass, openstackTenent, openstackAltNatIp);
 	}
@@ -121,7 +123,7 @@ public class ServiceHelper {
 
 	public String launchServer(String name, String flavorName, String imageName) {
 		try {
-			return cs.launchServer(name, flavorName, imageName);
+			return cs.launchServer(name, flavorName, imageName, true);
 		} catch (FlavorNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -184,6 +186,21 @@ public class ServiceHelper {
 		}
 
 		return containerId;
+	}
+
+	public String createMGWSim(String mgwSimStp) throws FlavorNotFoundException, ImageNotFoundException,
+			VmCreationFailureException, TimeoutException {
+		if (mgwSimStp.equalsIgnoreCase("TP019")) {
+			logger.info("::::gonna create");
+			return this.cs.launchServer("MGWSim", "m1.medium", "MGwsim_small",
+					Arrays.asList("3a054eef-d44f-493d-8be9-87f3167fdfd5"), cs.createPort(mgwSimStp),
+					"nova:pcd25.openstack");
+		} else {
+			return this.cs.launchServer("MGWSim", "m1.medium", "MGwsim_small",
+					Arrays.asList("ae8b6fc8-406e-4460-95d7-c06dd11fc139"), cs.createPort(mgwSimStp),
+					"nova:pcd25.openstack");
+		}
+
 	}
 
 	public TestEnvStatus getStatus(String id, InstanceType instanceType) {

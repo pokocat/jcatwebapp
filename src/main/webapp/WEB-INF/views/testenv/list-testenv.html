@@ -423,7 +423,7 @@
 									<td class="center-text" colspan="12">No Test Environment exists currently</td>
 								</tr>
 								<tr th:each="testEnv,iterStat : ${testEnvs}" th:id="${testEnv.id}">
-									<td id="id" th:text="${iterStat.count}">1</td>
+									<td id="id" th:text="${iterStat.count}">1<span class="hide"></span></td>
 									
 									<td>
 										<div class="env-name nowrap" data-toggle="tooltip" title="" data-placement="top" data-original-title="Hello there! Some description here." th:attr="data-original-title=${testEnv.description}">
@@ -442,15 +442,23 @@
 												<span th:if="${testEnv.pcSet}" class="label label-inverse light normal-text" th:inline="text"><i class="fa fa-desktop" >&nbsp;</i>[[${testEnv.imageSet}]]</span>
 											</a>
 										</div>
-										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/docker/7fade3768d4d03abb78fb60274f8b2f4ec60dfb74057858f6f1eb924048f9a4d}">
-											<span class="label label-info light normal-text" th:each="env : ${testEnv.envTG}" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${env}]]</span>
+										<div class="env-name inline" data-toggle="tooltip" title="" data-placement="top" data-original-title="PC config details.">
+											<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/vmserver/}+ ${testEnv.mgwSimVmServerId}">
+												<span th:if="${testEnv.mgwSimVmServerId}" class="label label-inverse light normal-text" th:inline="text"><i class="fa fa-desktop" >&nbsp;</i>[[MGWSim]]</span>
+											</a>
+										</div>
+										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/docker/371028538cbb864d79ed6f084e6cd7b615837eb922595bf8ec566a900e41f97a}">
+											<span class="label label-info light normal-text" th:each="env : ${testEnv.envTG}" th:classappend="( (${#strings.toString(env)} == 'MgwSim')? 'hidden' : '')" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${env}]]</span>
 										</a>
 										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)">
 											<span class="label label-info light normal-text" th:each="env : ${testEnv.envTT}" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${env}]]</span>
 										</a>
+										<a href="">
+											<span th:id="${iterStat.count}" class="label light normal-text stp" th:if="${testEnv.StpIp != ''}"><i class="fa fa-building-o" >&nbsp;</i>STP</span>
+										</a>
 									</td>
 									<td id="envstatus" class="v-align-middle ">
-										<span class="label label-success">UPDATING...</span>
+										<span class="label">UPDATING...</span>
 									</td>
 									<td class="v-align-middle"><time class="age" th:attr="datetime=${#dates.format(testEnv.created, 'dd/MMM/yyyy HH:mm')}">10 minutes</time></td>
 									<td class="v-align-middle">
@@ -466,7 +474,7 @@
 												<li><a href="#" th:attr="data-href=@{/testenv/suspend/}+${testEnv.id}">Suspend</a></li>
 												<li><a href="#" th:attr="data-href=@{/testenv/resume/}+${testEnv.id}">Resume</a></li>
 												<li class="divider"></li>
-												<li><a href="#" th:attr="data-attr=@{/testenv/destroy/}+(${testEnv.id})">Destroy</a></li>
+												<li><a href="#" th:attr="data-href=@{/testenv/destroy/}+(${testEnv.id})">Destroy</a></li>
 												<li><a href="#" th:attr="data-href=@{/testenv/reset/}+${testEnv.id}">Reset</a></li>
 											</ul>
 										</div>
@@ -540,7 +548,12 @@
 <script src="../../../resources/assets/plugins/bootbox.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootbox.js}"></script>
 <script src="../../../resources/assets/plugins/jquery-notifications/js/messenger.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-notifications/js/messenger.min.js}"></script>
 <script src="../../../resources/assets/plugins/jquery-notifications/js/messenger-theme-future.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-notifications/js/messenger-theme-future.js}"></script>
-<!-- END PAGE LEVEL PLUGINS --> 	
+<!-- END PAGE LEVEL PLUGINS -->
+<script type="text/javascript" th:inline="javascript" >
+/*<![CDATA[*/
+	var alertVariable = /*[[${testEnvs}]]*/ 'Sebastian';
+/*]]>*/
+</script>
 <script src="../../../resources/assets/js/list_env.js" type="text/javascript" charset="utf-8" th:src="@{/resources/assets/js/list_env.js}"></script>
 <!-- BEGIN CORE TEMPLATE JS --> 
 <script src="../../../resources/assets/js/core.js" type="text/javascript" th:src="@{/resources/assets/js/core.js}"></script> 

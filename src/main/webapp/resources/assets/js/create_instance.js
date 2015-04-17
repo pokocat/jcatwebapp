@@ -69,6 +69,11 @@ $(document).ready(function() {
                 str += $(this).val() + ", ";
             });
             $("#env-tg").text(str.substr(0, str.length - 2));
+            if(!$("input[value='MgwSim']:checked").val()){
+        	$("#mgwsim_stp").hide();
+            } else {
+        	$("#mgwsim_stp").show();
+            }
         }
         if (inputbox == "envTT") {
             var str = "";
@@ -122,7 +127,7 @@ $(document).ready(function() {
     $("#form-createTestEnv").submit(function(event) {
         var name = $("#name").val();
         var desc = $("#description").val();
-        var group = $("select[name='group']").val();
+        var userGroup = $("select[name='userGroup']").val();
         var pcSet = $("input[name='pcSet']:checked").val();
         var imageSet = $("select[name='imageSet']").val();
         var hwSet = $("select[name='hwSet']").val();
@@ -130,6 +135,9 @@ $(document).ready(function() {
         $("input[name='envTG']:checked").each(function(index, el) {
         	envTG.push($(el).val());	
         });
+        if ($("input[value='MgwSim']:checked").val()) {
+	    var mgwSimStp = $("select[id=mgwsim_stp]").val();
+	}
         var envTT = new Array();
         $("input[name='envTT']:checked").each(function(index, el) {
         	envTT.push($(el).val());	
@@ -140,7 +148,7 @@ $(document).ready(function() {
         var customerUser = $("input[name='customerUser']").val();
         var customerPass = $("input[name='customerPass']").val();
         
-        var json = {"name" : name, "description" : desc, "group" : group,"pcSet" : pcSet,"imageSet" : imageSet,"hwSet" : hwSet,"envTG" : envTG ,"envTT" : envTT,"stpIp" : stpIp,"expertUser" : expertUser,"expertPass" : expertPass,"customerUser" : customerUser,"customerPass" : customerPass};
+        var json = {"name" : name, "description" : desc, "userGroup" : userGroup,"pcSet" : pcSet,"imageSet" : imageSet,"hwSet" : hwSet,"envTG" : envTG ,"envTT" : envTT,"mgwSimStp" : mgwSimStp,"stpIp" : stpIp,"expertUser" : expertUser,"expertPass" : expertPass,"customerUser" : customerUser,"customerPass" : customerPass};
 
 
         // for spring csrf verify
@@ -150,7 +158,7 @@ $(document).ready(function() {
         var el =  $(this);
         blockUI(el);
   		console.log($(this).attr("action"));
-        console.log(JSON.stringify(json));
+        console.log(" json data: "+JSON.stringify(json));
         $.ajax({
         		url: $(this).attr("action"),
         		type: 'post',

@@ -42,11 +42,15 @@ public class CreateTestEnvForm {
 
 	private ArrayList<TrafficGenerator> envTG;
 
+	private String mgwSimStp;
+	
+	private String mgwSimVmServerId;
+
 	private ArrayList<TestingTool> envTT;
 
 	private ArrayList<String> envSP;
 
-//	private Map<String, String> dockerInstances;
+	// private Map<String, String> dockerInstances;
 
 	private String stpIp;
 
@@ -130,6 +134,14 @@ public class CreateTestEnvForm {
 		this.envTG = envTG;
 	}
 
+	public String getMgwSimStp() {
+		return mgwSimStp;
+	}
+
+	public void setMgwSimStp(String mgwSimStp) {
+		this.mgwSimStp = mgwSimStp;
+	}
+
 	public ArrayList<TestingTool> getEnvTT() {
 		return envTT;
 	}
@@ -186,32 +198,43 @@ public class CreateTestEnvForm {
 		this.customerPass = customerPass;
 	}
 
-//	public Map<String, String> getDockerInstances() {
-//		return dockerInstances;
-//	}
-//
-//	public void setDockerInstances(Map<String, String> dockerInstances) {
-//		this.dockerInstances = dockerInstances;
-//	}
+	// public Map<String, String> getDockerInstances() {
+	// return dockerInstances;
+	// }
+	//
+	// public void setDockerInstances(Map<String, String> dockerInstances) {
+	// this.dockerInstances = dockerInstances;
+	// }
+
+	public String getMgwSimVmServerId() {
+		return mgwSimVmServerId;
+	}
+
+	public void setMgwSimVmServerId(String mgwSimVmServerId) {
+		this.mgwSimVmServerId = mgwSimVmServerId;
+	}
 
 	public TestEnv createTestEnv() throws FlavorNotFoundException, ImageNotFoundException, VmCreationFailureException,
 			TimeoutException {
 		return new TestEnv(this.getName(), this.getDescription(), this.getOwner(), this.getUserGroup(), this.isPcSet(),
-				this.getImageSet(), this.getVmServerId(), this.getEnvTG(), this.getEnvTT(), this.getStpIp(),
+				this.getImageSet(), this.getVmServerId(),this.getMgwSimVmServerId(), this.getEnvTG(), this.getEnvTT(), this.getStpIp(),
 				this.getExpertUser(), this.getExpertPass(), this.getCustomerUser(), this.getCustomerPass());
 	}
 
 	@Override
 	public String toString() {
-		return "CreateTestEnvForm [" + (name != null ? "name=" + name + ", " : "")
+		return "CreateTestEnvForm [" + (id != null ? "id=" + id + ", " : "")
+				+ (name != null ? "name=" + name + ", " : "")
 				+ (description != null ? "description=" + description + ", " : "")
 				+ (owner != null ? "owner=" + owner + ", " : "")
 				+ (userGroup != null ? "userGroup=" + userGroup + ", " : "") + "pcSet=" + pcSet + ", "
 				+ (vmServerId != null ? "vmServerId=" + vmServerId + ", " : "")
 				+ (hwSet != null ? "hwSet=" + hwSet + ", " : "")
 				+ (imageSet != null ? "imageSet=" + imageSet + ", " : "")
-				+ (envTG != null ? "envTG=" + envTG + ", " : "") + (envTT != null ? "envTT=" + envTT + ", " : "")
-				+ (envSP != null ? "envSP=" + envSP + ", " : "") + (stpIp != null ? "stpIp=" + stpIp + ", " : "")
+				+ (envTG != null ? "envTG=" + envTG + ", " : "")
+				+ (mgwSimStp != null ? "mgwSimStp=" + mgwSimStp + ", " : "")
+				+ (envTT != null ? "envTT=" + envTT + ", " : "") + (envSP != null ? "envSP=" + envSP + ", " : "")
+				+ (stpIp != null ? "stpIp=" + stpIp + ", " : "")
 				+ (expertUser != null ? "expertUser=" + expertUser + ", " : "")
 				+ (expertPass != null ? "expertPass=" + expertPass + ", " : "")
 				+ (customerUser != null ? "customerUser=" + customerUser + ", " : "")
