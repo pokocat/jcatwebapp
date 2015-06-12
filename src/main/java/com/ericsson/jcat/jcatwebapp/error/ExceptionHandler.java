@@ -34,7 +34,7 @@ class ExceptionHandler {
 	@ResponseBody
 	public ResponseEntity<String> nullPointerException(Exception exception, WebRequest request) {
 		logger.error(exception.toString());
-		return new ResponseEntity<String>(exception.toString(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>(Throwables.getStackTraceAsString(exception), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
 
 }

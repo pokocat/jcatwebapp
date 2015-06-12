@@ -252,6 +252,25 @@
 			<artifactId>jcat-docker-adapter</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.ericsson.axe.jcat</groupId>
+			<artifactId>axe-jcat-fw</artifactId>
+			<version>0.1.29</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.collections</groupId>
+					<artifactId>google-collections</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-collections</groupId>
+					<artifactId>commons-collections</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.code.google-collections</groupId>
+					<artifactId>google-collect</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

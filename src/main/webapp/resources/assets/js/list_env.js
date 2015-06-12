@@ -81,6 +81,43 @@ $(document).ready(function() {
 	
     });
     
+    $("a.inspect_docker").click(function(event) {
+	var dockerid = $(this).data("dockerid");
+	var url = "/jcatwebapp/testenv/docker/" +dockerid;
+	
+	var orihtml = $("#dockerModal .modal-dialog .modal-content").html();
+	
+	$("#dockerModal .modal-dialog .modal-content").html($("#spinner").html());
+	
+	var response;
+	$.ajax({
+		url: url,
+	})
+	.success(function(data){
+	    $("#dockerModal .modal-dialog .modal-content").html(orihtml);
+	    response = data;
+	    $("#docker-name").text(response.Name);
+	    $("#docker-time").val(response.Created);
+	    $("#docker-image").val(response.Config.Image);
+	    if (response.State.Running) {
+		$("#docker-state").val("Running");
+	    }
+	    $("#docker-hostName").val(response.Config.Hostname);
+	    $("#docker-ip").val(response.NetworkSettings.Ports['22/tcp'][0].HostIp);
+	    $("#docker-HostPort").val(response.NetworkSettings.Ports['22/tcp'][0].HostPort);
+	    $("#docker-volume").val(response.Volumes.binds[0].hostPath);
+	})
+	.done(function() {
+		console.log("success");
+	})
+	.fail(function() {
+		console.log("error");
+	})
+	.always(function() {
+		console.log("complete");
+	});
+    });
+    
 
     $(".modalFormSubmit").click(function(event) {
         $(this).html('<i class="fa fa-wrench"></i>&nbsp;&nbsp;Save changes');
@@ -136,8 +173,13 @@ $(document).ready(function() {
             var vmId = statusGrid.closest("tr").attr("id");
             $.get('status/' + vmId, function(data) {
 //                console.log("env" + index + ' is ' + data);
-        	statusGrid.addClass("label-success");
-                statusGrid.text(data);
+        	if (data == 'SUSPENDED' || data == 'STOPPED' || data == 'BUILDING') {
+        	    statusGrid.addClass("label-important");
+                    statusGrid.text(data);
+		} else {
+		    statusGrid.addClass("label-success");
+	            statusGrid.text(data);
+		}
             }).fail(function() {
         	console.log( "error updating envs... " + (vmId) );
         	statusGrid.addClass("label-warning");

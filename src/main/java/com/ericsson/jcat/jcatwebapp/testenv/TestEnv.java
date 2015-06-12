@@ -30,7 +30,7 @@ public class TestEnv {
 	private long created = Calendar.getInstance().getTimeInMillis();
 
 	private String owner;
-	
+
 	private boolean shared;
 
 	private String userGroup;
@@ -40,33 +40,38 @@ public class TestEnv {
 	private String imageSet;
 
 	private String vmServerId;
-	
+
 	private String mgwSimVmServerId;
 
 	private ArrayList<TrafficGenerator> envTG;
+	
+	private String tgenDockerId;
 
 	private ArrayList<TestingTool> envTT;
 
 	private ArrayList<String> envSP;
 
-//	private Map<String, String> dockerInstances;
+	// private Map<String, String> dockerInstances;
+	private String stpName;
 
+	@Deprecated
 	private String stpIp;
-
+	@Deprecated
 	private String expertUser;
-
+	@Deprecated
 	private String expertPass;
-
+	@Deprecated
 	private String customerUser;
-
+	@Deprecated
 	private String customerPass;
 
 	public TestEnv() {
 	}
 
 	public TestEnv(String title, String text, String owner, String userGroup, boolean pcSet, String imageSet,
-			String vmServerId,String mgwSimVmServerId, ArrayList<TrafficGenerator> envTG, ArrayList<TestingTool> envTT, String stpIp,
-			String expertUser, String expertPass, String customerUser, String customerPass) {
+			String vmServerId, String mgwSimVmServerId, ArrayList<TrafficGenerator> envTG, String tgenDockerId,
+			ArrayList<TestingTool> envTT,String stpName, String stpIp, String expertUser, String expertPass, String customerUser,
+			String customerPass) {
 		this.setName(title);
 		this.setDescription(text);
 		this.setOwner(owner);
@@ -77,7 +82,9 @@ public class TestEnv {
 		this.setVmServerId(vmServerId);
 		this.setMgwSimVmServerId(mgwSimVmServerId);
 		this.setEnvTG(envTG);
+		this.setTgenDockerId(tgenDockerId);
 		this.setEnvTT(envTT);
+		this.setStpName(stpName);
 		this.setStpIp(stpIp);
 		this.setExpertUser(expertUser);
 		this.setExpertPass(expertPass);
@@ -237,12 +244,28 @@ public class TestEnv {
 		this.mgwSimVmServerId = mgwSimVmServerId;
 	}
 
-//	public Map<String, String> getDockerInstances() {
-//		return dockerInstances;
-//	}
-//
-//	public void setDockerInstances(Map<String, String> dockerInstances) {
-//		this.dockerInstances = dockerInstances;
-//	}
+	public String getStpName() {
+		return stpName;
+	}
+
+	public void setStpName(String stpName) {
+		this.stpName = stpName;
+	}
+
+	public String getTgenDockerId() {
+		return tgenDockerId;
+	}
+
+	public void setTgenDockerId(String tgenDockerId) {
+		this.tgenDockerId = tgenDockerId;
+	}
+
+	// public Map<String, String> getDockerInstances() {
+	// return dockerInstances;
+	// }
+	//
+	// public void setDockerInstances(Map<String, String> dockerInstances) {
+	// this.dockerInstances = dockerInstances;
+	// }
 
 }

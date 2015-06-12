@@ -465,12 +465,12 @@
 													<label th:for="${#ids.prev('envTG')}" th:text="${trafficGenerator}">Traffic Gen</label>
 												</div>
 											</div>
-											<div class="col-md-3">
+											<!-- <div class="col-md-3">
 												<select id="mgwsim_stp" style="width:100%;display: none;">
 								                    <option value="TP019">TP019</option>
 								                    <option value="TP025">TP025</option>
 								                </select>
-											</div>
+											</div> -->
 										</div>
 										<div class="clearfix"></div>
 										<div class="form-group">
@@ -503,40 +503,57 @@
 											<label class="form-label">STP info</label>
 											<span class="help">Information about target STP.</span>
 											<br />
+											<div class="controls col-md-12">
+												<select id="stpName" name="stpName" style="width: 100%;" th:field="*{stpName}">
+													<optgroup label="Predefined STP Resources">
+													<option th:each="stpInfo : ${allStpInfo}" th:value="${stpInfo}" th:text="${stpInfo}"></option>
+													</optgroup>
+													<optgroup label="Customize STP Resources">
+													<option value="custom">Custom</option>
+													</optgroup>
+												</select>
+											</div>
+											
+											<!-- <div class="controls col-md-1">
+												<div class="checkbox check-default">
+												   <input type="checkbox" value="1" id="customStpChkBox" />
+												   <label for="customStpChkBox">custom</label>
+												</div>
+											</div> -->
 											<div class="controls col-md-6">
-												<input type="text" class="form-control" id="stpIp" placeholder="STP IP address" th:field="*{stpIp}"/>
+												<input type="text" class="form-control stp-custom" id="stpIp" placeholder="STP IP address" th:field="*{stpIp}"/>
 												<span id="stp-span" class="error" style="display: none;">
 													<label for="name" class="error">This field is required.</label>
 												</span>
 											</div>
 											<div class="controls col-md-3">
-												<input type="text" class="form-control" id="expertUser" name="expertUser" placeholder="ExpertUser" th:field="*{expertUser}"/>
+												<input type="text" class="form-control stp-custom" id="expertUser" name="expertUser" placeholder="ExpertUser" th:field="*{expertUser}"/>
 												<span id="stp-span" class="error" style="display: none;">
 													<label for="name" class="error">This field is required.</label>
 												</span>
 											</div>
 											<div class="controls col-md-3">
-												<input type="text" class="form-control" id="expertPass" name="expertPass" placeholder="ExpertPass" th:field="*{expertPass}"/>
+												<input type="text" class="form-control stp-custom" id="expertPass" name="expertPass" placeholder="ExpertPass" th:field="*{expertPass}"/>
 												<span id="stp-span" class="error" style="display: none;">
 													<label for="name" class="error">This field is required.</label>
 												</span>
 											</div>
+											<div class="controls col-md-6">
 											<div class="checkbox">
-												<div class="controls col-md-6">
 													<div class="checkbox check-primary" >
-														<input type="checkbox" id="customerUserSetting" name="customerUserSetting" />
+														<input type="checkbox" class="stp-custom" id="customerUserSetting" name="customerUserSetting" />
 														<label for="customerUserSetting">Use Expert user as Customer user.</label>
 													</div>
 												</div>
 											</div>
 											<div class="controls col-md-3">
-												<input type="text" class="form-control" id="customerUser" name="customerUser" placeholder="CustomerUser" th:field="*{customerUser}"/>
+												<input type="text" class="form-control stp-custom" id="customerUser" name="customerUser" placeholder="CustomerUser" th:field="*{customerUser}"/>
 												<span id="stp-span" class="error" style="display: none;">
 													<label for="name" class="error">This field is required.</label>
 												</span>
 											</div>
 											<div class="controls col-md-3">
-												<input type="text" class="form-control" id="customerPass" name="customerPass" placeholder="CustomerPass" th:field="*{customerPass}"/>
+												<input type="text" class="form-control stp-custom" id="customerPass" name="customerPass" placeholder="CustomerPass" th:field="*{customerPass}"/>
 												<span id="stp-span" class="error" style="display: none;">
 													<label for="name" class="error">This field is required.</label>
 												</span>
@@ -650,7 +667,7 @@
 <script src="../../../resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js}"></script> 
 <script src="../../../resources/assets/plugins/pace/pace.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/pace/pace.min.js}"></script>  
 <script src="../../../resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js}"></script>
-
+<script src="../../../resources/assets/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-validation/js/jquery.validate.min.js}"></script>
 <!-- END PAGE LEVEL PLUGINS --> 	
 
 <script src="../../../resources/assets/plugins/bootstrap-select2/select2.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/bootstrap-select2/select2.min.js}" ></script> 

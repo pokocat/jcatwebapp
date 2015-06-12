@@ -1,18 +1,17 @@
 package com.ericsson.jcat.jcatwebapp.testenv;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ericsson.jcat.jcatwebapp.account.UserGroup;
-
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 @Transactional(readOnly = true)

@@ -39,7 +39,7 @@
                     <p>Use admin, admin to sign in.
                         <br />
                     </p>
-                    <p class="p-b-20" th:text="${action == 'login' ? 'login' : 'signup'}">Sign up Now! it's free and always will be..</p>
+                    <p class="p-b-20">Sign up Now! it's free and always will be..</p>
                     <div class="center-text">
                     <button type="button" class="btn btn-primary btn-cons" id="login_toggle">Login</button> or&nbsp;&nbsp;
                     <button type="button" class="btn btn-info btn-cons" id="register_toggle"> Create an account</button>
@@ -97,7 +97,7 @@
                             </div>
                             <div class="col-md-6 col-sm-6">
                            		<select class="form-control" id="reg_group" name="group" style="width: 100%;" th:field="*{userGroup}">
-									<option th:each="group : ${allGroups}" th:value="${group}" th:text="${group}"></option>
+									<option th:each="group : ${allGroups}" th:value="${group.name}" th:text="${group.name}"></option>
 								</select>
                             </div>
                         </div>

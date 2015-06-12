@@ -34,6 +34,7 @@ import com.ericsson.axe.jcat.docker.adapter.exceptions.ContainerRunningException
 import com.ericsson.axe.jcat.docker.adapter.exceptions.ContainerStartingException;
 import com.ericsson.axe.jcat.docker.adapter.implementations.JcatDockerAdapter;
 import com.ericsson.axe.jcat.docker.adapter.interfaces.IJcatDockerContainerClient;
+import com.ericsson.axe.jcat.docker.adapter.interfaces.IJcatDockerTgenClient;
 import com.ericsson.jcat.jcatwebapp.config.TestConfig;
 import com.ericsson.jcat.jcatwebapp.cusom.TestEnvStatus;
 import com.ericsson.jcat.osadapter.exceptions.FlavorNotFoundException;
@@ -69,7 +70,8 @@ public class ServiceHelper {
 
 	private OpenstackService cs;
 
-	IJcatDockerContainerClient conClient;
+	private IJcatDockerTgenClient tgenClient;
+	private JcatDockerAdapter jda;
 
 	public ServiceHelper() {
 		logger.debug("Servicehelper auto inject ====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. ", openstackIp,
@@ -80,7 +82,8 @@ public class ServiceHelper {
 		logger.debug(
 				"Servicehelper final ====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. docker ip:{}, docker port:{}.",
 				openstackIp, openstackUser, openstackPass, openstackTenent, openstackAltNatIp, dockerIp, dockerPort);
-		conClient = new JcatDockerAdapter("http://" + dockerIp + ":" + dockerPort).containerClient();
+//		jda = new JcatDockerAdapter("http://" + dockerIp + ":" + dockerPort);
+		tgenClient = new JcatDockerAdapter("http://" + dockerIp + ":" + dockerPort).tgenClient();
 		this.cs = new OpenstackService(openstackIp, openstackUser, openstackPass, openstackTenent, openstackAltNatIp);
 	}
 
@@ -170,10 +173,9 @@ public class ServiceHelper {
 
 	public String createTgen(String name) throws ContainerExecutionException {
 		// boot container
-		String containerId = null;
-
+		String containerId = "";
 		try {
-			conClient.runContainer(name, "tgen/centos", 22);
+			containerId = tgenClient.runContainer(name);
 		} catch (ContainerCreationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -184,7 +186,6 @@ public class ServiceHelper {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return containerId;
 	}
 
@@ -213,7 +214,11 @@ public class ServiceHelper {
 	}
 
 	public InspectContainerResponse getDockerInstance(String id) {
-		return conClient.inspectContainer(id);
+		logger.debug("Gonna inspect docker with id: {}", id);
+		if (tgenClient == null) {
+			logger.error("null tgenClient!!!!");
+		}
+		return tgenClient.inspectContainer(id);
 
 	}
 

@@ -223,6 +223,7 @@ Page sidebar
 
 .page-sidebar > ul > li > ul.sub-menu > li.active > a {
 	color: #fff !important;
+	font-weight: 600;
 }
 
 .page-sidebar > ul > li > ul.sub-menu > li > a:hover {
@@ -7036,7 +7037,7 @@ ul.my-friends li .profile-pic{
 
 .post .post-links li:after {
     color: #999999;
-    content: "•";
+    content: "鈥�";
 	padding-left:8px;
 }
 
@@ -7509,7 +7510,7 @@ ul.my-friends li .profile-pic{
 
 .cbp_tmtimeline .action-links li:after {
     color: #999999;
-    content: "•";
+    content: "鈥�";
 	padding-left:8px;
 }
 

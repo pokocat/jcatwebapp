@@ -42,8 +42,6 @@ public class CreateTestEnvForm {
 
 	private ArrayList<TrafficGenerator> envTG;
 
-	private String mgwSimStp;
-	
 	private String mgwSimVmServerId;
 
 	private ArrayList<TestingTool> envTT;
@@ -51,6 +49,10 @@ public class CreateTestEnvForm {
 	private ArrayList<String> envSP;
 
 	// private Map<String, String> dockerInstances;
+
+	private String tgenDockerId;
+
+	private String stpName;
 
 	private String stpIp;
 
@@ -134,13 +136,6 @@ public class CreateTestEnvForm {
 		this.envTG = envTG;
 	}
 
-	public String getMgwSimStp() {
-		return mgwSimStp;
-	}
-
-	public void setMgwSimStp(String mgwSimStp) {
-		this.mgwSimStp = mgwSimStp;
-	}
 
 	public ArrayList<TestingTool> getEnvTT() {
 		return envTT;
@@ -156,6 +151,14 @@ public class CreateTestEnvForm {
 
 	public void setEnvSP(ArrayList<String> envSP) {
 		this.envSP = envSP;
+	}
+
+	public String getStpName() {
+		return stpName;
+	}
+
+	public void setStpName(String stpName) {
+		this.stpName = stpName;
 	}
 
 	public String getStpIp() {
@@ -214,11 +217,20 @@ public class CreateTestEnvForm {
 		this.mgwSimVmServerId = mgwSimVmServerId;
 	}
 
+	public String getTgenDockerId() {
+		return tgenDockerId;
+	}
+
+	public void setTgenDockerId(String tgenDockerId) {
+		this.tgenDockerId = tgenDockerId;
+	}
+
 	public TestEnv createTestEnv() throws FlavorNotFoundException, ImageNotFoundException, VmCreationFailureException,
 			TimeoutException {
 		return new TestEnv(this.getName(), this.getDescription(), this.getOwner(), this.getUserGroup(), this.isPcSet(),
-				this.getImageSet(), this.getVmServerId(),this.getMgwSimVmServerId(), this.getEnvTG(), this.getEnvTT(), this.getStpIp(),
-				this.getExpertUser(), this.getExpertPass(), this.getCustomerUser(), this.getCustomerPass());
+				this.getImageSet(), this.getVmServerId(), this.getMgwSimVmServerId(), this.getEnvTG(),
+				this.getTgenDockerId(), this.getEnvTT(), this.getStpName(), this.getStpIp(), this.getExpertUser(),
+				this.getExpertPass(), this.getCustomerUser(), this.getCustomerPass());
 	}
 
 	@Override
@@ -232,9 +244,10 @@ public class CreateTestEnvForm {
 				+ (hwSet != null ? "hwSet=" + hwSet + ", " : "")
 				+ (imageSet != null ? "imageSet=" + imageSet + ", " : "")
 				+ (envTG != null ? "envTG=" + envTG + ", " : "")
-				+ (mgwSimStp != null ? "mgwSimStp=" + mgwSimStp + ", " : "")
+				+ (mgwSimVmServerId != null ? "mgwSimVmServerId=" + mgwSimVmServerId + ", " : "")
 				+ (envTT != null ? "envTT=" + envTT + ", " : "") + (envSP != null ? "envSP=" + envSP + ", " : "")
-				+ (stpIp != null ? "stpIp=" + stpIp + ", " : "")
+				+ (tgenDockerId != null ? "tgenDockerId=" + tgenDockerId + ", " : "")
+				+ (stpName != null ? "stpName=" + stpName + ", " : "") + (stpIp != null ? "stpIp=" + stpIp + ", " : "")
 				+ (expertUser != null ? "expertUser=" + expertUser + ", " : "")
 				+ (expertPass != null ? "expertPass=" + expertPass + ", " : "")
 				+ (customerUser != null ? "customerUser=" + customerUser + ", " : "")

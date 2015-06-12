@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 import com.ericsson.axe.jcat.docker.adapter.exceptions.ContainerExecutionException;
+import com.ericsson.axe.jcat.rm.tass.configdb.ConfigdbFault;
+import com.ericsson.axe.jcat.rm.tass.configdb.NoSuchTestbedFault;
 import com.ericsson.jcat.jcatwebapp.account.Account;
 import com.ericsson.jcat.jcatwebapp.account.AccountRepository;
 import com.ericsson.jcat.jcatwebapp.account.UserGroup;
@@ -41,10 +43,13 @@ import com.ericsson.jcat.jcatwebapp.cusom.TestingTool;
 import com.ericsson.jcat.jcatwebapp.cusom.TrafficGenerator;
 import com.ericsson.jcat.jcatwebapp.extension.AjaxUtils;
 import com.ericsson.jcat.jcatwebapp.service.ServiceHelper;
+import com.ericsson.jcat.jcatwebapp.service.TassProvider;
 import com.ericsson.jcat.jcatwebapp.service.ServiceHelper.InstanceType;
 import com.ericsson.jcat.osadapter.exceptions.FlavorNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.ImageNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.VmCreationFailureException;
+import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.google.common.base.Throwables;
 
 @Controller
 @Secured("ROLE_USER")
@@ -58,31 +63,37 @@ class TestEnvController {
 	@Autowired
 	private ServiceHelper sh;
 
+	private StpInfoRepository stpInfoRepository;
+
 	private UserGroupRepository userGroupRepository;
 
 	@Autowired
-	public TestEnvController(TestEnvRepository testEnvRepository, UserGroupRepository userGroupRepository) {
+	public TestEnvController(TestEnvRepository testEnvRepository, UserGroupRepository userGroupRepository,
+			StpInfoRepository stpInfoRepository) {
 		this.testEnvRepository = testEnvRepository;
 		this.userGroupRepository = userGroupRepository;
+		this.stpInfoRepository = stpInfoRepository;
 		init();
 	}
 
 	private void init() {
 		testEnvRepository.save(new TestEnv("ENV SET DEMO 1", "This is a demo env set", "admin", "JCAT", true, "centos",
-				"b58cf29c-3ca0-4476-850e-f2a1e7268c40", null, new ArrayList<TrafficGenerator>(Arrays
+				"057f17e8-7192-4dac-bac7-c60ead3e9db0", null, new ArrayList<TrafficGenerator>(Arrays
 						.asList(TrafficGenerator.Client4)),
-				new ArrayList<TestingTool>(Arrays.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se",
+				"", new ArrayList<TestingTool>(Arrays.asList(TestingTool.JCAT)), "stp019", "tp999ap1.axe.k2.ericsson.se",
 				"expertuser", "expertpass", "customeruser", "customeruser"));
 		testEnvRepository.save(new TestEnv("ENV SET DEMO 2", "Isn't this demo fantacy? Created by me.", "eduowan",
-				"RST", false, "centos_pure", "b58cf29c-3ca0-4476-850e-f2a1e7268c40", null,
-				new ArrayList<TrafficGenerator>(Arrays.asList(TrafficGenerator.Client4)), new ArrayList<TestingTool>(
-						Arrays.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
-				"customeruser", "customeruser"));
+				"RST", false, "centos_pure", "ce9f9606-bd99-4a75-8e03-fa775697930f", null,
+				new ArrayList<TrafficGenerator>(Arrays.asList(TrafficGenerator.Tgen)), "eee945fbd12b", new ArrayList<TestingTool>(
+						Arrays.asList(TestingTool.JCAT)), "stp019", "tp999ap1.axe.k2.ericsson.se", "expertuser",
+				"expertpass", "customeruser", "customeruser"));
 		testEnvRepository.save(new TestEnv("ENV SET DEMO 3", "Isn't this demo fantacy? Created by me.", "admin", "RST",
-				false, "centos_pure", "1864a699-bd93-45ec-be99-2cd4afb1050b", null, new ArrayList<TrafficGenerator>(
-						Arrays.asList(TrafficGenerator.Client4)), new ArrayList<TestingTool>(Arrays
-						.asList(TestingTool.JCAT)), "tp999ap1.axe.k2.ericsson.se", "expertuser", "expertpass",
-				"customeruser", "customeruser"));
+				false, "centos_pure", "057f17e8-7192-4dac-bac7-c60ead3e9db1", null, new ArrayList<TrafficGenerator>(
+						Arrays.asList(TrafficGenerator.Client4)), "", new ArrayList<TestingTool>(Arrays
+						.asList(TestingTool.JCAT)), "stp019", "tp999ap1.axe.k2.ericsson.se", "expertuser",
+				"expertpass", "customeruser", "customeruser"));
+		stpInfoRepository.save(new StpInfo("stp019", "", "", "", "", "", ""));
+		stpInfoRepository.save(new StpInfo("stp025", "", "", "", "", "", ""));
 	}
 
 	public String getUserLoggedIn() {
@@ -132,6 +143,12 @@ class TestEnvController {
 	public List<UserGroup> populateGroups() {
 		return userGroupRepository.findAll();
 	}
+	
+	@ModelAttribute("allStpInfo")
+	public List<String> populateStpInfo() throws ConfigdbFault, NoSuchTestbedFault{
+//		return TassProvider.getTestbedsList();
+		return new ArrayList<String>(Arrays.asList("tp019","tp025"));
+	}
 
 	@ModelAttribute("allTrafficGenerators")
 	public List<TrafficGenerator> populateTrafficGenerators() {
@@ -164,13 +181,13 @@ class TestEnvController {
 		}
 
 		if (createTestEnvForm.getEnvTG().contains(TrafficGenerator.Tgen)) {
-			logger.info(":::: gonna create tgen .... ");
-			sh.createTgen(createTestEnvForm.getName());
+			logger.info(":::: gonna create tgen .... " + createTestEnvForm.getStpName());
+			createTestEnvForm.setTgenDockerId(sh.createTgen(createTestEnvForm.getStpName()));
 		}
 
 		if (createTestEnvForm.getEnvTG().contains(TrafficGenerator.MgwSim)) {
-			logger.info(":::: gonna create MGWSim - {}", createTestEnvForm.getMgwSimStp());
-			createTestEnvForm.setMgwSimVmServerId(sh.createMGWSim(createTestEnvForm.getMgwSimStp()));
+			logger.info(":::: gonna create MGWSim - {}", createTestEnvForm.getStpName());
+			createTestEnvForm.setMgwSimVmServerId(sh.createMGWSim(createTestEnvForm.getStpName()));
 		}
 		testEnvRepository.save(createTestEnvForm.createTestEnv());
 		return new TestEnvCreatResultJson("success");
@@ -236,9 +253,13 @@ class TestEnvController {
 	}
 
 	@RequestMapping(value = "/docker/{id}", method = RequestMethod.GET)
-	public String getDockerContainer(@PathVariable String id, Model model) {
-		model.addAttribute("dockerInstance", sh.getDockerInstance(id));
-		return "testenv/dockerInstance-modal";
+	public @ResponseBody InspectContainerResponse getDockerContainer(@PathVariable String id, Model model) {
+		if (id == null || id.isEmpty()) {
+			logger.error("Inspect docker with null or empty ID!!!!");
+		}
+		return sh.getDockerInstance(id);
+//		model.addAttribute("dockerInstance", sh.getDockerInstance(id));
+//		return "testenv/dockerInstance-modal";
 	}
 
 	@RequestMapping(value = "/update", produces = "application/json")
@@ -266,17 +287,17 @@ class TestEnvController {
 	@RequestMapping(value = "/status/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public String getTestEnvStatus(@PathVariable int id) {
-		logger.info("====> find server id");
+		logger.debug("====> find server id");
 		TestEnv te = testEnvRepository.findById(id);
 		if (te == null) {
 			return TestEnvStatus.UNKNOWN.toString();
 		}
 		String serverId = te.getVmServerId();
-		logger.info("====> server id found {}", serverId);
+		logger.debug("====> server id found {}", serverId);
 		if (serverId == null || serverId.isEmpty()) {
 			return TestEnvStatus.UNKNOWN.toString();
 		}
-		logger.info("====> check status of env-{}, serverId-{}", id, serverId);
+		logger.debug("====> check status of env-{}, serverId-{}", id, serverId);
 		return sh.getStatus(serverId, InstanceType.Openstack).toString();
 	}
 

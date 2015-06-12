@@ -43,7 +43,7 @@
         <!-- BEGIN MINI-PROFILE -->
         <div class="user-info-wrapper">
             <div class="profile-wrapper" th:if="${#authorization.expression('isAuthenticated()')}">
-                <img src="../../../resources/assets/img/profiles/avatar.jpg" alt="" width="69" height="69" th:src="@{/resources/assets/img/profiles/avatar.jpg}"/>
+                <img src="../../../resources/assets/img/profiles/avatar.png" alt="" width="69" height="69" th:src="@{/resources/assets/img/profiles/avatar.png}"/>
             </div>
             <div class="user-info" th:if="${#authorization.expression('isAuthenticated()')}">
                 <div class="greeting">Welcome</div>
@@ -86,15 +86,15 @@
                     </li>
                 </ul>
             </li>
- 			<li class="" th:classappend="${page == '' ? 'active' : ''}">
+ 			<li class="" th:classappend="${fatherpage == 'testengine' ? 'open active' : ''}">
                 <a href="javascript:;"> <i class="icon-custom-extra"></i> 
                 <span class="title">Test Engine</span><span class="arrow " th:classappend="${page == '' ? 'open ' : ''}"></span>
                 </a>
                 <ul class="sub-menu">
-                    <li th:classappend="${page == '' ? 'active' : ''}">
+                    <li th:classappend="${page == 'launchtestengine' ? 'active' : ''}">
                         <a th:href="@{/testengine/launch}">TestEngine Launch</a>
                     </li>
-                    <li th:classappend="${page == '' ? 'active' : ''}">
+                    <li th:classappend="${page == 'setuptestengine' ? 'active' : ''}">
                         <a href="/" th:href="@{/testengine/setup}">TestEngine Setup </a>
                         
                     </li>
