@@ -1,5 +1,6 @@
 package com.ericsson.jcat.jcatwebapp.testenv;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -29,7 +30,7 @@ public class StpInfoRepository {
 
 	@Transactional
 	public StpInfo update(StpInfo stpInfo) {
-		entityManager.refresh(stpInfo);
+		entityManager.merge(stpInfo);
 		return stpInfo;
 	}
 
@@ -40,9 +41,20 @@ public class StpInfoRepository {
 	public StpInfo findById(int id) {
 		return entityManager.find(StpInfo.class, id);
 	}
-	
-	public StpInfo findByName(String name){
-		return entityManager.createQuery("SELECT i FROM StpInfo i where i.stpName = :stpName", StpInfo.class).setParameter("stpName", name).getSingleResult();
+
+	public StpInfo findByName(String name) {
+		return entityManager.createQuery("SELECT i FROM StpInfo i where i.stpName = :stpName", StpInfo.class)
+				.setParameter("stpName", name).getSingleResult();
+	}
+
+	public List<StpInfo> findByGroup(List<UserGroup> currentGroups) {
+		List<StpInfo> stpInfoList = new ArrayList<StpInfo>();
+		for (UserGroup userGroup : currentGroups) {
+			stpInfoList.addAll(entityManager
+					.createQuery("SELECT i FROM StpInfo i where i.userGroup = :userGroup", StpInfo.class)
+					.setParameter("userGroup", userGroup.getName()).getResultList());
+		}
+		return stpInfoList;
 	}
 
 	public void deleteById(int id) {

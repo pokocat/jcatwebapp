@@ -53,24 +53,24 @@ $(document).ready(function() {
     
     $(".stp").click(function(event) {
 	event.preventDefault();
-	var it = $(this).attr("id") -1;
-	console.log(alertVariable[it]);
+	var data = $(this).data("stpinfo");
+	console.log(data);
 	bootbox.dialog({
-	    title: "target STP info",
+	    title: "target STP info [" +data.stpName+ "]" ,
 	    message: 
 		'<table class="table no-more-tables table-bordered table-hover"">'+
     		   '<tbody>'+
             		'<tr>'+
             			'<td>STP IP</td>'+
-            			'<td>'+alertVariable[it].stpIp+'</td>'+
+            			'<td>'+data.stpIp+'</td>'+
             		'</tr>'+
             		'<tr>'+
             			'<td>ExpertUser : Pass</td>'+
-            			'<td>'+alertVariable[it].expertUser +' : '+ alertVariable[it].expertPass +'</td>'+
+            			'<td>'+data.expertUser +' : '+ data.expertPass +'</td>'+
             		'</tr>'+
             		'<tr>'+
             			'<td>CustomerUser&nbsp;: Pass</td>'+
-            			'<td>'+alertVariable[it].customerUser +' : '+ alertVariable[it].customerPass +'</td>'+
+            			'<td>'+data.customerUser +' : '+ data.customerPass +'</td>'+
             		'</tr>'+
                     '</tbody>'+
                 '</table>'+

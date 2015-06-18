@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 <meta charset="utf-8" />
-<title>Test Environment List - Jcat</title>
+<title>STP List - Jcat Cloud</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="" name="description" />
 <meta content="" name="author" />
@@ -25,9 +25,6 @@
 <link href="../../../resources/assets/css/responsive.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/css/responsive.css}"/>
 <link href="../../../resources/assets/css/custom-icon-set.css" rel="stylesheet" type="text/css" th:href="@{/resources/assets/css/custom-icon-set.css}"/>
 <!-- END CSS TEMPLATE -->
-<script type="text/javascript">
-	var stpInfos=new Array();
-</script>
 </head>
 <!-- END HEAD -->
 
@@ -381,17 +378,17 @@
     			<p>YOU ARE HERE</p>
     		</li> 
     		<li>
-    			<a href="#" class="active">TestEnv List</a>
+    			<a href="#" class="active">STP List</a>
     		</li>
     	</ul>
 		<div class="page-title">	
-			<h3>VM Info</h3>		
+			<h3>STP Info</h3>		
 		</div>
 		<div class="row">
 			<div class="col-md-12">
 				<div class="grid simple ">
 					<div class="grid-title no-border">
-						<h4>Test Environment List <span class="semi-bold"></span></h4>
+						<h4>STP List <span class="semi-bold"></span></h4>
 						<div class="tools">	<a href="javascript:;" class="collapse"></a>
 							<a href="#grid-config" data-toggle="modal" class="config"></a>
 							<a href="javascript:;" class="reload"></a>
@@ -400,78 +397,61 @@
 					</div>
 					<div class="grid-body no-border">
 
-
-
-
-
 						<h3>User Group:  <span class="semi-bold" th:text="${currentGroups}">RST</span></h3>
 						<table class="table no-more-tables table-bordered">
 							<thead>
 								<tr>
-									<th style="width:1%; white-space: nowrap;" class="v-align-middle" >
-										ID
-									</th>
-									
-									<th style="width:19%; white-space: nowrap;" class="v-align-middle">ENV Set Name</th>
-									<!--<th style="width:3%; white-space: nowrap;" class="v-align-middle">IP Address</th>
-									<th style="width:3%; white-space: nowrap;" class="v-align-middle">PC Type</th>-->
-									<th style="width:40%; white-space: nowrap;" class="v-align-middle">Resources</th>
-									<th style="width:5%; white-space: nowrap;" class="v-align-middle">Status</th>
-									<th style="width:15%; white-space: nowrap;" class="v-align-middle">Live time</th>
+									<th style="width:1%; white-space: nowrap;" class="v-align-middle" >ID</th>
+									<th style="width:9%; white-space: nowrap;" class="v-align-middle">STP Name</th>
+									<th style="width:20%; white-space: nowrap;" class="v-align-middle">IP address</th>
+									<th style="width:10%; white-space: nowrap;" class="v-align-middle">Expert User</th>
+									<th style="width:10%; white-space: nowrap;" class="v-align-middle">Expert Pass</th>
+									<th style="width:10%; white-space: nowrap;" class="v-align-middle">Booking State</th>
+									<th style="width:10%; white-space: nowrap;" class="v-align-middle">Group</th>
 									<th style="width:20%; white-space: nowrap;" class="v-align-middle">Actions</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:if="${testEnvs.empty}">
-									<td class="center-text" colspan="12">No Test Environment exists currently</td>
+								<tr th:if="${stpInfos.empty}">
+									<td class="center-text" colspan="12">No STP exists currently</td>
 								</tr>
-								<tr th:each="testEnv,iterStat : ${testEnvs}" th:id="${testEnv.id}">
+								<tr th:each="stpInfo,iterStat : ${stpInfos}" th:id="${stpInfo.id}">
 									<td id="id" th:text="${iterStat.count}">1<span class="hide"></span></td>
 									
 									<td>
-										<div class="env-name nowrap" data-toggle="tooltip" title="" data-placement="top" data-original-title="Hello there! Some description here." th:attr="data-original-title=${testEnv.description}">
-										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)" th:text="${testEnv.name}">
-											INSTA-EXAMPLE</a>
-											<i class="fa fa-user" >&nbsp;</i>
-											<i class="fa fa-users" th:if="${testEnv.shared} == true">&nbsp;</i>
+										<div class="nowrap">
+										<a href="#myModal"  th:text="${stpInfo.stpName}">
+											TP777</a>
 										</div>
 									</td>
 									<!--<td  class="v-align-middle muted" th:text="10.10.10.10">10.170.110.1</td>-->
 									<!--<td  class="v-align-middle"><span class="label" th:text="${testEnvs.imageSet}"><i class="fa fa-desktop" >&nbsp;</i>PURE_OS</span>
 									</td>-->
 									<td class="v-align-middle">
-										<div class="env-name inline" data-toggle="tooltip" title="" data-placement="top" data-original-title="PC config details.">
-											<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/vmserver/}+ ${testEnv.vmServerId}">
-												<span th:if="${testEnv.pcSet}" class="label label-inverse light normal-text" th:inline="text"><i class="fa fa-desktop" >&nbsp;</i>[[${testEnv.imageSet}]]</span>
-											</a>
+										<div class=" inline" data-toggle="tooltip" title="" data-placement="top" data-original-title="PC config details.">
+											<span class=" light normal-text" th:inline="text">[[${stpInfo.stpIp}]]</span>
 										</div>
-										<div class="env-name inline" data-toggle="tooltip" title="" data-placement="top" data-original-title="PC config details.">
-											<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/vmserver/}+ ${testEnv.mgwSimVmServerId}">
-												<span th:if="${testEnv.mgwSimVmServerId}" class="label label-inverse light normal-text" th:inline="text"><i class="fa fa-desktop" >&nbsp;</i>[[MGWSim]]</span>
-											</a>
+									</td>
+									<td class="v-align-middle">
+										<div class=" inline" data-toggle="tooltip" title="" data-placement="top" data-original-title="PC config details.">
+											<span class=" light normal-text" th:inline="text">[[${stpInfo.expertUser}]]</span>
 										</div>
-										<a href="#" class="inspect_docker" data-toggle="modal" data-load-remote="/1" data-target="#dockerModal" th:attr="data-dockerid=${testEnv.tgenDockerId}">
-											<span class="label label-info light normal-text" th:each="env : ${testEnv.envTG}" th:classappend="( (${#strings.toString(env)} == 'MgwSim')? 'hidden' : '')" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${env}]]</span>
-										</a>
-										<a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/}+ (${iterStat.index}+1)">
-											<span class="label label-info light normal-text" th:each="env : ${testEnv.envTT}" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${env}]]</span>
-										</a>
-										<a href="">
-											<span th:id="${iterStat.count}" class="label light normal-text stp" th:if="${testEnv.stp != ''}" th:attr="data-stpInfo=${testEnv.stp}"><i class="fa fa-building-o" >&nbsp;</i>STP</span>
-											<script type="text/javascript" th:inline="javascript">
-											/*<![CDATA[*/
-											    var tempObj = /*[[${testEnv.stp}]]*/;
-												stpInfos.push(/*[[${testEnv.stp}]]*/);
-											/*]]>*/
-												alert(tempObj);
-												stpInfos.push(tempObj);
-											</script>
-										</a>
 									</td>
-									<td id="envstatus" class="v-align-middle ">
-										<span class="label">UPDATING...</span>
+									<td class="v-align-middle">
+										<div class=" inline" data-toggle="tooltip" title="" data-placement="top" data-original-title="PC config details.">
+											<span class=" light normal-text" th:inline="text">[[${stpInfo.expertUser}]]</span>
+										</div>
 									</td>
-									<td class="v-align-middle"><time class="age" th:attr="datetime=${#dates.format(testEnv.created, 'dd/MMM/yyyy HH:mm')}">10 minutes</time></td>
+									<td class="v-align-middle">
+										<div class=" inline" data-toggle="tooltip" title="" data-placement="top" data-original-title="PC config details.">
+											<span class=" light normal-text" th:text="${stpInfo.isBooked}">false</span>
+										</div>
+									</td>
+									<td class="v-align-middle">
+										<div class=" inline" data-toggle="tooltip" title="" data-placement="top" data-original-title="PC config details.">
+											<span class=" light normal-text" th:inline="text">[[${stpInfo.userGroup}]]</span>
+										</div>
+									</td>
 									<td class="v-align-middle">
 										<div id="action-btn-group" class="btn-group">
 											<button class="btn btn-white btn-small"><a href="#myModal" data-toggle="modal" data-load-remote="/1" data-remote-target="#myModal" th:attr="data-load-remote=@{/testenv/createsnapshot/}+ (${testEnv.id})">Create Snapshot</a></button>
@@ -641,7 +621,11 @@
 <script src="../../../resources/assets/plugins/jquery-notifications/js/messenger.min.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-notifications/js/messenger.min.js}"></script>
 <script src="../../../resources/assets/plugins/jquery-notifications/js/messenger-theme-future.js" type="text/javascript" th:src="@{/resources/assets/plugins/jquery-notifications/js/messenger-theme-future.js}"></script>
 <!-- END PAGE LEVEL PLUGINS -->
-
+<script type="text/javascript" th:inline="javascript" >
+/*<![CDATA[*/
+	var alertVariable = /*[[${testEnvs}]]*/ 'Sebastian';
+/*]]>*/
+</script>
 <script src="../../../resources/assets/js/list_env.js" type="text/javascript" charset="utf-8" th:src="@{/resources/assets/js/list_env.js}"></script>
 <!-- BEGIN CORE TEMPLATE JS --> 
 <script src="../../../resources/assets/js/core.js" type="text/javascript" th:src="@{/resources/assets/js/core.js}"></script> 

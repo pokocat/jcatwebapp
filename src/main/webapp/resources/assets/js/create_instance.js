@@ -210,9 +210,9 @@ $(document).ready(function() {
                 xhr.setRequestHeader("X-CSRF-TOKEN", token);
             },
             success: function(data) {
-                unblockUI(el, "Successfully created new Test Environment!");
                 console.log(JSON.stringify(data));
                 if (data.status == "success") {
+                    unblockUI(el, "Successfully created new Test Environment!<h3>Submitting...</h3>");
                     console.log(data.status);
                     $("#resultBox").removeClass('hide');
                     $("#resultBox > div").addClass("alert-success");
@@ -220,11 +220,12 @@ $(document).ready(function() {
                     $("#resultBox > div > p").text("New test environment successfully created!");
                     window.location.href = "/jcatwebapp/testenv/";
                 } else {
+                    unblockUI(el, "Created new Test Environment failed!");
                     $("#resultBox").removeClass('hide');
                     $("#resultBox > div").addClass("alert-error");
                     $("#resultBox > div > h4").text("Error!");
-                    $("#resultBox > div > p").text("New test environment creating failed!");
-                    alert("errror");
+                    $("#resultBox > div > p").text("New test environment creating failed! Reason: "+ data.reason);
+//                    alert("errror");
                 };
             },
             error: function(data) {
@@ -252,7 +253,7 @@ $(document).ready(function() {
     //***********************************BEGIN Function calls ***************************** 
     function blockUI(el) {
         $(el).block({
-            message: '<div class="loading-animator"></div><h3>Submitting...</h3>',
+            message: '<div class="loading-animator"></div>',
             css: {
                 border: 'none',
                 padding: '2px',

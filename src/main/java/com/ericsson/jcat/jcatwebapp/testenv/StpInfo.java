@@ -30,6 +30,8 @@ public class StpInfo {
 
 	private String customerPass;
 
+	private boolean isBooked;
+
 	@Version
 	private long created = Calendar.getInstance().getTimeInMillis();
 
@@ -99,11 +101,19 @@ public class StpInfo {
 		this.userGroup = userGroup;
 	}
 
+	public boolean getIsBooked() {
+		return isBooked;
+	}
+
+	public void setBooked(boolean isBooked) {
+		this.isBooked = isBooked;
+	}
+
 	public StpInfo() {
 	}
 
 	public StpInfo(String name, String stpIp, String expertUser, String expertPass, String customerUser,
-			String customerPass, String userGroup) {
+			String customerPass, String userGroup, boolean isBooked) {
 		super();
 		this.stpName = name;
 		this.stpIp = stpIp;
@@ -112,17 +122,21 @@ public class StpInfo {
 		this.customerUser = customerUser;
 		this.customerPass = customerPass;
 		this.userGroup = userGroup;
+		this.isBooked = isBooked;
 	}
 
 	@Override
 	public String toString() {
-		return "StpInfo [id=" + id + ", " + (stpName != null ? "name=" + stpName + ", " : "")
-				+ (stpIp != null ? "stpIp=" + stpIp + ", " : "")
-				+ (expertUser != null ? "expertUser=" + expertUser + ", " : "")
-				+ (expertPass != null ? "expertPass=" + expertPass + ", " : "")
-				+ (customerUser != null ? "customerUser=" + customerUser + ", " : "")
-				+ (customerPass != null ? "customerPass=" + customerPass + ", " : "") + "created=" + created + ", "
-				+ (userGroup != null ? "userGroup=" + userGroup : "") + "]";
+		return "{\"id\":\"" + id + "\", " + (stpName != null ? "\"stpName\":\"" + stpName + "\", " : "")
+				+ (stpIp != null ? "\"stpIp\":\"" + stpIp + "\", " : "")
+				+ (expertUser != null ? "\"expertUser\":\"" + expertUser + "\", " : "")
+				+ (expertPass != null ? "\"expertPass\":\"" + expertPass + "\", " : "")
+				+ (customerUser != null ? "\"customerUser\":\"" + customerUser + "\", " : "")
+				+ (customerPass != null ? "\"customerPass\":\"" + customerPass + "\", " : "") + "\"created\":\"" + created + "\", "
+				+ (userGroup != null ? "\"userGroup\":\"" + userGroup : "") + "\"}";
 	}
 
+	public static void main(String[] args) {
+		System.out.print(new StpInfo("tp019", "19fakeip", "expuser", "exppass", "cusUser", "cusPass", "JCAT", false));
+	}
 }

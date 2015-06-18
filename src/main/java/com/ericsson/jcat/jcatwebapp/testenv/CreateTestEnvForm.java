@@ -1,6 +1,7 @@
 package com.ericsson.jcat.jcatwebapp.testenv;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import javax.persistence.Entity;
@@ -15,13 +16,9 @@ import com.ericsson.jcat.osadapter.exceptions.FlavorNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.ImageNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.VmCreationFailureException;
 
-@Entity
+
 public class CreateTestEnvForm {
 	private static final String NOT_BLANK_MESSAGE = "{notBlank.message}";
-
-	@Id
-	@GeneratedValue
-	private Integer id;
 
 	@NotBlank(message = CreateTestEnvForm.NOT_BLANK_MESSAGE)
 	private String name;
@@ -64,179 +61,21 @@ public class CreateTestEnvForm {
 
 	private String customerPass;
 
-	public String getName() {
-		return name;
-	}
+	private ArrayList<TestTool> toolList = new ArrayList<TestTool>();
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getOwner() {
-		return owner;
-	}
-
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-	public String getUserGroup() {
-		return userGroup;
-	}
-
-	public void setUserGroup(String userGroup) {
-		this.userGroup = userGroup;
-	}
-
-	public boolean isPcSet() {
-		return pcSet;
-	}
-
-	public void setPcSet(boolean pcSet) {
-		this.pcSet = pcSet;
-	}
-
-	public String getVmServerId() {
-		return vmServerId;
-	}
-
-	public void setVmServerId(String vmServerId) {
-		this.vmServerId = vmServerId;
-	}
-
-	public String getHwSet() {
-		return hwSet;
-	}
-
-	public void setHwSet(String hwSet) {
-		this.hwSet = hwSet;
-	}
-
-	public String getImageSet() {
-		return imageSet;
-	}
-
-	public void setImageSet(String imageSet) {
-		this.imageSet = imageSet;
-	}
-
-	public ArrayList<TrafficGenerator> getEnvTG() {
-		return envTG;
-	}
-
-	public void setEnvTG(ArrayList<TrafficGenerator> envTG) {
-		this.envTG = envTG;
-	}
-
-
-	public ArrayList<TestingTool> getEnvTT() {
-		return envTT;
-	}
-
-	public void setEnvTT(ArrayList<TestingTool> envTT) {
-		this.envTT = envTT;
-	}
-
-	public ArrayList<String> getEnvSP() {
-		return envSP;
-	}
-
-	public void setEnvSP(ArrayList<String> envSP) {
-		this.envSP = envSP;
-	}
-
-	public String getStpName() {
-		return stpName;
-	}
-
-	public void setStpName(String stpName) {
-		this.stpName = stpName;
-	}
-
-	public String getStpIp() {
-		return stpIp;
-	}
-
-	public void setStpIp(String stpIp) {
-		this.stpIp = stpIp;
-	}
-
-	public String getExpertUser() {
-		return expertUser;
-	}
-
-	public void setExpertUser(String expertUser) {
-		this.expertUser = expertUser;
-	}
-
-	public String getExpertPass() {
-		return expertPass;
-	}
-
-	public void setExpertPass(String expertPass) {
-		this.expertPass = expertPass;
-	}
-
-	public String getCustomerUser() {
-		return customerUser;
-	}
-
-	public void setCustomerUser(String customerUser) {
-		this.customerUser = customerUser;
-	}
-
-	public String getCustomerPass() {
-		return customerPass;
-	}
-
-	public void setCustomerPass(String customerPass) {
-		this.customerPass = customerPass;
-	}
-
-	// public Map<String, String> getDockerInstances() {
-	// return dockerInstances;
-	// }
-	//
-	// public void setDockerInstances(Map<String, String> dockerInstances) {
-	// this.dockerInstances = dockerInstances;
-	// }
-
-	public String getMgwSimVmServerId() {
-		return mgwSimVmServerId;
-	}
-
-	public void setMgwSimVmServerId(String mgwSimVmServerId) {
-		this.mgwSimVmServerId = mgwSimVmServerId;
-	}
-
-	public String getTgenDockerId() {
-		return tgenDockerId;
-	}
-
-	public void setTgenDockerId(String tgenDockerId) {
-		this.tgenDockerId = tgenDockerId;
-	}
-
-	public TestEnv createTestEnv() throws FlavorNotFoundException, ImageNotFoundException, VmCreationFailureException,
+	public TestEnv createTestEnv(StpInfo stp) throws FlavorNotFoundException, ImageNotFoundException, VmCreationFailureException,
 			TimeoutException {
-		return new TestEnv(this.getName(), this.getDescription(), this.getOwner(), this.getUserGroup(), this.isPcSet(),
+		 TestEnv testEnv = new TestEnv(this.getName(), this.getDescription(), this.getOwner(), this.getUserGroup(), this.isPcSet(),
 				this.getImageSet(), this.getVmServerId(), this.getMgwSimVmServerId(), this.getEnvTG(),
 				this.getTgenDockerId(), this.getEnvTT(), this.getStpName(), this.getStpIp(), this.getExpertUser(),
-				this.getExpertPass(), this.getCustomerUser(), this.getCustomerPass());
+				this.getExpertPass(), this.getCustomerUser(), this.getCustomerPass(), this.getToolList());
+		 testEnv.setStp(stp);
+		 return testEnv;
 	}
 
 	@Override
 	public String toString() {
-		return "CreateTestEnvForm [" + (id != null ? "id=" + id + ", " : "")
-				+ (name != null ? "name=" + name + ", " : "")
+		return "CreateTestEnvForm [" + (name != null ? "name=" + name + ", " : "")
 				+ (description != null ? "description=" + description + ", " : "")
 				+ (owner != null ? "owner=" + owner + ", " : "")
 				+ (userGroup != null ? "userGroup=" + userGroup + ", " : "") + "pcSet=" + pcSet + ", "
@@ -251,7 +90,178 @@ public class CreateTestEnvForm {
 				+ (expertUser != null ? "expertUser=" + expertUser + ", " : "")
 				+ (expertPass != null ? "expertPass=" + expertPass + ", " : "")
 				+ (customerUser != null ? "customerUser=" + customerUser + ", " : "")
-				+ (customerPass != null ? "customerPass=" + customerPass : "") + "]";
+				+ (customerPass != null ? "customerPass=" + customerPass + ", " : "")
+				+ (toolList != null ? "toolList=" + toolList : "") + "]";
+	}
+
+	public String getCustomerPass() {
+		return customerPass;
+	}
+
+	public String getCustomerUser() {
+		return customerUser;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public ArrayList<String> getEnvSP() {
+		return envSP;
+	}
+
+	public ArrayList<TrafficGenerator> getEnvTG() {
+		return envTG;
+	}
+
+	public ArrayList<TestingTool> getEnvTT() {
+		return envTT;
+	}
+
+	public String getExpertPass() {
+		return expertPass;
+	}
+
+	public String getExpertUser() {
+		return expertUser;
+	}
+
+	public String getHwSet() {
+		return hwSet;
+	}
+
+	public String getImageSet() {
+		return imageSet;
+	}
+
+	public String getMgwSimVmServerId() {
+		return mgwSimVmServerId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public String getStpIp() {
+		return stpIp;
+	}
+
+	public String getStpName() {
+		return stpName;
+	}
+
+	public String getTgenDockerId() {
+		return tgenDockerId;
+	}
+
+	public ArrayList<TestTool> getToolList() {
+		return toolList;
+	}
+
+	public String getUserGroup() {
+		return userGroup;
+	}
+
+	public String getVmServerId() {
+		return vmServerId;
+	}
+
+	public boolean isPcSet() {
+		return pcSet;
+	}
+
+	public void setCustomerPass(String customerPass) {
+		this.customerPass = customerPass;
+	}
+
+	public void setCustomerUser(String customerUser) {
+		this.customerUser = customerUser;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setEnvSP(ArrayList<String> envSP) {
+		this.envSP = envSP;
+	}
+
+	public void setEnvTG(ArrayList<TrafficGenerator> envTG) {
+		this.envTG = envTG;
+	}
+
+	public void setEnvTT(ArrayList<TestingTool> envTT) {
+		this.envTT = envTT;
+	}
+
+	public void setExpertPass(String expertPass) {
+		this.expertPass = expertPass;
+	}
+
+	public void setExpertUser(String expertUser) {
+		this.expertUser = expertUser;
+	}
+
+	public void setHwSet(String hwSet) {
+		this.hwSet = hwSet;
+	}
+
+	public void setImageSet(String imageSet) {
+		this.imageSet = imageSet;
+	}
+
+	public void setMgwSimVmServerId(String mgwSimVmServerId) {
+		this.mgwSimVmServerId = mgwSimVmServerId;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	// public Map<String, String> getDockerInstances() {
+	// return dockerInstances;
+	// }
+	//
+	// public void setDockerInstances(Map<String, String> dockerInstances) {
+	// this.dockerInstances = dockerInstances;
+	// }
+
+	public void setPcSet(boolean pcSet) {
+		this.pcSet = pcSet;
+	}
+
+	public void setStpIp(String stpIp) {
+		this.stpIp = stpIp;
+	}
+
+	public void setStpName(String stpName) {
+		this.stpName = stpName;
+	}
+
+	public void setTgenDockerId(String tgenDockerId) {
+		this.tgenDockerId = tgenDockerId;
+	}
+
+	public void setToolList(ArrayList<TestTool> toolList) {
+		this.toolList = toolList;
+	}
+
+	
+
+	public void setUserGroup(String userGroup) {
+		this.userGroup = userGroup;
+	}
+
+	public void setVmServerId(String vmServerId) {
+		this.vmServerId = vmServerId;
 	}
 
 }

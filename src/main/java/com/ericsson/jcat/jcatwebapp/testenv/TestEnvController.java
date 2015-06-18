@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
+import javax.annotation.PostConstruct;
+
 import org.openstack4j.openstack.compute.domain.NovaAbsoluteLimit;
 import org.openstack4j.openstack.compute.domain.NovaFlavor;
 import org.openstack4j.openstack.compute.domain.NovaServer;
@@ -56,44 +58,36 @@ import com.google.common.base.Throwables;
 @RequestMapping("/testenv")
 class TestEnvController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
-
+	@Autowired
 	private TestEnvRepository testEnvRepository;
 	@Autowired
 	private AccountRepository accountRepository;
 	@Autowired
 	private ServiceHelper sh;
-
+	@Autowired
 	private StpInfoRepository stpInfoRepository;
-
+	@Autowired
 	private UserGroupRepository userGroupRepository;
 
-	@Autowired
-	public TestEnvController(TestEnvRepository testEnvRepository, UserGroupRepository userGroupRepository,
-			StpInfoRepository stpInfoRepository) {
-		this.testEnvRepository = testEnvRepository;
-		this.userGroupRepository = userGroupRepository;
-		this.stpInfoRepository = stpInfoRepository;
-		init();
-	}
-
-	private void init() {
+	@PostConstruct
+	protected void init() {
 		testEnvRepository.save(new TestEnv("ENV SET DEMO 1", "This is a demo env set", "admin", "JCAT", true, "centos",
 				"057f17e8-7192-4dac-bac7-c60ead3e9db0", null, new ArrayList<TrafficGenerator>(Arrays
-						.asList(TrafficGenerator.Client4)),
-				"", new ArrayList<TestingTool>(Arrays.asList(TestingTool.JCAT)), "stp019", "tp999ap1.axe.k2.ericsson.se",
-				"expertuser", "expertpass", "customeruser", "customeruser"));
+						.asList(TrafficGenerator.Client4)), "", new ArrayList<TestingTool>(Arrays
+						.asList(TestingTool.JCAT)), "stp019", "tp999ap1.axe.k2.ericsson.se", "expertuser",
+				"expertpass", "customeruser", "customeruser"));
 		testEnvRepository.save(new TestEnv("ENV SET DEMO 2", "Isn't this demo fantacy? Created by me.", "eduowan",
 				"RST", false, "centos_pure", "ce9f9606-bd99-4a75-8e03-fa775697930f", null,
-				new ArrayList<TrafficGenerator>(Arrays.asList(TrafficGenerator.Tgen)), "eee945fbd12b", new ArrayList<TestingTool>(
-						Arrays.asList(TestingTool.JCAT)), "stp019", "tp999ap1.axe.k2.ericsson.se", "expertuser",
-				"expertpass", "customeruser", "customeruser"));
+				new ArrayList<TrafficGenerator>(Arrays.asList(TrafficGenerator.Tgen)), "eee945fbd12b",
+				new ArrayList<TestingTool>(Arrays.asList(TestingTool.JCAT)), "stp019", "tp999ap1.axe.k2.ericsson.se",
+				"expertuser", "expertpass", "customeruser", "customeruser"));
 		testEnvRepository.save(new TestEnv("ENV SET DEMO 3", "Isn't this demo fantacy? Created by me.", "admin", "RST",
 				false, "centos_pure", "057f17e8-7192-4dac-bac7-c60ead3e9db1", null, new ArrayList<TrafficGenerator>(
 						Arrays.asList(TrafficGenerator.Client4)), "", new ArrayList<TestingTool>(Arrays
 						.asList(TestingTool.JCAT)), "stp019", "tp999ap1.axe.k2.ericsson.se", "expertuser",
 				"expertpass", "customeruser", "customeruser"));
-		stpInfoRepository.save(new StpInfo("stp019", "", "", "", "", "", ""));
-		stpInfoRepository.save(new StpInfo("stp025", "", "", "", "", "", ""));
+		stpInfoRepository.save(new StpInfo("tp019", "19fakeip", "expuser", "exppass", "cusUser", "cusPass", "JCAT", false));
+		stpInfoRepository.save(new StpInfo("tp025", "25fakeip", "expuser", "exppass", "cusUser", "cusPass", "JCAT", false));
 	}
 
 	public String getUserLoggedIn() {
@@ -143,11 +137,11 @@ class TestEnvController {
 	public List<UserGroup> populateGroups() {
 		return userGroupRepository.findAll();
 	}
-	
+
 	@ModelAttribute("allStpInfo")
-	public List<String> populateStpInfo() throws ConfigdbFault, NoSuchTestbedFault{
-//		return TassProvider.getTestbedsList();
-		return new ArrayList<String>(Arrays.asList("tp019","tp025"));
+	public List<String> populateStpInfo() throws ConfigdbFault, NoSuchTestbedFault {
+		// return TassProvider.getTestbedsList();
+		return new ArrayList<String>(Arrays.asList("tp019", "tp025"));
 	}
 
 	@ModelAttribute("allTrafficGenerators")
@@ -175,21 +169,48 @@ class TestEnvController {
 	public TestEnv createTestEnv(@RequestBody CreateTestEnvForm createTestEnvForm) throws ContainerExecutionException,
 			FlavorNotFoundException, ImageNotFoundException, VmCreationFailureException, TimeoutException {
 		logger.info("Comming POST {}", createTestEnvForm.toString());
+		StpInfo stp;
+		if (createTestEnvForm.getStpName() == null || createTestEnvForm.getStpName().isEmpty()) {
+			return new TestEnvCreatResultJson("failed", "No STP given!");
+		} else {
+			stp = stpInfoRepository.findByName(createTestEnvForm.getStpName());
+			if (!stp.getIsBooked()) {
+				stp.setBooked(true);
+				stpInfoRepository.update(stp);
+			} else {
+				return new TestEnvCreatResultJson("failed", "STP: " + createTestEnvForm.getStpName()
+						+ " is already being used!");
+			}
+		}
+		
 		if (createTestEnvForm.isPcSet()) {
-			createTestEnvForm.setVmServerId(sh.launchServer(createTestEnvForm.getName(), createTestEnvForm.getHwSet(),
+			TestTool tt = new TestTool();
+			tt.setToolName(TestToolName.PC);
+			tt.setToolType(TestToolType.VM);
+			tt.setToolId(sh.launchServer(createTestEnvForm.getName(), createTestEnvForm.getHwSet(),
 					createTestEnvForm.getImageSet()));
+			createTestEnvForm.getToolList().add(tt);
 		}
 
 		if (createTestEnvForm.getEnvTG().contains(TrafficGenerator.Tgen)) {
 			logger.info(":::: gonna create tgen .... " + createTestEnvForm.getStpName());
-			createTestEnvForm.setTgenDockerId(sh.createTgen(createTestEnvForm.getStpName()));
+			TestTool tt = new TestTool();
+			tt.setToolName(TestToolName.TGen);
+			tt.setToolType(TestToolType.Docker);
+			tt.setToolId(sh.createTgen(createTestEnvForm.getStpName()));
+			createTestEnvForm.getToolList().add(tt);
 		}
 
 		if (createTestEnvForm.getEnvTG().contains(TrafficGenerator.MgwSim)) {
 			logger.info(":::: gonna create MGWSim - {}", createTestEnvForm.getStpName());
-			createTestEnvForm.setMgwSimVmServerId(sh.createMGWSim(createTestEnvForm.getStpName()));
+			TestTool tt = new TestTool();
+			tt.setToolName(TestToolName.MGWSim);
+			tt.setToolType(TestToolType.VM);
+			tt.setToolId(sh.createMGWSim(createTestEnvForm.getStpName()));
+			createTestEnvForm.getToolList().add(tt);
 		}
-		testEnvRepository.save(createTestEnvForm.createTestEnv());
+
+		testEnvRepository.save(createTestEnvForm.createTestEnv(stp));
 		return new TestEnvCreatResultJson("success");
 	}
 
@@ -258,8 +279,8 @@ class TestEnvController {
 			logger.error("Inspect docker with null or empty ID!!!!");
 		}
 		return sh.getDockerInstance(id);
-//		model.addAttribute("dockerInstance", sh.getDockerInstance(id));
-//		return "testenv/dockerInstance-modal";
+		// model.addAttribute("dockerInstance", sh.getDockerInstance(id));
+		// return "testenv/dockerInstance-modal";
 	}
 
 	@RequestMapping(value = "/update", produces = "application/json")
@@ -299,6 +320,16 @@ class TestEnvController {
 		}
 		logger.debug("====> check status of env-{}, serverId-{}", id, serverId);
 		return sh.getStatus(serverId, InstanceType.Openstack).toString();
+	}
+
+	@RequestMapping(value = "/stp", method = RequestMethod.GET)
+	public String stpSet(Model model, Principal principal) {
+		Assert.notNull(principal);
+		Account curAccount = accountRepository.findByUserName(principal.getName());
+		List<String> currentGroups = curAccount.getUserGroupNameList();
+		model.addAttribute("currentGroups", currentGroups);
+		model.addAttribute("stpInfos", stpInfoRepository.findByGroup(curAccount.getUserGroup()));
+		return "testenv/list-stp";
 	}
 
 }

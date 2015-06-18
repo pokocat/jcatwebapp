@@ -84,6 +84,9 @@
                     <li th:classappend="${page == 'launchInstance' ? 'active' : ''}">
                         <a href="/" th:href="@{/testenv/create}">Launch new Testing ENV</a>
                     </li>
+                    <li th:classappend="${page == 'setStp' ? 'active' : ''}">
+                        <a href="/" th:href="@{/testenv/stp}">STP resources</a>
+                    </li>
                 </ul>
             </li>
  			<li class="" th:classappend="${fatherpage == 'testengine' ? 'open active' : ''}">
