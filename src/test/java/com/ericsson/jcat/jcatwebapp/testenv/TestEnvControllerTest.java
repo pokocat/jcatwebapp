@@ -14,8 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.ericsson.jcat.jcatwebapp.cusom.TestingTool;
-import com.ericsson.jcat.jcatwebapp.cusom.TrafficGenerator;
+import com.ericsson.jcat.jcatwebapp.enums.TestingTool;
+import com.ericsson.jcat.jcatwebapp.enums.TrafficGenerator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestEnvControllerTest {
@@ -38,11 +38,7 @@ public class TestEnvControllerTest {
 
 	@Test
 	public void testTestEnvDetails(){
-		TestEnv testTE = new TestEnv("TestENV", "Isn't this demo fantacy? Created by me.", "admin", "JCAT",
-				true, "centos_pure", "057f17e8-7192-4dac-bac7-c60ead3e9db1", null, new ArrayList<TrafficGenerator>(
-						Arrays.asList(TrafficGenerator.Client4)), "", new ArrayList<TestingTool>(Arrays
-						.asList(TestingTool.JCAT)), "stp777", "tp999ap1.axe.k2.ericsson.se", "expertuser",
-				"expertpass", "customeruser", "customeruser");
+		TestEnv testTE = new TestEnv();
 		when(ter.findById(0)).thenReturn(testTE);
 		System.out.println(""+ testTE.getToolList().add(new TestTool()));
 		

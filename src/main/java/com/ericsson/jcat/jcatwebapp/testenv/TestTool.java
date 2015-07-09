@@ -7,17 +7,33 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.ericsson.jcat.jcatwebapp.enums.TestToolType;
+import com.ericsson.jcat.jcatwebapp.enums.TestingTool;
+import com.ericsson.jcat.jcatwebapp.enums.TrafficGenerator;
+
 @Entity
-public class TestTool implements Serializable{
+public class TestTool implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	private TestToolType toolType;
 
-	private TestToolName toolName;
+	private TestingTool toolName;
 
 	private String toolId;
+
+	public TestTool() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public TestTool(TestToolType toolType, TestingTool toolName, String toolId) {
+		super();
+		this.toolType = toolType;
+		this.toolName = toolName;
+		this.toolId = toolId;
+	}
 
 	public int getId() {
 		return id;
@@ -35,11 +51,11 @@ public class TestTool implements Serializable{
 		this.toolType = type;
 	}
 
-	public TestToolName getToolName() {
+	public TestingTool getToolName() {
 		return toolName;
 	}
 
-	public void setToolName(TestToolName toolName) {
+	public void setToolName(TestingTool toolName) {
 		this.toolName = toolName;
 	}
 
@@ -50,12 +66,11 @@ public class TestTool implements Serializable{
 	public void setToolId(String toolId) {
 		this.toolId = toolId;
 	}
-}
 
-enum TestToolType {
-	VM, Docker;
-}
-
-enum TestToolName {
-	PC, MGWSim, TGen;
+	@Override
+	public String toString() {
+		return "TestTool [id=" + id + ", " + (toolType != null ? "toolType=" + toolType + ", " : "")
+				+ (toolName != null ? "toolName=" + toolName + ", " : "") + (toolId != null ? "toolId=" + toolId : "")
+				+ "]";
+	}
 }

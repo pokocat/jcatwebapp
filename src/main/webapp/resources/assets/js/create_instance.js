@@ -47,6 +47,7 @@ $(document).ready(function() {
 
     $("input").change(function(event) {
         var inputbox = $(this).attr("name");
+        var inputboxVal = $(this).attr("value");
         if (inputbox == "name") {
             if (!$("input[name='name']").val()) {
                 $("input[name='name']").addClass("error");
@@ -60,9 +61,10 @@ $(document).ready(function() {
         if (inputbox == "description") {
             $("#env-description").text($(this).val());
         }
-        if (inputbox == "pcSet") {
-            var pc = $("input[name='pcSet']:checked").val();
-            if (pc == 'true') {
+        if (inputboxVal == "RemotePC") {
+            var pc = $("input[value='RemotePC']").attr("checked");
+            console.log(inputbox+ ":"+inputboxVal);
+            if (pc == 'checked') {
                 $("#pc-custom").show('fast', function() {});
                 var hwset = "." + $("select[name='hwSet']").val().replace('.', '');
                 $(hwset).show();
@@ -155,6 +157,7 @@ $(document).ready(function() {
         var expertPass = $("input[name='expertPass']").val();
         var customerUser = $("input[name='customerUser']").val();
         var customerPass = $("input[name='customerPass']").val();
+        
 
         var json = {
             "name": name,
@@ -163,7 +166,6 @@ $(document).ready(function() {
             "pcSet": pcSet,
             "imageSet": imageSet,
             "hwSet": hwSet,
-            "envTG": envTG,
             "envTT": envTT,
             "stpName": stpName,
             "stpIp": stpIp,

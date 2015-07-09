@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
+import org.openstack4j.model.compute.Action;
 import org.openstack4j.model.compute.ActionResponse;
 import org.openstack4j.openstack.compute.domain.NovaAbsoluteLimit;
 import org.openstack4j.openstack.compute.domain.NovaFlavor;
@@ -32,11 +33,15 @@ import com.ericsson.axe.jcat.docker.adapter.exceptions.ContainerCreationExceptio
 import com.ericsson.axe.jcat.docker.adapter.exceptions.ContainerExecutionException;
 import com.ericsson.axe.jcat.docker.adapter.exceptions.ContainerRunningException;
 import com.ericsson.axe.jcat.docker.adapter.exceptions.ContainerStartingException;
+import com.ericsson.axe.jcat.docker.adapter.exceptions.ContainerStopException;
 import com.ericsson.axe.jcat.docker.adapter.implementations.JcatDockerAdapter;
 import com.ericsson.axe.jcat.docker.adapter.interfaces.IJcatDockerContainerClient;
 import com.ericsson.axe.jcat.docker.adapter.interfaces.IJcatDockerTgenClient;
 import com.ericsson.jcat.jcatwebapp.config.TestConfig;
-import com.ericsson.jcat.jcatwebapp.cusom.TestEnvStatus;
+import com.ericsson.jcat.jcatwebapp.enums.ServerAction;
+import com.ericsson.jcat.jcatwebapp.enums.TestEnvStatus;
+import com.ericsson.jcat.jcatwebapp.enums.TestToolType;
+import com.ericsson.jcat.jcatwebapp.testenv.TestTool;
 import com.ericsson.jcat.osadapter.exceptions.FlavorNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.ImageNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.VmCreationFailureException;
@@ -44,10 +49,6 @@ import com.github.dockerjava.api.command.InspectContainerResponse;
 
 @Service
 public class ServiceHelper {
-
-	public enum InstanceType {
-		Openstack, docker
-	}
 
 	// Configs for openstack
 	@Value("${openstack.ip}")
@@ -82,7 +83,7 @@ public class ServiceHelper {
 		logger.debug(
 				"Servicehelper final ====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. docker ip:{}, docker port:{}.",
 				openstackIp, openstackUser, openstackPass, openstackTenent, openstackAltNatIp, dockerIp, dockerPort);
-//		jda = new JcatDockerAdapter("http://" + dockerIp + ":" + dockerPort);
+		// jda = new JcatDockerAdapter("http://" + dockerIp + ":" + dockerPort);
 		tgenClient = new JcatDockerAdapter("http://" + dockerIp + ":" + dockerPort).tgenClient();
 		this.cs = new OpenstackService(openstackIp, openstackUser, openstackPass, openstackTenent, openstackAltNatIp);
 	}
@@ -124,31 +125,57 @@ public class ServiceHelper {
 		return cs.getVMServer(id);
 	}
 
-	public String launchServer(String name, String flavorName, String imageName) {
-		try {
-			return cs.launchServer(name, flavorName, imageName, true);
-		} catch (FlavorNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ImageNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (VmCreationFailureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TimeoutException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+	public String launchServer(String name, String flavorName, String imageName) throws FlavorNotFoundException,
+			ImageNotFoundException, VmCreationFailureException, TimeoutException {
+		return cs.launchServer(name, flavorName, imageName, true);
 	}
 
 	public String createSnapshot(String id, String name) {
 		return cs.createSnapshot(id, name);
 	}
+	
+	public void handleServers(List<TestTool> list, ServerAction action) throws ContainerExecutionException, ContainerStopException{
+		for (TestTool testTool : list) {
+			if (testTool.getToolType().equals(TestToolType.VM)) {
+				switch (action) {
+				case START:
+					cs.startVMServer(testTool.getToolId());
+					break;
+				case SUSPEND:
+					cs.suspendVMServer(testTool.getToolId());
+					break;
+				case RESET:
+					cs.resetVMServer(testTool.getToolId());
+					break;
+				case STOP:
+					cs.stopVMServer(testTool.getToolId());
+					break;
+				case DESTROY:
+					cs.destroyVMServer(testTool.getToolId());
+					break;
+				case RESTORE:
+					cs.resumeVMServer(testTool.getToolId());
+					break;
+				}
+			} else if (testTool.getToolType().equals(TestToolType.Docker)){
+				switch (action) {
+				case STOP:
+					tgenClient.stopContainer(testTool.getToolId(), 10);
+					break;
 
-	public ActionResponse startServer(String serverId) {
-		return cs.startVMServer(serverId);
+				default:
+					break;
+				}
+			}
+		}
+	}
+
+	public void startServer(List<TestTool> list) {
+		for (TestTool testTool : list) {
+			if (testTool.getToolType().equals(TestToolType.VM)) {
+				cs.startVMServer(testTool.getToolId());
+			}
+		}
 	}
 
 	public ActionResponse stopServer(String serverId) {
@@ -171,21 +198,11 @@ public class ServiceHelper {
 		cs.destroyVMServer(serverId);
 	}
 
-	public String createTgen(String name) throws ContainerExecutionException {
+	public String createTgen(String name) throws ContainerExecutionException, ContainerCreationException,
+			ContainerStartingException, ContainerRunningException {
 		// boot container
 		String containerId = "";
-		try {
-			containerId = tgenClient.runContainer(name);
-		} catch (ContainerCreationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ContainerStartingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ContainerRunningException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		containerId = tgenClient.runContainer(name);
 		return containerId;
 	}
 
@@ -204,11 +221,12 @@ public class ServiceHelper {
 
 	}
 
-	public TestEnvStatus getStatus(String id, InstanceType instanceType) {
-		if (instanceType.equals(InstanceType.Openstack)) {
+	public TestEnvStatus getStatus(String id, TestToolType instanceType) {
+		if (instanceType.equals(TestToolType.VM)) {
 			return cs.getVMServerStatus(id);
-		} else {
-
+		} 
+		if (instanceType.equals(TestToolType.Docker)) {
+			
 		}
 		return TestEnvStatus.UNKNOWN;
 	}

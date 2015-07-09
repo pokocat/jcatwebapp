@@ -438,20 +438,6 @@
 												<input id="has-PC" type="radio" name="pcSet" th:field="*{pcSet}" value="true" />
 												<label for="has-PC">Use PC</label>
 											</div>
-											<div id="pc-custom" style="display: none;">
-												<div class="col-md-6">
-													<p>Custom Image settings:</p>
-													<select id="image-set" style="width: 100%;" th:field="*{imageSet}">   
-														<option th:each="image : ${allImages}" th:value="${image}" th:text="${image}">Image</option>
-													</select>
-												</div>
-												<div class="col-md-6">
-													<p>Custom Hardware settings:</p>
-													<select id="hw-set" style="width: 100%;" th:field="*{hwSet}">
-														<option th:each="flavor : ${allFlavors}" th:value="${flavor.name}" th:text="${flavor.name}">Hardware settings</option>
-													</select>
-												</div>
-											</div>
 										</div>
 										<div class="clearfix"></div>
 										<div class="clearfix"></div>
@@ -473,18 +459,29 @@
 											</div> -->
 										</div>
 										<div class="clearfix"></div>
-										<div class="form-group">
-											<label class="form-label">Testing Tool</label>
+										<div class="form-group" th:each="testingToolGroup : ${allTestingToolGroups}">
+											<label class="form-label" th:text="${{testingToolGroup}}">xxx</label>
 											<span class="help">Choose your desired testing environment, various tools can be chosen.</span>
 											<br />
-											<div class="checkbox">
-												<div class="col-md-3" th:each="testingTool : ${allTestingTools}">
-													<div class="checkbox check-primary" >
-														<input type="checkbox" th:field="*{envTT}" th:value="${testingTool}" />
-														<label th:for="${#ids.prev('envTT')}" th:text="${testingTool}">Winfiol</label>
-													</div>
+											<div class="col-md-3" th:each="testingTool : ${testingToolGroup.getTtSet()}">
+												<div class="checkbox check-primary" >
+													<input type="checkbox" th:field="*{envTT}" th:value="${{testingTool}}" />
+													<label th:for="${#ids.prev('envTT')}" th:text="${{testingTool}}">Winfiol</label>
 												</div>
 											</div>
+											<div th:if="${{testingToolGroup}} == 'Basic'" id="pc-custom" style="display: none;" class="col-md-9">
+												<div class="col-md-8">
+													<select id="image-set" style="width: 100%;" th:field="*{imageSet}">   
+														<option th:each="image : ${allImages}" th:value="${image}" th:text="${image}">Image</option>
+													</select>
+												</div>
+												<div class="col-md-4">
+													<select id="hw-set" style="width: 100%;" th:field="*{hwSet}">
+														<option th:each="flavor : ${allFlavors}" th:value="${flavor.name}" th:text="${flavor.name}">Hardware settings</option>
+													</select>
+												</div>
+											</div>
+											<br />
 										</div>
 										<!--<div class="clearfix"></div>
 										<div class="form-group">
@@ -505,6 +502,9 @@
 											<br />
 											<div class="controls col-md-12">
 												<select id="stpName" name="stpName" style="width: 100%;" th:field="*{stpName}">
+													<optgroup label="No need STP Resources">
+													<option value="noStp">Exclude STP</option>
+													</optgroup>
 													<optgroup label="Predefined STP Resources">
 													<option th:each="stpInfo : ${allStpInfo}" th:value="${stpInfo}" th:text="${stpInfo}"></option>
 													</optgroup>

@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.testng.xml.LaunchSuite;
 
-import com.ericsson.jcat.jcatwebapp.cusom.TestEnvStatus;
+import com.ericsson.jcat.jcatwebapp.enums.TestEnvStatus;
 import com.ericsson.jcat.osadapter.compute.JcatOSCompute;
 import com.ericsson.jcat.osadapter.exceptions.AssignFloatingIPFailException;
 import com.ericsson.jcat.osadapter.exceptions.FlavorNotFoundException;

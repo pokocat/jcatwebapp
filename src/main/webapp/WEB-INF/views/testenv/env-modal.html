@@ -31,10 +31,10 @@
 							<label class="form-label bold">Description</label>
 						</div>
 						<div class="col-md-8">
-							<input type="text" class="form-control" value="Description" th:field="*{description}" th:value="*{description}"/>
+							<input type="text" class="form-control modalInputControl" value="Description" th:field="*{description}" th:value="*{description}"/>
 						</div>
 					</div>
-					<div class="row form-row" style="height: 47px;">
+					<!-- <div class="row form-row" style="height: 47px;">
 						<div class="col-md-4">
 							<label class="form-label bold">Use RemotePC</label>
 						</div>
@@ -43,40 +43,17 @@
 							<label for="useRPC">Yes</label>
 							<input type="radio" class="form-control" value="false" id="noRPC" name="useRPC" th:checked="*{pcSet} ? false : 'true'"/>
 							<label for="noRPC">no</label>
-						</div>
-					</div>
-					<div class="row form-row" id="rpcHwSet" th:style="*{pcSet} ? 'display:;' : 'display:none;'">
-						<div class="col-md-4">
-							<label class="form-label bold"></label>
-						</div>
-						<div class="col-md-8">
-							<select id="hw-set" style="width: 100%;">
-								<optgroup label="Default setting">
-									<option value="medium">Medium</option>
-								</optgroup>
-								<optgroup label="Custom setting">
-									<option value="mini">Mini</option>
-									<option value="large">Large</option>
-									<option value="xlarge">X-Large</option>
-								</optgroup>
-								<!-- <option th:each="flavor : ${allFlavors}" th:value="${flavor}" th:text="${flavor}"></option> -->
-							</select>
-						</div>
-					</div>
-					<div class="row form-row">
-						<div class="col-md-4">
-							<label class="form-label bold">Traffic Generator</label>
-						</div>
-						<div class="col-md-8">
-							<input type="text" class="form-control" value="tg env settings" th:value="*{envTG}"/>
-						</div>
-					</div>
+						</div> 
+					</div>-->
 					<div class="row form-row">
 						<div class="col-md-4">
 							<label class="form-label bold">Testing Tools</label>
 						</div>
-						<div class="col-md-8">
-							<input type="text" class="form-control" value="tt env settings" th:value="*{envTT}"/>
+						<div class="col-md-8" >
+							<th:block th:each="tt : *{toolList}" >
+								<span th:if="${#strings.toString(tt.toolType) == 'VM'}" class="label label-inverse light normal-text" th:inline="text"><i class="fa fa-desktop" >&nbsp;</i>[[${tt.toolName}]]</span>
+								<span th:if="${#strings.toString(tt.toolType) == 'Docker'}" class="label label-info light normal-text" th:inline="text"><i class="fa fa-tasks" >&nbsp;</i>[[${tt.toolName}]]</span>
+							</th:block>
 						</div>
 					</div>
 					<div class="row form-row">
