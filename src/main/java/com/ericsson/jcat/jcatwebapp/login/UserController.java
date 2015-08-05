@@ -1,5 +1,6 @@
 package com.ericsson.jcat.jcatwebapp.login;
 
+import java.util.Deque;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -38,9 +39,6 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-//	@Value("${myProps['openstack.user']}")
-	private String aaa;
-
 	@ModelAttribute("allGroups")
 	public List<UserGroup> populateGroups() {
 		return userGroupRepository.findAll();
@@ -64,10 +62,16 @@ public class UserController {
 		 * }
 		 */
 		logger.info("====> New User: " + signupForm.toString());
-		Account account = accountRepository.save(signupForm.createAccount());
+		Account account = null;
+		try {
+			 account = accountRepository.save(signupForm.createAccount());
+		} catch (javax.persistence.PersistenceException e) {
+			logger.error("====> Can't create duplicate user! 2- {}", e.getLocalizedMessage());
+			//TODO
+		}
 		userService.signin(account);
 		MessageHelper.addSuccessAttribute(ra, "signup.success");
-		return "/";
+		return "redirect:/";
 	}
 
 	@RequestMapping(value = "login")

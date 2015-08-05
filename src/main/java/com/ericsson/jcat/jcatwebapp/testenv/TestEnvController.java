@@ -164,6 +164,11 @@ class TestEnvController {
 	public int caculateTestingEnvNumber() {
 		return testEnvRepository.findAll().size();
 	}
+	
+	@ModelAttribute("zabbixUrl")
+	public String tempZabbixUrl(){
+		return sh.getZabbixUrl();
+	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@ResponseBody
@@ -263,8 +268,8 @@ class TestEnvController {
 			StpInfo stpInfo = testEnvRepository.findById(id).getStp();
 			if (stpInfo != null && !stpInfo.getStpName().isEmpty()) {
 				stpInfo.setBooked(false);
+				stpInfoRepository.update(stpInfo);
 			}
-			stpInfoRepository.update(stpInfo);
 			testEnvRepository.deleteById(id);
 			return new ResponseEntity<CustomResultJson>(new CustomResultJson("success"), new HttpHeaders(),
 					HttpStatus.OK);

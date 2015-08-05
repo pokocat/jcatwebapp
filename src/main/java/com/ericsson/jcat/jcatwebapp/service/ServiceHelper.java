@@ -45,6 +45,7 @@ import com.ericsson.jcat.jcatwebapp.testenv.TestTool;
 import com.ericsson.jcat.osadapter.exceptions.FlavorNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.ImageNotFoundException;
 import com.ericsson.jcat.osadapter.exceptions.VmCreationFailureException;
+import com.ericsson.jcat.zabbix.api.DefaultZabbixApi;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 
 @Service
@@ -66,6 +67,15 @@ public class ServiceHelper {
 	private String dockerIp;
 	@Value("${docker.port}")
 	private String dockerPort;
+	// Configs for zabbix
+	@Value("${zabbix.ip}")
+	private String zabbixIp;
+	@Value("${zabbix.port}")
+	private String zabbixPort;
+	@Value("${zabbix.user}")
+	private String zabbixUser;
+	@Value("${zabbix.pass}")
+	private String zabbixPass;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -73,6 +83,8 @@ public class ServiceHelper {
 
 	private IJcatDockerTgenClient tgenClient;
 	private JcatDockerAdapter jda;
+
+	DefaultZabbixApi zabbixApi;
 
 	public ServiceHelper() {
 		logger.debug("Servicehelper auto inject ====>ip:{} user:{} pass:{}, tenent:{}, altIp:{}. ", openstackIp,
@@ -86,6 +98,17 @@ public class ServiceHelper {
 		// jda = new JcatDockerAdapter("http://" + dockerIp + ":" + dockerPort);
 		tgenClient = new JcatDockerAdapter("http://" + dockerIp + ":" + dockerPort).tgenClient();
 		this.cs = new OpenstackService(openstackIp, openstackUser, openstackPass, openstackTenent, openstackAltNatIp);
+
+		// zabbix part
+		String url = "http://" + zabbixIp + ":" + zabbixPort + "/zabbix/api_jsonrpc.php";
+		zabbixApi = new DefaultZabbixApi(url);
+		zabbixApi.init();
+
+		boolean login = zabbixApi.login(zabbixUser, zabbixPass);
+		if (!login) {
+			logger.error("Login to zabbix server error!");
+		}
+
 	}
 
 	private void readPropsManually() {
@@ -103,6 +126,9 @@ public class ServiceHelper {
 		openstackAltNatIp = p.getProperty("openstack.altNatIp");
 		dockerIp = p.getProperty("docker.ip");
 		dockerPort = p.getProperty("docker.port");
+		zabbixIp = p.getProperty("zabbix.ip");
+		zabbixUser = p.getProperty("zabbix.user");
+		zabbixPass = p.getProperty("zabbix.pass");
 	}
 
 	public List<String> getImages() {
@@ -133,8 +159,9 @@ public class ServiceHelper {
 	public String createSnapshot(String id, String name) {
 		return cs.createSnapshot(id, name);
 	}
-	
-	public void handleServers(List<TestTool> list, ServerAction action) throws ContainerExecutionException, ContainerStopException{
+
+	public void handleServers(List<TestTool> list, ServerAction action) throws ContainerExecutionException,
+			ContainerStopException {
 		for (TestTool testTool : list) {
 			if (testTool.getToolType().equals(TestToolType.VM)) {
 				switch (action) {
@@ -157,7 +184,7 @@ public class ServiceHelper {
 					cs.resumeVMServer(testTool.getToolId());
 					break;
 				}
-			} else if (testTool.getToolType().equals(TestToolType.Docker)){
+			} else if (testTool.getToolType().equals(TestToolType.Docker)) {
 				switch (action) {
 				case STOP:
 					tgenClient.stopContainer(testTool.getToolId(), 10);
@@ -224,9 +251,9 @@ public class ServiceHelper {
 	public TestEnvStatus getStatus(String id, TestToolType instanceType) {
 		if (instanceType.equals(TestToolType.VM)) {
 			return cs.getVMServerStatus(id);
-		} 
+		}
 		if (instanceType.equals(TestToolType.Docker)) {
-			
+
 		}
 		return TestEnvStatus.UNKNOWN;
 	}
@@ -246,6 +273,14 @@ public class ServiceHelper {
 
 	public List<CeilometerStatistics> getCpuUtilStats(int period) {
 		return cs.getCpuUtilStats(period);
+	}
+
+	public String getZabbixUrl() {
+		String host = "10.170.28.6";
+		String item = "net.if.out[eth0,bytes]";
+//		String itemId = zabbixApi.getItemId(zabbixApi, host, item);
+//		return "http://127.0.0.1:49160/zabbix/history.php?itemids%5B%5D=" + itemId + "&action=showgraph&period=3600";
+		return "http://127.0.0.1:49160/zabbix/history.php?itemids%5B%5D=23316&action=showgraph&period=3600";
 	}
 
 }

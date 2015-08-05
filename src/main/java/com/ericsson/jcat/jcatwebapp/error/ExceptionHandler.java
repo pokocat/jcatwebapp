@@ -1,5 +1,8 @@
 package com.ericsson.jcat.jcatwebapp.error;
 
+import javax.persistence.PersistenceException;
+
+import org.hibernate.exception.ConstraintViolationException;
 import org.openstack4j.api.exceptions.OS4JException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,21 +40,21 @@ class ExceptionHandler {
 	@ResponseBody
 	public CustomResultJson nullPointerException(Exception exception, WebRequest request) {
 		logger.error(Throwables.getStackTraceAsString(exception));
-		return new CustomResultJson("failed", exception.getLocalizedMessage(), Throwables.getStackTraceAsString(exception));
+		return new CustomResultJson("failed", exception.getMessage(), Throwables.getStackTraceAsString(exception));
 	}
 
 	@org.springframework.web.bind.annotation.ExceptionHandler(value = OS4JException.class)
 	@ResponseBody
 	public CustomResultJson OS4JException(Exception exception, WebRequest request) {
 		logger.error(Throwables.getStackTraceAsString(exception));
-		return new CustomResultJson("failed", "Reason: " + exception.getLocalizedMessage(), Throwables.getStackTraceAsString(exception));
+		return new CustomResultJson("failed", "Reason: " + exception.getMessage(), Throwables.getStackTraceAsString(exception));
 	}
 
 	@org.springframework.web.bind.annotation.ExceptionHandler(value = DockerException.class)
 	@ResponseBody
 	public CustomResultJson DockerException(Exception exception, WebRequest request) {
 		logger.error(Throwables.getStackTraceAsString(exception));
-		return new CustomResultJson("failed", "Reason: " + exception.getLocalizedMessage(), Throwables.getStackTraceAsString(exception));
+		return new CustomResultJson("failed", "Reason: " + exception.getMessage(), Throwables.getStackTraceAsString(exception));
 	}
-
+	
 }
